@@ -14,6 +14,7 @@ namespace collector
 		public:
 			Collector();
 			virtual ~Collector();
+			int main();
 		private:
 			SDL_Window* window;
 			SDL_Renderer* renderer;

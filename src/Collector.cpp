@@ -1,13 +1,19 @@
 
 #include "Collector.h"
 #include <iostream>
+#include <stdlib.h>
 
 using namespace collector;
 
 
 Collector::Collector()
 {
-	
+	if(SDL_Init(SDL_INIT_VIDEO) != 0)
+	{
+		std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
+		return;
+	}
+
 	window = SDL_CreateWindow("Hello World!", 100, 100, 640, 480, SDL_WINDOW_SHOWN);
 	if(window == NULL)
 	{
@@ -55,8 +61,31 @@ Collector::Collector()
 }
 
 
+int Collector::main()
+{
+	//main event loop
+	SDL_Event e;
+	
+	bool running = true;
+
+	while(running)
+	{
+		while (SDL_PollEvent(&e))
+		{
+			if (e.type == SDL_QUIT)
+				running = false;
+		}
+		
+		//render changes
+	}
+
+	return EXIT_SUCCESS;
+}
+
+
 Collector::~Collector()
 {
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
+	SDL_Quit();
 }
