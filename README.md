@@ -28,10 +28,7 @@ Dependencies
 Building
 --------
 
-###Dependencies
-
-First, ensure that you have installed the following dependencies. They should be available from your distributions package manager.
-
+First, ensure that you have installed all listed dependencies. They should be available from your distributions package manager.
 
 Run CMake and the created Makefile
 
