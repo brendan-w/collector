@@ -1,6 +1,4 @@
 
-Collector
-
 # Compiled Object files
 *.slo
 *.lo
@@ -36,3 +34,4 @@ CMakeFiles
 Makefile
 cmake_install.cmake
 install_manifest.txt
+build

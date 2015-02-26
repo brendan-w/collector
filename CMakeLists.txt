@@ -8,7 +8,10 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR})
 
-set(SOURCE_FILES src/main.cpp)
+set(SOURCE_FILES
+"src/main.cpp"
+"src/Collector.cpp"
+)
 
 add_executable(Collector ${SOURCE_FILES})
 target_link_libraries(Collector ${SDL2_LIBRARY})
