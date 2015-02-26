@@ -30,11 +30,13 @@ Building
 
 First, ensure that you have installed all listed dependencies. They should be available from your distributions package manager.
 
-Run CMake and the created Makefile
+To build the project, create a `build/` directory, run CMake, and build with CMake
 
 ```sh
-$ cmake CMakeLists.txt
-$ make
+$ mkdir build
+$ cd build/
+$ cmake ../
+$ cmake --build ./
 ```
 
 Installation
