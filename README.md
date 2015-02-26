@@ -11,6 +11,20 @@ Usage
 *usage instructions will be provided once there is something to use*
 
 
+Dependencies
+------------
+
+#### Runtime
+
++ SDL2
++ SDL2_image
+
+#### Build
+
++ gcc (or other suitable C++ compiler)
++ CMake
+
+
 Building
 --------
 
@@ -18,9 +32,6 @@ Building
 
 First, ensure that you have installed the following dependencies. They should be available from your distributions package manager.
 
-+ CMake
-+ SDL2
-+ SDL2_image
 
 Run CMake and the created Makefile
 
