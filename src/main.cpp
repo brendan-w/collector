@@ -14,9 +14,24 @@ int main(int argc, char * argv[])
 	}
 
 	collector::Collector app;
-	
-	SDL_Delay(1000);
-    SDL_Quit();
 
-    return 0;
+	//main event loop
+	SDL_Event e;
+	
+	bool running = true;
+
+	while(running)
+	{
+		while (SDL_PollEvent(&e))
+		{
+			if (e.type == SDL_QUIT)
+				running = false;
+		}
+		
+		//render changes
+	}
+
+	SDL_Quit();
+
+	return 0;
 }

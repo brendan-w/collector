@@ -50,8 +50,8 @@ Collector::Collector()
 	SDL_RenderClear(renderer);
 	SDL_RenderCopy(renderer, tex, NULL, NULL);
 	SDL_RenderPresent(renderer);
+
 	SDL_DestroyTexture(tex);
-	
 }
 
 
