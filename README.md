@@ -1,9 +1,6 @@
 Collector
 =========
 
-Description
------------
-
 A front-end for performing tag-based file management on linux.
 
 *Warning: development in progress*
@@ -36,3 +33,8 @@ Installation
 ------------
 
 You should *not* be installing this yet
+
+License
+-------
+
+GNU GPL v2
