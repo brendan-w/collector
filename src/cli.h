@@ -1,6 +1,11 @@
 
 
+#pragma once
+
+
 #include <string>
+#include <SDL_ttf.h>
+
 
 class CLI
 {
@@ -13,6 +18,4 @@ class CLI
 	private:
 		bool dirty;
 		std::string text;
-
 };
-

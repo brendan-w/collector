@@ -3,19 +3,19 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <string.h>
-#include <iostream>
 #include "cli.h"
+#include "collector.h"
+#include "utils.h"
 
 
 CLI::CLI()
 {
-	SDL_StartTextInput();
 	dirty = true;
 }
 
 CLI::~CLI()
 {
-	SDL_StopTextInput();
+
 }
 
 void CLI::handle_key(SDL_KeyboardEvent &e)
@@ -39,5 +39,21 @@ void CLI::handle_text(SDL_TextInputEvent &e)
 
 void CLI::render()
 {
+	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);	
 
+	SDL_Rect a;
+	a.x = 100;
+	a.y = 100;
+	a.w = 100;
+	a.h = 100;
+
+	SDL_RenderDrawRect(renderer, &a);
+
+
+
+	if(dirty)
+	{
+
+		dirty = false;
+	}
 }

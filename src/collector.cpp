@@ -1,29 +1,31 @@
 
 
 #include <SDL.h>
+#include <SDL_ttf.h>
 #include "collector.h"
+#include "config.h"
 #include "display.h"
 #include "cli.h"
 #include "utils.h"
 
 
 //forward declare
-bool start_SDL();
-void stop_SDL();
+bool init();
+void close();
 
 
+//global contexts and resources
+Config* config = NULL;
 SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
+TTF_Font* font = NULL;
 
 
 int main(int argc, char * argv[])
 {
-	//only run if initialization was successful
-	bool running = start_SDL();
-
-	if(!running)
+	if(!init())
 	{
-		stop_SDL();
+		close();
 		return EXIT_FAILURE;
 	}
 
@@ -33,6 +35,7 @@ int main(int argc, char * argv[])
 
 	//main event loop
 	SDL_Event e;
+	bool running = true;
 
 	while(running)
 	{
@@ -59,18 +62,32 @@ int main(int argc, char * argv[])
 		}
 
 		//render changes
+		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);	
+		SDL_RenderClear(renderer);
 
+		cli.render();
+
+		SDL_RenderPresent(renderer);
 		SDL_Delay(33);
 	}
 
-	stop_SDL();
+	close();
 
 	return EXIT_SUCCESS;
 }
 
 
-bool start_SDL()
+bool init()
 {
+	/*
+		load the config
+	*/
+
+	config = new Config;
+
+	/*
+		load SDL components
+	*/
 
 	if(SDL_Init(SDL_INIT_VIDEO) != 0)
 	{
@@ -79,39 +96,55 @@ bool start_SDL()
 	}
 
 	window = SDL_CreateWindow("Collector",
-                              SDL_WINDOWPOS_UNDEFINED,
-                              SDL_WINDOWPOS_UNDEFINED,
-                              640,
-                              480,
-                              SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN_DESKTOP);
+                              config->get_window_x(),
+                              config->get_window_y(),
+                              config->get_window_w(),
+                              config->get_window_h(),
+                              config->get_window_flags());
 	if(window == NULL)
 	{
 		print_SDL_error("SDL_CreateWindow Error");
-		SDL_Quit();
 		return false;
 	}
 
 	renderer = SDL_CreateRenderer(window,
                                   -1,
-                                  SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+                                  config->get_render_flags());
 	if(renderer == NULL)
 	{
-		SDL_DestroyWindow(window);
 		print_SDL_error("SDL_CreateRenderer Error");
-		SDL_Quit();
 		return false;
 	}
 
-	//draw initial background
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);	
-	SDL_RenderClear(renderer);
-	SDL_RenderPresent(renderer);
+	SDL_StartTextInput();
+
+	//Initialize SDL_ttf
+	if(TTF_Init() != 0)
+	{
+		print_TTF_error("SDL_ttf could not initialize! SDL_ttf Error");
+		return false;
+	}
+
+	font = TTF_OpenFont(config->get_font_path().c_str(),
+						config->get_font_size());
+	if(font == NULL)
+	{
+		print_TTF_error("Failed to load font: " + config->get_font_path());
+		return false;
+	}
+
+	return true;
 }
 
-
-void stop_SDL()
+void close()
 {
+	TTF_CloseFont(font);
+	SDL_StopTextInput();
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
+
+	TTF_Quit();
 	SDL_Quit();
+
+	delete config;
 }
