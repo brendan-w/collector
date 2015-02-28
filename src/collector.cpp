@@ -87,13 +87,13 @@ int main(int argc, char * argv[])
 bool init()
 {
 	/*
-		load the config
+		Config
 	*/
 
 	config = new Config;
 
 	/*
-		load SDL components
+		SDL2
 	*/
 
 	if(SDL_Init(SDL_INIT_VIDEO) != 0)
@@ -125,10 +125,14 @@ bool init()
 
 	SDL_StartTextInput();
 
+	/*
+		SDL2_ttf
+	*/
+
 	//Initialize SDL_ttf
 	if(TTF_Init() != 0)
 	{
-		print_TTF_error("SDL_ttf could not initialize! SDL_ttf Error");
+		print_TTF_error("SDL_ttf could not initialize");
 		return false;
 	}
 
@@ -140,18 +144,48 @@ bool init()
 		return false;
 	}
 
+	/*
+		SDL2_image
+	*/
+
+	int flags = IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF;
+
+	if((IMG_Init(flags) & flags) != flags)
+	{
+		print_IMG_error("SDL_image could not initialize");
+		return false;
+	}
+
 	return true;
 }
 
 void close()
 {
+	/*
+		SDL2_image
+	*/
+
+	IMG_Quit();
+
+	/*
+		SDL2_ttf
+	*/
+
 	TTF_CloseFont(font);
+	TTF_Quit();
+
+	/*
+		SDL2
+	*/
+
 	SDL_StopTextInput();
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
-
-	TTF_Quit();
 	SDL_Quit();
+
+	/*
+		Config
+	*/
 
 	delete config;
 }
