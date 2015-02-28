@@ -2,6 +2,8 @@
 #include "display.h"
 #include "collector.h"
 
+
+
 Display::Display()
 {
 

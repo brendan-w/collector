@@ -11,8 +11,12 @@ include_directories(${SDL2_INCLUDE_DIR})
 set(SOURCE_FILES
 "src/collector.cpp"
 "src/display.cpp"
+"src/cli.cpp"
 "src/utils.cpp"
 )
+
+# enable C++11
+set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
 
 add_executable(Collector ${SOURCE_FILES})
 target_link_libraries(Collector ${SDL2_LIBRARY})

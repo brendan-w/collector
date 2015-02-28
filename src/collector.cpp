@@ -1,9 +1,10 @@
 
 
-
+#include <iostream>
 #include <SDL.h>
 #include "collector.h"
 #include "display.h"
+#include "cli.h"
 #include "utils.h"
 
 
@@ -27,6 +28,10 @@ int main(int argc, char * argv[])
 		return EXIT_FAILURE;
 	}
 
+	//create the two main screen elements
+	Display display;
+	CLI cli;
+
 	//main event loop
 	SDL_Event e;
 
@@ -35,12 +40,23 @@ int main(int argc, char * argv[])
 		//pump events
 		while(SDL_PollEvent(&e))
 		{
-			if(e.type == SDL_QUIT)
-				running = false;
-			else if(e.type == SDL_MOUSEBUTTONDOWN)
-				running = false;
-			else if(e.type == SDL_KEYDOWN)
-				running = false;
+			switch(e.type)
+			{
+				case SDL_QUIT:
+				case SDL_MOUSEBUTTONDOWN:
+					running = false;
+					break;
+				case SDL_KEYDOWN:
+					cli.handle_key(e.key);
+					break;
+				case SDL_TEXTINPUT:
+					cli.handle_text(e.text);
+					break;
+				case SDL_USEREVENT:
+					break;
+				default:
+					break;
+			}
 		}
 
 		//render changes

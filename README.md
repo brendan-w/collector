@@ -21,7 +21,7 @@ Dependencies
 
 #### Build
 
-+ gcc (or other suitable C++ compiler)
++ gcc (or other suitable C++11 compiler)
 + CMake
 
 
