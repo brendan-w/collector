@@ -5,6 +5,12 @@
 #include <SDL_image.h>
 #include "utils.h"
 
+
+void print_message(std::string message)
+{
+	std::cout << message << std::endl;
+}
+
 void print_SDL_error(std::string message)
 {
 	std::cout << message << std::endl << SDL_GetError() << std::endl;

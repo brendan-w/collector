@@ -22,6 +22,7 @@ class Config
 		std::string font_path;
 		int font_size;
 		bool fullscreen;
+		bool resizable;
 		int window_x;
 		int window_y;
 		int window_w;

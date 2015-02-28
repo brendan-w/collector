@@ -1,11 +1,7 @@
 
-
 #pragma once
 
-
 #include <string>
-#include <SDL_ttf.h>
-
 
 class CLI
 {

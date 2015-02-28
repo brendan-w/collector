@@ -9,6 +9,7 @@ Config::Config()
 	font_path = "../assets/MonoLiberation.ttf";
 	font_size = 12;
 	fullscreen = false;
+	resizable = true;
 	window_x = SDL_WINDOWPOS_UNDEFINED;
 	window_y = SDL_WINDOWPOS_UNDEFINED;
 	window_w = 640;
@@ -36,7 +37,8 @@ Uint32 Config::get_window_flags()
 {
 	Uint32 flags = 0;
 	flags |= SDL_WINDOW_SHOWN;
-	flags |= (fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);	
+	flags |= (fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
+	flags |= (resizable ? SDL_WINDOW_RESIZABLE : 0);
 	return flags;
 }
 

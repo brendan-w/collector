@@ -21,6 +21,7 @@ set(SOURCE_FILES
 	"src/collector.cpp"
 	"src/display.cpp"
 	"src/cli.cpp"
+	"src/texture.cpp"
 	"src/config.cpp"
 	"src/utils.cpp"
 )
