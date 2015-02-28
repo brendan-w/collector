@@ -1,20 +1,34 @@
 
 
-#include <iostream>
+
 #include <SDL.h>
-#include "Collector.h"
+#include "collector.h"
+#include "display.h"
 #include "utils.h"
 
-using namespace collector;
+
+//forward declare
+bool start_SDL();
+void stop_SDL();
 
 
-int Collector::main()
+SDL_Window* window = NULL;
+SDL_Renderer* renderer = NULL;
+
+
+int main(int argc, char * argv[])
 {
-	//main event loop
-	SDL_Event e;
-
 	//only run if initialization was successful
 	bool running = start_SDL();
+
+	if(!running)
+	{
+		stop_SDL();
+		return EXIT_FAILURE;
+	}
+
+	//main event loop
+	SDL_Event e;
 
 	while(running)
 	{
@@ -39,7 +53,8 @@ int Collector::main()
 	return EXIT_SUCCESS;
 }
 
-bool Collector::start_SDL()
+
+bool start_SDL()
 {
 
 	if(SDL_Init(SDL_INIT_VIDEO) != 0)
@@ -73,12 +88,13 @@ bool Collector::start_SDL()
 	}
 
 	//draw initial background
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);	
 	SDL_RenderClear(renderer);
 	SDL_RenderPresent(renderer);
 }
 
-void Collector::stop_SDL()
+
+void stop_SDL()
 {
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);

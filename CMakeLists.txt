@@ -9,8 +9,8 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR})
 
 set(SOURCE_FILES
-"src/main.cpp"
-"src/Collector.cpp"
+"src/collector.cpp"
+"src/display.cpp"
 "src/utils.cpp"
 )
 
