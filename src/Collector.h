@@ -11,8 +11,8 @@ namespace collector
 		public:
 			int main();
 		private:
-			bool init();
-			bool destruct();
+			bool start_SDL();
+			void stop_SDL();
 			SDL_Window* window;
 			SDL_Renderer* renderer;
 	};
