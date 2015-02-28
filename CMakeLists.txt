@@ -11,6 +11,7 @@ include_directories(${SDL2_INCLUDE_DIR})
 set(SOURCE_FILES
 "src/main.cpp"
 "src/Collector.cpp"
+"src/utils.cpp"
 )
 
 add_executable(Collector ${SOURCE_FILES})

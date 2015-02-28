@@ -1,10 +1,7 @@
 
 #pragma once
 
-#include <iostream>
-#include <string.h>
-#include "SDL.h"
-
+#include <SDL.h>
 
 namespace collector
 {
@@ -12,10 +9,10 @@ namespace collector
 	class Collector
 	{
 		public:
-			Collector();
-			virtual ~Collector();
 			int main();
 		private:
+			bool init();
+			bool destruct();
 			SDL_Window* window;
 			SDL_Renderer* renderer;
 	};
