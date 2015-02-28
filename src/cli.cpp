@@ -1,6 +1,7 @@
 
 
 #include <SDL.h>
+#include <SDL_ttf.h>
 #include <string.h>
 #include <iostream>
 #include "cli.h"

@@ -1,6 +1,5 @@
 
 
-#include <iostream>
 #include <SDL.h>
 #include "collector.h"
 #include "display.h"
