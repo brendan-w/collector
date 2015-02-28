@@ -14,4 +14,6 @@ class CLI
 	private:
 		bool dirty;
 		std::string text;
+
+		void send_quit();
 };

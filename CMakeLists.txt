@@ -23,7 +23,6 @@ set(SOURCE_FILES
 	"src/cli.cpp"
 	"src/texture.cpp"
 	"src/config.cpp"
-	"src/utils.cpp"
 )
 
 add_executable(Collector ${SOURCE_FILES})

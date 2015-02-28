@@ -1,12 +1,16 @@
 
 
+#include <string>
+#include <iostream>
+
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <SDL_image.h>
+
 #include "collector.h"
 #include "config.h"
 #include "display.h"
 #include "cli.h"
-#include "utils.h"
 
 
 //forward declare
@@ -48,6 +52,9 @@ int main(int argc, char * argv[])
 				case SDL_MOUSEBUTTONDOWN:
 					running = false;
 					break;
+
+				// cli.cpp handles all keyboard input
+				// and creates new events when needed
 				case SDL_KEYDOWN:
 					cli.handle_key(e.key);
 					break;
@@ -62,7 +69,7 @@ int main(int argc, char * argv[])
 		}
 
 		//render changes
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);	
+		setRenderDrawColor(renderer, config->get_background_color());
 		SDL_RenderClear(renderer);
 
 		cli.render();
@@ -147,4 +154,39 @@ void close()
 	SDL_Quit();
 
 	delete config;
+}
+
+
+/*
+	General program-wide utils
+*/
+
+
+void setRenderDrawColor(SDL_Renderer* r, SDL_Color color)
+{
+    SDL_SetRenderDrawColor(r,
+                           color.r,
+                           color.g,
+                           color.b,
+                           color.a);
+}
+
+void print_message(std::string message)
+{
+	std::cout << message << std::endl;
+}
+
+void print_SDL_error(std::string message)
+{
+	std::cout << message << std::endl << SDL_GetError() << std::endl;
+}
+
+void print_TTF_error(std::string message)
+{
+	std::cout << message << std::endl << TTF_GetError() << std::endl;
+}
+
+void print_IMG_error(std::string message)
+{
+	std::cout << message << std::endl << IMG_GetError() << std::endl;
 }

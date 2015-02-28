@@ -1,11 +1,13 @@
 
 
+#include <string.h>
+
 #include <SDL.h>
 #include <SDL_ttf.h>
-#include <string.h>
-#include "cli.h"
+
 #include "collector.h"
 #include "texture.h"
+#include "cli.h"
 
 
 CLI::CLI()
@@ -26,6 +28,12 @@ void CLI::handle_key(SDL_KeyboardEvent &e)
 			if(text.length() > 0)
 				text.pop_back();				
 			break;
+		case SDLK_RETURN:
+			text = "";
+			break;
+		case SDLK_ESCAPE:
+			send_quit();
+			break;
 		default:
 			break;
 	}
@@ -38,10 +46,9 @@ void CLI::handle_text(SDL_TextInputEvent &e)
 
 void CLI::render()
 {
-	SDL_SetRenderDrawColor(renderer, 40, 40, 40, 255);
+	setRenderDrawColor(renderer, config->get_fill_color());
 
 	SDL_Rect background;
-	
 
 	int win_w = 0;
 	int win_h = 0;
@@ -56,10 +63,19 @@ void CLI::render()
 
 	if(text.length() > 0)
 	{
-		SDL_Color color = {255,255,255,255};
 		Texture* texture = new Texture;
-		texture->load_text(text, color);
+		texture->load_text(text, config->get_highlight_color());
 		texture->render(4, win_h - 16);
 		delete texture;
 	}
+}
+
+
+void CLI::send_quit()
+{
+	SDL_Event e;
+	e.type = SDL_QUIT;
+
+	//SDL copies memory into event queue, so this is memory safe
+	SDL_PushEvent(&e);
 }

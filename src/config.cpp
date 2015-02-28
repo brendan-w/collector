@@ -15,6 +15,9 @@ Config::Config()
 	window_w = 640;
 	window_h = 480;
 
+	background_color = { 0,   0,   0,   255};
+	fill_color       = { 40,  40,  40,  255};
+	highlight_color  = { 255, 255, 255, 255};
 }
 
 Config::~Config()
@@ -47,7 +50,6 @@ Uint32 Config::get_render_flags()
 	return SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
 }
 
-
 int Config::get_window_x()
 {
 	return window_x;
@@ -66,4 +68,19 @@ int Config::get_window_w()
 int Config::get_window_h()
 {
 	return window_h;
+}
+
+SDL_Color Config::get_background_color()
+{
+	return background_color;
+}
+
+SDL_Color Config::get_fill_color()
+{
+	return fill_color;
+}
+
+SDL_Color Config::get_highlight_color()
+{
+	return highlight_color;
 }
