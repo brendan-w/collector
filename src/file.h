@@ -2,6 +2,8 @@
 #pragma once
 
 #include <string>
+#include <set>
+#include <SDL.h>
 #include "texture.h"
 
 class File
@@ -19,5 +21,6 @@ class File
 		void set_file_path(std::string new_path);
 	private:
 		std::string path;
+		SDL_Rect rect;
 		Texture* texture;
 };

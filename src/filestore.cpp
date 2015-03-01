@@ -5,6 +5,7 @@
 #include <iostream>
 #include <stdio.h>
 #include "filestore.h"
+#include "file.h"
 
 
 FileStore::FileStore()
@@ -12,21 +13,24 @@ FileStore::FileStore()
 	// root = "~/cool";
 	root = ".";
 
-	std::vector<std::string> files;
-	exec_find("*", files);
+	std::vector<std::string> file_paths;
+	exec_find("*", file_paths);
 
-	std::cout << "done: " << files.size() << std::endl;
+	std::cout << "done: " << file_paths.size() << std::endl;
 
-	// for(unsigned int i = 0; i < files.size(); i++)
-	// {
-	// 	std::cout << files[i] << std::endl;		
-	// }
+	for(unsigned int i = 0; i < file_paths.size(); i++)
+	{
+		files.push_back(new File(file_paths[i]));
+	}
 }
 
 
 FileStore::~FileStore()
 {
-
+	for(unsigned int i = 0; i < files.size(); i++)
+	{
+		delete files[i];
+	}
 }
 
 

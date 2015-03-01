@@ -22,6 +22,7 @@ set(SOURCE_FILES
 	"src/display.cpp"
 	"src/cli.cpp"
 	"src/filestore.cpp"
+	"src/file.cpp"
 	"src/texture.cpp"
 	"src/config.cpp"
 )

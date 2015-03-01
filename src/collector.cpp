@@ -43,7 +43,7 @@ int main(int argc, char * argv[])
 
 	while(running)
 	{
-		//pump events
+		//event pump
 		while(SDL_PollEvent(&e))
 		{
 			switch(e.type)
@@ -58,11 +58,21 @@ int main(int argc, char * argv[])
 				case SDL_KEYDOWN:
 					cli.handle_key(e.key);
 					break;
+
 				case SDL_TEXTINPUT:
 					cli.handle_text(e.text);
 					break;
+
+				case SDL_WINDOWEVENT:
+					if(e.window.event == SDL_WINDOWEVENT_RESIZED)
+					{
+						cli.set_dirty();
+					}
+					break;
+
 				case SDL_USEREVENT:
 					break;
+
 				default:
 					break;
 			}

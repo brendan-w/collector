@@ -17,7 +17,7 @@ Config::Config()
 
 	background_color = { 0,   0,   0,   255};
 	fill_color       = { 40,  40,  40,  255};
-	highlight_color  = { 160, 160, 160, 255};
+	highlight_color  = { 180, 180, 180, 255};
 }
 
 Config::~Config()
