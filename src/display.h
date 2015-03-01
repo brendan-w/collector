@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include "filestore.h"
+
 
 class Display
 {
@@ -11,5 +13,5 @@ class Display
 		void render();
 
 	private:
-		
+		FileStore filestore;
 };
