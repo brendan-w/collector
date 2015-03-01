@@ -16,6 +16,13 @@ FileStore::FileStore()
 	exec_find("*", files);
 
 	std::cout << "done: " << files.size() << std::endl;
+
+	/*
+	for(unsigned int i = 0; i < files.size(); i++)
+	{
+		std::cout << files[i] << std::endl;		
+	}
+	*/
 }
 
 
@@ -27,7 +34,7 @@ FileStore::~FileStore()
 
 void FileStore::exec_find(std::string query, std::vector<std::string> &lines)
 {
-	std::string cmd = "find " + root + " -name \"" + query + "\"";
+	std::string cmd = "find " + root + " -type f -name \"" + query + "\"";
 
 	FILE* pipe = popen(cmd.c_str(), "r");
 
@@ -42,8 +49,13 @@ void FileStore::exec_find(std::string query, std::vector<std::string> &lines)
 		if(getline(&line, &size, pipe) != -1)
 		{
 			std::string path = std::string(line);
-			path.pop_back(); //pop the ending newline
-			lines.push_back(path);
+
+			//filter out dot-files and dot-folders
+			if(path.find("/.") == std::string::npos)
+			{
+				path.pop_back(); //pop the ending newline
+				lines.push_back(path);
+			}
 		}
 	}
 
