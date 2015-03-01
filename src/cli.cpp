@@ -12,7 +12,7 @@
 
 CLI::CLI()
 {
-	dirty = true;
+
 }
 
 
@@ -30,12 +30,10 @@ void CLI::handle_key(SDL_KeyboardEvent &e)
 			if(text.length() > 0)
 			{
 				text.pop_back();
-				dirty = true;
 			}
 			break;
 		case SDLK_RETURN:
 			text = "";
-			dirty = true;
 			break;
 		case SDLK_ESCAPE:
 			send_quit();
@@ -49,45 +47,33 @@ void CLI::handle_key(SDL_KeyboardEvent &e)
 void CLI::handle_text(SDL_TextInputEvent &e)
 {
 	text += e.text;
-	dirty = true;
 }
 
 
 void CLI::render()
 {
-	if(dirty)
+	setRenderDrawColor(renderer, config->get_fill_color());
+
+	SDL_Rect background;
+
+	int win_w = 0;
+	int win_h = 0;
+	SDL_GetWindowSize(window, &win_w, &win_h);
+
+	background.x = 0;
+	background.y = win_h - 20;
+	background.w = win_w;
+	background.h = 20;
+
+	SDL_RenderFillRect(renderer, &background);
+
+	if(text.length() > 0)
 	{
-		setRenderDrawColor(renderer, config->get_fill_color());
-
-		SDL_Rect background;
-
-		int win_w = 0;
-		int win_h = 0;
-		SDL_GetWindowSize(window, &win_w, &win_h);
-
-		background.x = 0;
-		background.y = win_h - 20;
-		background.w = win_w;
-		background.h = 20;
-
-		SDL_RenderFillRect(renderer, &background);
-
-		if(text.length() > 0)
-		{
-			Texture* texture = new Texture;
-			texture->load_text(text, config->get_highlight_color());
-			texture->render(4, win_h - 16);
-			delete texture;
-		}
-
-		// dirty = false;
+		Texture* texture = new Texture;
+		texture->load_text(text, config->get_highlight_color());
+		texture->render(4, win_h - 16);
+		delete texture;
 	}
-}
-
-
-void CLI::set_dirty()
-{
-	dirty = true;
 }
 
 

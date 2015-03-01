@@ -43,6 +43,8 @@ int main(int argc, char * argv[])
 
 	while(running)
 	{
+		SDL_WaitEvent(NULL);
+
 		//event pump
 		while(SDL_PollEvent(&e))
 		{
@@ -61,13 +63,6 @@ int main(int argc, char * argv[])
 
 				case SDL_TEXTINPUT:
 					cli.handle_text(e.text);
-					break;
-
-				case SDL_WINDOWEVENT:
-					if(e.window.event == SDL_WINDOWEVENT_RESIZED)
-					{
-						cli.set_dirty();
-					}
 					break;
 
 				case SDL_USEREVENT:
