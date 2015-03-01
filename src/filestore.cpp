@@ -1,7 +1,6 @@
 
 
 #include <string>
-#include <sstream>
 #include <vector>
 #include <iostream>
 #include <stdio.h>
@@ -10,7 +9,8 @@
 
 FileStore::FileStore()
 {
-	root = "~/cool";
+	// root = "~/cool";
+	root = ".";
 
 	std::vector<std::string> files;
 	exec_find("*", files);
@@ -34,23 +34,18 @@ void FileStore::exec_find(std::string query, std::vector<std::string> &lines)
 	if(!pipe)
 		return;
 
-	char buffer[128];
-	std::string result = "";
+	char *line = NULL;
+	size_t size = 0;
 
 	while(!feof(pipe))
 	{
-		if(fgets(buffer, 128, pipe) != NULL)
-			result += buffer;
+		if(getline(&line, &size, pipe) != -1)
+		{
+			std::string path = std::string(line);
+			path.pop_back(); //pop the ending newline
+			lines.push_back(path);
+		}
 	}
 
 	pclose(pipe);
-
-	//split response into lines
-
-    std::stringstream ss(result);
-    std::string item;
-    while(std::getline(ss, item))
-    {
-        lines.push_back(item);
-    }
 }
