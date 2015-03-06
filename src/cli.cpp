@@ -7,43 +7,8 @@
 #include <SDL_ttf.h>
 
 #include "collector.h"
-#include "texture.h"
+#include "text.h"
 #include "cli.h"
-
-
-
-/*
-	Individual Tag
-*/
-
-CLITag::CLITag()
-{
-	text = "";
-	current_text = "";
-	texture = new Texture;
-}
-
-CLITag::~CLITag()
-{
-	delete texture;
-}
-
-void CLITag::render(int x, int y)
-{
-	//only update the texture if the text has changed
-	if(text != current_text)
-	{
-		texture->load_text(text, config->get_highlight_color());
-		current_text = text;
-	}
-
-	texture->render(x, y);
-}
-
-int CLITag::width()
-{
-	return texture->width();
-}
 
 
 
@@ -55,8 +20,8 @@ int CLITag::width()
 
 CLI::CLI()
 {
-	current = 0;
-	tags.push_back(new CLITag);
+	//create the initial empty tag field
+	new_tag();
 }
 
 
@@ -75,9 +40,17 @@ void CLI::destroy_tags()
 	tags.clear();
 }
 
-CLITag* CLI::current_tag()
+Text* CLI::current_tag()
 {
 	return tags[current];
+}
+
+void CLI::new_tag()
+{
+	Text* t = new Text("", config->get_highlight_color());
+	tags.push_back(t);
+
+	current = tags.size() - 1;
 }
 
 
@@ -87,10 +60,11 @@ void CLI::handle_key(SDL_KeyboardEvent &e)
 	{
 		case SDLK_BACKSPACE:
 		{
-			CLITag* t = current_tag();
-			if(t->text.length() > 0)
+			std::string s = current_tag()->get_text();
+			if(s.length() > 0)
 			{
-				t->text.pop_back();
+				s.pop_back();
+				current_tag()->set_text(s);
 			}
 			break;
 		}
@@ -119,12 +93,12 @@ void CLI::handle_text(SDL_TextInputEvent &e)
 	//space bar starts a new tag
 	if(e.text[0] == ' ')
 	{
-		tags.push_back(new CLITag);
-		current = tags.size() - 1;
+		new_tag();
 	}
 	else
 	{
-		current_tag()->text += e.text;
+		Text* t = current_tag();
+		t->set_text(t->get_text() += e.text);
 	}
 }
 
@@ -152,13 +126,9 @@ void CLI::render()
 	int x = 4;
 	for(unsigned int i = 0; i < tags.size(); i++)
 	{
-		CLITag* tag = tags[i];
-
-		if(tag->text.length() > 0)
-		{
-			tag->render(x, win_h - 16);
-			x += tag->width() + 10;
-		}
+		Text* t = tags[i];
+		t->render(x, win_h - 16);
+		x += t->width() + 10;
 	}
 }
 

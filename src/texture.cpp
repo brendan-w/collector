@@ -3,7 +3,6 @@
 #include <string>
 
 #include <SDL.h>
-#include <SDL_ttf.h>
 #include <SDL_image.h>
 
 #include "texture.h"
@@ -54,7 +53,7 @@ bool Texture::load_surface(SDL_Surface* surface)
 	return true;
 }
 
-
+/*
 bool Texture::load_image(std::string filename)
 {
 	SDL_Surface* surface = IMG_Load(filename.c_str());
@@ -69,23 +68,7 @@ bool Texture::load_image(std::string filename)
 	SDL_FreeSurface(surface);
 	return success;
 }
-
-
-bool Texture::load_text(std::string text, SDL_Color color)
-{
-	SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), color);
-
-	if(surface == NULL)
-	{
-		print_TTF_error("Failed to render text to surface");
-		return false;
-	}
-
-	bool success = load_surface(surface);
-	SDL_FreeSurface(surface);
-	return success;
-}
-
+*/
 
 void Texture::render(int x, int y)
 {
