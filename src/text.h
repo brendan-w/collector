@@ -21,7 +21,7 @@ class Text: public Texture
 		SDL_Color get_color();
 
 	private:
-		bool load_text();
+		void load_text();
 
 		std::string text;
 		std::string current_text;

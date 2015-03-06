@@ -72,14 +72,11 @@ bool Texture::load_image(std::string filename)
 
 void Texture::render(int x, int y)
 {
-	if(texture == NULL)
+	if((texture != NULL) && (w > 0) && (h > 0))
 	{
-		print_message("Can't render a NULL texture");
-		return;
+		SDL_Rect dest = { x, y, w, h };
+		SDL_RenderCopy(renderer, texture, NULL, &dest);
 	}
-
-	SDL_Rect dest = { x, y, w, h };
-	SDL_RenderCopy(renderer, texture, NULL, &dest);
 }
 
 int Texture::width()

@@ -12,12 +12,6 @@
 
 
 
-
-/*
-	Main CLI logic
-*/
-
-
 CLI::CLI()
 {
 	//create the initial empty tag field
@@ -74,13 +68,19 @@ void CLI::handle_key(SDL_KeyboardEvent &e)
 		case SDLK_ESCAPE:
 			send_quit();
 			break;
+		case SDLK_TAB:
+			break;
 		case SDLK_UP:
 			break;
 		case SDLK_DOWN:
 			break;
 		case SDLK_LEFT:
+			if(current > 0)
+				current--;
 			break;
 		case SDLK_RIGHT:
+			if(current < (tags.size() - 1))
+				current++;
 			break;
 		default:
 			break;
@@ -108,25 +108,30 @@ void CLI::render()
 	//draw the main bar
 	setRenderDrawColor(renderer, config->get_fill_color());
 
-	SDL_Rect background;
+	SDL_Rect rect;
 
 	int win_w = 0;
 	int win_h = 0;
 	SDL_GetWindowSize(window, &win_w, &win_h);
 
-	background.x = 0;
-	background.y = win_h - 20;
-	background.w = win_w;
-	background.h = 20;
-
-	SDL_RenderFillRect(renderer, &background);
-
+	rect.x = 0;
+	rect.y = win_h - 20;
+	rect.w = win_w;
+	rect.h = 20;
 
 	//draw each tags text
 	int x = 4;
 	for(unsigned int i = 0; i < tags.size(); i++)
 	{
 		Text* t = tags[i];
+		
+		if(i == current)
+		{
+			rect.x = x;
+			rect.w = t->width();
+			SDL_RenderFillRect(renderer, &rect);
+		}
+
 		t->render(x, win_h - 16);
 		x += t->width() + 10;
 	}
