@@ -13,8 +13,8 @@
 Texture::Texture()
 {
 	texture = NULL;
-	width = 0;
-	height = 0;
+	w = 0;
+	h = 0;
 }
 
 
@@ -30,8 +30,8 @@ void Texture::free()
 	{
 		SDL_DestroyTexture(texture);
 		texture = NULL;
-		width = 0;
-		height = 0;
+		w = 0;
+		h = 0;
 	}
 }
 
@@ -48,8 +48,8 @@ bool Texture::load_surface(SDL_Surface* surface)
 		return false;
 	}
 
-	width = surface->w;
-	height = surface->h;
+	w = surface->w;
+	h = surface->h;
 
 	return true;
 }
@@ -95,6 +95,16 @@ void Texture::render(int x, int y)
 		return;
 	}
 
-	SDL_Rect dest = { x, y, width, height };
+	SDL_Rect dest = { x, y, w, h };
 	SDL_RenderCopy(renderer, texture, NULL, &dest);
+}
+
+int Texture::width()
+{
+	return w;
+}
+
+int Texture::height()
+{
+	return h;
 }

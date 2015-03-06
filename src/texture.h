@@ -14,8 +14,10 @@ class Texture
 		bool load_image(std::string filename);
 		bool load_text(std::string text, SDL_Color color);
 		void render(int x, int y);
+		int width();
+		int height();
 	private:
 		SDL_Texture* texture;
-		int width;
-		int height;
+		int w;
+		int h;
 };

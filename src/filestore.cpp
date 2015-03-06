@@ -10,14 +10,12 @@
 
 FileStore::FileStore()
 {
-	// root = "~/cool";
-	root = ".";
-
 	std::vector<std::string> file_paths;
-	exec_find("*", file_paths);
+	exec_find(file_paths);
 
 	std::cout << "done: " << file_paths.size() << std::endl;
 
+	//instantiate file objects for each filepath
 	for(unsigned int i = 0; i < file_paths.size(); i++)
 	{
 		files.push_back(new File(file_paths[i]));
@@ -34,13 +32,13 @@ FileStore::~FileStore()
 }
 
 
-void FileStore::exec_find(std::string query, std::vector<std::string> &lines)
+void FileStore::exec_find(std::vector<std::string> &lines)
 {
 	//lists all items in the current directory and below
 	//only returns files
 	//excludes dot-files and dot-folders
 	//excludes executables where o=x
-	std::string cmd = "find " + root + " -type f \\( -path \"" + query + "\" ! -path \"*/.*\" ! -perm -o=x \\)";
+	std::string cmd = "find . -type f \\( -path \"*\" ! -path \"*/.*\" ! -perm -o=x \\)";
 
 	FILE* pipe = popen(cmd.c_str(), "r");
 
