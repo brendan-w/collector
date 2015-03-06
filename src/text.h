@@ -12,7 +12,6 @@ class Text: public Texture
 {
 	public:
 		Text(std::string t, SDL_Color c);
-		void render(int x, int y);
 
 		void set_text(std::string s);
 		std::string get_text();

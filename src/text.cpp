@@ -13,22 +13,39 @@ Text::Text(std::string t, SDL_Color c)
 	set_color(c);
 }
 
+
 //get/set text
+
+
+std::string Text::get_text()
+{
+	return text;
+}
+
 void Text::set_text(std::string s)
 {
 	text = s;
-	
+
 	//if the texture needs updating
 	if(text != current_text)
 	{
 		load_text();
 	}	
 }
-std::string Text::get_text()       { return text; }
+
 
 //get/set color
-void Text::set_color(SDL_Color c) { color = c;  }
-SDL_Color Text::get_color()       { return color; }
+
+
+SDL_Color Text::get_color()
+{
+	return color;
+}
+
+void Text::set_color(SDL_Color c)
+{ 
+	color = c;
+}
 
 
 void Text::load_text()
@@ -48,17 +65,9 @@ void Text::load_text()
 	}
 	else
 	{
+		//prevent rendering of null strings
 		free();
 	}
 
 	current_text = text;
-}
-
-
-void Text::render(int x, int y)
-{
-	//will not render a null string since that would make
-	// w = 0
-	// h = 0
-	Texture::render(x, y);
 }
