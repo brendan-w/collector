@@ -18,7 +18,8 @@ Config::Config()
 
 	background_color = { 0,   0,   0,   255};
 	fill_color       = { 40,  40,  40,  255};
-	highlight_color  = { 180, 180, 180, 255};
+	highlight_color  = { 18,  53,  70,  255};
+	cli_text_color   = { 255, 255, 255, 255};
 }
 
 Config::~Config()
@@ -51,3 +52,4 @@ int Config::get_font_size()              { return font_size; }
 SDL_Color Config::get_background_color() { return background_color; }
 SDL_Color Config::get_fill_color()       { return fill_color; }
 SDL_Color Config::get_highlight_color()  { return highlight_color; }
+SDL_Color Config::get_cli_text_color()   { return cli_text_color; }

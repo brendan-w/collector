@@ -22,6 +22,7 @@ class Config
 		SDL_Color get_background_color();
 		SDL_Color get_fill_color();
 		SDL_Color get_highlight_color();
+		SDL_Color get_cli_text_color();
 
 
 	private:
@@ -38,4 +39,5 @@ class Config
 		SDL_Color background_color;
 		SDL_Color fill_color;
 		SDL_Color highlight_color;
+		SDL_Color cli_text_color;
 };

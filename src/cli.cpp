@@ -24,6 +24,7 @@ CLI::~CLI()
 	destroy_tags();
 }
 
+
 void CLI::destroy_tags()
 {
 	for(unsigned int i = 0; i < tags.size(); i++)
@@ -34,17 +35,42 @@ void CLI::destroy_tags()
 	tags.clear();
 }
 
+
 Text* CLI::current_tag()
 {
 	return tags[current];
 }
 
+
 void CLI::new_tag()
 {
-	Text* t = new Text("", config->get_highlight_color());
+	Text* t = new Text("", config->get_cli_text_color());
 	tags.push_back(t);
 
 	current = tags.size() - 1;
+}
+
+
+void CLI::delete_tag()
+{
+	Text* t = current_tag();
+
+	//ensure that there is always at least one tag preset
+	if(tags.size() > 1)
+	{
+		delete t;
+		tags.erase(tags.begin() + current);
+
+		if(current > (tags.size() - 1))
+		{
+			current--;
+		}
+	}
+	else
+	{
+		//if the user deleted the last tag, simply empty it
+		t->set_text("");
+	}
 }
 
 
@@ -64,11 +90,16 @@ void CLI::handle_key(SDL_KeyboardEvent &e)
 		}
 		case SDLK_RETURN:
 			destroy_tags();
+			new_tag();
 			break;
 		case SDLK_ESCAPE:
 			send_quit();
 			break;
+		case SDLK_DELETE:
+			delete_tag();
+			break;
 		case SDLK_TAB:
+			//autocomplete
 			break;
 		case SDLK_UP:
 			break;
@@ -93,7 +124,15 @@ void CLI::handle_text(SDL_TextInputEvent &e)
 	//space bar starts a new tag
 	if(e.text[0] == ' ')
 	{
-		new_tag();
+		//if the last tag is empty, skip to it (rather than adding another)
+		if(tags[tags.size() - 1]->get_text().length() == 0)
+		{
+			current = tags.size() - 1;
+		}
+		else
+		{
+			new_tag();
+		}
 	}
 	else
 	{
@@ -105,35 +144,29 @@ void CLI::handle_text(SDL_TextInputEvent &e)
 
 void CLI::render()
 {
-	//draw the main bar
-	setRenderDrawColor(renderer, config->get_fill_color());
-
-	SDL_Rect rect;
-
 	int win_w = 0;
 	int win_h = 0;
 	SDL_GetWindowSize(window, &win_w, &win_h);
 
-	rect.x = 0;
-	rect.y = win_h - 20;
-	rect.w = win_w;
-	rect.h = 20;
+	SDL_Rect current_rect = {0, win_h - CLI_height, win_w, CLI_height};
+
+	setRenderDrawColor(renderer, config->get_highlight_color());
 
 	//draw each tags text
-	int x = 4;
+	int x = CLI_padding;
 	for(unsigned int i = 0; i < tags.size(); i++)
 	{
 		Text* t = tags[i];
 		
 		if(i == current)
 		{
-			rect.x = x;
-			rect.w = t->width();
-			SDL_RenderFillRect(renderer, &rect);
+			current_rect.x = x - CLI_padding;
+			current_rect.w = t->width() + (CLI_padding * 2);
+			SDL_RenderFillRect(renderer, &current_rect);
 		}
 
 		t->render(x, win_h - 16);
-		x += t->width() + 10;
+		x += t->width() + (CLI_padding * 2);
 	}
 }
 

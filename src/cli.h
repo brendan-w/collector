@@ -5,7 +5,8 @@
 #include <vector>
 #include "text.h"
 
-
+const int CLI_height = 20;
+const int CLI_padding = 4;
 
 class CLI
 {
@@ -21,6 +22,7 @@ class CLI
 
 		void new_tag();
 		void destroy_tags();
+		void delete_tag();
 		Text* current_tag();
 		void send_quit();
 };
