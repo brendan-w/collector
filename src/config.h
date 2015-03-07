@@ -24,6 +24,9 @@ class Config
 		SDL_Color get_highlight_color();
 		SDL_Color get_cli_text_color();
 
+		std::string get_cwd();
+		std::string get_find_cmd();
+		std::string get_tag_delim();
 
 	private:
 		bool fullscreen;
@@ -40,4 +43,8 @@ class Config
 		SDL_Color fill_color;
 		SDL_Color highlight_color;
 		SDL_Color cli_text_color;
+
+		std::string cwd;
+		std::string find_cmd;
+		std::string tag_delim;
 };

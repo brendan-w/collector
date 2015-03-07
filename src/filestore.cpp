@@ -4,43 +4,36 @@
 #include <vector>
 #include <iostream>
 #include <stdio.h>
+
 #include "filestore.h"
 #include "file.h"
+#include "collector.h"
 
 
 FileStore::FileStore()
 {
-	std::vector<std::string> file_paths;
-	exec_find(file_paths);
+	//fill the files vector with all valid file paths found
+	exec_find();
 
-	std::cout << "done: " << file_paths.size() << std::endl;
-
-	//instantiate file objects for each filepath
-	for(unsigned int i = 0; i < file_paths.size(); i++)
-	{
-		files.push_back(new File(file_paths[i]));
-	}
+	std::cout << "done: " << files.size() << std::endl;
+	std::cout << "path: " << config->get_cwd() << std::endl;
 }
 
 
 FileStore::~FileStore()
 {
-	for(unsigned int i = 0; i < files.size(); i++)
+	for(size_t i = 0; i < files.size(); i++)
 	{
 		delete files[i];
 	}
+	files.clear();
 }
 
 
-void FileStore::exec_find(std::vector<std::string> &lines)
+void FileStore::exec_find()
 {
-	//lists all items in the current directory and below
-	//only returns files
-	//excludes dot-files and dot-folders
-	//excludes executables where o=x
-	std::string cmd = "find . -type f \\( -path \"*\" ! -path \"*/.*\" ! -perm -o=x \\)";
-
-	FILE* pipe = popen(cmd.c_str(), "r");
+	//run command to return /n delimited list of files in the current directory
+	FILE* pipe = popen(config->get_find_cmd().c_str(), "r");
 
 	if(!pipe)
 		return;
@@ -54,7 +47,9 @@ void FileStore::exec_find(std::vector<std::string> &lines)
 		{
 			std::string path = std::string(line);
 			path.pop_back(); //pop the ending newline
-			lines.push_back(path);
+
+			//create a new File object, and save it in the vector
+			files.push_back(new File(path));
 		}
 	}
 

@@ -16,5 +16,5 @@ class FileStore
 		std::string root;
 		std::vector<File*> files;
 		std::set<std::string> tags;
-		void exec_find(std::vector<std::string> &lines);
+		void exec_find();
 };
