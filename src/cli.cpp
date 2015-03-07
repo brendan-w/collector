@@ -1,10 +1,8 @@
 
 
 #include <string.h>
-#include <iostream>
 
 #include <SDL.h>
-#include <SDL_ttf.h>
 
 #include "collector.h"
 #include "text.h"
@@ -25,6 +23,7 @@ CLI::~CLI()
 }
 
 
+//deallocates all Text objects in tags
 void CLI::destroy_tags()
 {
 	for(unsigned int i = 0; i < tags.size(); i++)
@@ -42,6 +41,8 @@ Text* CLI::current_tag()
 }
 
 
+//creates a new tag at the end of the tags vector
+//and sets it as the current
 void CLI::new_tag()
 {
 	Text* t = new Text("", config->get_cli_text_color());
@@ -51,6 +52,8 @@ void CLI::new_tag()
 }
 
 
+//deletes the current tag, ensures that there is
+//always one tag in the vector
 void CLI::delete_tag()
 {
 	Text* t = current_tag();
@@ -148,7 +151,12 @@ void CLI::render()
 	int win_h = 0;
 	SDL_GetWindowSize(window, &win_w, &win_h);
 
-	SDL_Rect current_rect = {0, win_h - CLI_height, win_w, CLI_height};
+	SDL_Rect current_rect = {
+		0,
+		win_h - CLI_height,
+		win_w,
+		CLI_height
+	};
 
 	setRenderDrawColor(renderer, config->get_highlight_color());
 
