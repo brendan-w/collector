@@ -22,10 +22,10 @@ Config::Config()
 	font_path = "../assets/MonoLiberation.ttf";
 	font_size = 12;
 
-	background_color = { 0,   0,   0,   255};
-	fill_color       = { 40,  40,  40,  255};
-	highlight_color  = { 18,  53,  70,  255};
-	cli_text_color   = { 255, 255, 255, 255};
+	colors[BACKGROUND] = { 0,   0,   0,   255};
+	colors[FILL]       = { 40,  40,  40,  255};
+	colors[HIGHLIGHT]  = { 18,  53,  70,  255};
+	colors[CLI_TEXT]   = { 255, 255, 255, 255};
 
 	//get the pathname for the current working directory
 	char temp_cwd[PATH_MAX];
@@ -74,10 +74,7 @@ int Config::get_window_h() { return window_h; }
 std::string Config::get_font_path()      { return font_path; }
 int Config::get_font_size()              { return font_size; }
 
-SDL_Color Config::get_background_color() { return background_color; }
-SDL_Color Config::get_fill_color()       { return fill_color; }
-SDL_Color Config::get_highlight_color()  { return highlight_color; }
-SDL_Color Config::get_cli_text_color()   { return cli_text_color; }
+SDL_Color Config::get_color(Color c) { return colors[c]; }
 
 std::string Config::get_cwd() { return cwd; }
 std::string Config::get_find_cmd() { return find_cmd; }

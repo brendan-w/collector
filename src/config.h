@@ -3,6 +3,17 @@
 
 #include <string>
 
+//use these keys with get_color()
+
+#define NUM_COLORS 4
+
+enum Color {
+	BACKGROUND = 0,
+	FILL,
+	HIGHLIGHT,
+	CLI_TEXT
+};
+
 class Config
 {
 	public:
@@ -19,10 +30,7 @@ class Config
 		std::string get_font_path();
 		int get_font_size();
 
-		SDL_Color get_background_color();
-		SDL_Color get_fill_color();
-		SDL_Color get_highlight_color();
-		SDL_Color get_cli_text_color();
+		SDL_Color get_color(Color c);
 
 		std::string get_cwd();
 		std::string get_find_cmd();
@@ -39,10 +47,7 @@ class Config
 		std::string font_path;
 		int font_size;
 
-		SDL_Color background_color;
-		SDL_Color fill_color;
-		SDL_Color highlight_color;
-		SDL_Color cli_text_color;
+		SDL_Color colors[NUM_COLORS];
 
 		std::string cwd;
 		std::string find_cmd;

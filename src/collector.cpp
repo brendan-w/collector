@@ -74,7 +74,7 @@ int main(int argc, char * argv[])
 		}
 
 		//render changes
-		setRenderDrawColor(renderer, config->get_background_color());
+		setRenderDrawColor(renderer, config->get_color(BACKGROUND));
 		SDL_RenderClear(renderer);
 
 		cli.render();

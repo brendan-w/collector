@@ -45,7 +45,7 @@ Text* CLI::current_tag()
 //and sets it as the current
 void CLI::new_tag()
 {
-	Text* t = new Text("", config->get_cli_text_color());
+	Text* t = new Text("", config->get_color(CLI_TEXT));
 	tags.push_back(t);
 
 	current = tags.size() - 1;
@@ -158,7 +158,7 @@ void CLI::render()
 		CLI_height
 	};
 
-	setRenderDrawColor(renderer, config->get_highlight_color());
+	setRenderDrawColor(renderer, config->get_color(HIGHLIGHT));
 
 	//draw each tags text
 	int x = CLI_padding;
