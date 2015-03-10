@@ -19,6 +19,13 @@ class Config
 	public:
 		Config();
 		~Config();
+		void load_defaults();
+		void load_file();
+		
+		std::string get_find_cmd();
+		std::string get_bin_path();
+		std::string get_cwd_path();
+		std::string get_tag_delim();
 		
 		Uint32 get_window_flags();
 		Uint32 get_render_flags();
@@ -32,11 +39,13 @@ class Config
 
 		SDL_Color get_color(Color c);
 
-		std::string get_cwd();
-		std::string get_find_cmd();
-		std::string get_tag_delim();
 
 	private:
+		std::string find_cmd;
+		std::string bin_path;
+		std::string cwd_path;
+		std::string tag_delim;
+
 		bool fullscreen;
 		bool resizable;
 		int window_x;
@@ -48,8 +57,4 @@ class Config
 		int font_size;
 
 		SDL_Color colors[NUM_COLORS];
-
-		std::string cwd;
-		std::string find_cmd;
-		std::string tag_delim;
 };

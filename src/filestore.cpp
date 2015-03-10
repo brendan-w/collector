@@ -16,7 +16,8 @@ FileStore::FileStore()
 	exec_find();
 
 	std::cout << "done: " << files.size() << std::endl;
-	std::cout << "path: " << config->get_cwd() << std::endl;
+	std::cout << "bin path: " << config->get_bin_path() << std::endl;
+	std::cout << "cwd path: " << config->get_cwd_path() << std::endl;
 }
 
 

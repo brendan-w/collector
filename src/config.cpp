@@ -1,43 +1,23 @@
 
 #include <string.h>
-#include <unistd.h> //for getcwd()
 #include <linux/limits.h> //for PATH_MAX
 
 #include <SDL.h>
 #include "config.h"
 
+
+#ifdef _WIN32
+	#include <direct.h>
+    #define getcwd _getcwd
+#else
+	#include <unistd.h>
+#endif
+
+
 Config::Config()
-{	
-	/*
-		Program defaults
-	*/
-
-	fullscreen = false;
-	resizable = true;
-	window_x = SDL_WINDOWPOS_UNDEFINED;
-	window_y = SDL_WINDOWPOS_UNDEFINED;
-	window_w = 640;
-	window_h = 480;
-
-	font_path = "../assets/MonoLiberation.ttf";
-	font_size = 12;
-
-	colors[BACKGROUND] = { 0,   0,   0,   255};
-	colors[FILL]       = { 40,  40,  40,  255};
-	colors[HIGHLIGHT]  = { 18,  53,  70,  255};
-	colors[CLI_TEXT]   = { 255, 255, 255, 255};
-
-	//get the pathname for the current working directory
-	char temp_cwd[PATH_MAX];
-	getcwd(temp_cwd, PATH_MAX);
-	cwd = std::string(temp_cwd);
-
-	//lists all items in the current directory and below
-	//only returns files
-	//excludes dot-files and dot-folders
-	//excludes executables where o=x
-	find_cmd = "find " + cwd + " -type f \\( -path \"*\" ! -path \"*/.*\" ! -perm -o=x \\)";
-	tag_delim = " /_-+";
+{
+	load_defaults();
+	load_file();
 }
 
 Config::~Config()
@@ -45,12 +25,58 @@ Config::~Config()
 
 }
 
+void Config::load_defaults()
+{
+	//lists all items in the current directory and below
+	//only returns files
+	//excludes dot-files and dot-folders
+	//excludes executables where o=x
+	#ifdef _WIN32
+		//untested
+		find_cmd = "dir * /b/s";
+	#else
+		find_cmd = "find " + cwd_path + " -type f -path \"*\" ! -path \"*/.*\" ! -perm -o=x";
+	#endif
+
+	//use the executable location to find the assets
+	bin_path = std::string(SDL_GetBasePath());
+
+	//get the pathname for the current working directory
+	cwd_path = std::string(getcwd(NULL, 0));
+
+	tag_delim = " _-+";
+	font_path = bin_path + "../assets/MonoLiberation.ttf";
+	
+	fullscreen = false;
+	resizable = true;
+	window_x = SDL_WINDOWPOS_UNDEFINED;
+	window_y = SDL_WINDOWPOS_UNDEFINED;
+	window_w = 640;
+	window_h = 480;
+
+	font_size = 12;
+
+	colors[BACKGROUND] = { 0,   0,   0,   255};
+	colors[FILL]       = { 40,  40,  40,  255};
+	colors[HIGHLIGHT]  = { 18,  53,  70,  255};
+	colors[CLI_TEXT]   = { 255, 255, 255, 255};
+}
+
+void Config::load_file()
+{
+
+}
 
 
 
 /*
 	Getters
 */
+
+std::string Config::get_bin_path() { return bin_path; }
+std::string Config::get_cwd_path() { return cwd_path; }
+std::string Config::get_find_cmd() { return find_cmd; }
+std::string Config::get_tag_delim() { return tag_delim; }
 
 Uint32 Config::get_window_flags()
 {
@@ -75,7 +101,3 @@ std::string Config::get_font_path()      { return font_path; }
 int Config::get_font_size()              { return font_size; }
 
 SDL_Color Config::get_color(Color c) { return colors[c]; }
-
-std::string Config::get_cwd() { return cwd; }
-std::string Config::get_find_cmd() { return find_cmd; }
-std::string Config::get_tag_delim() { return tag_delim; }

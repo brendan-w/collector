@@ -13,5 +13,5 @@ class Display
 		void render();
 
 	private:
-		FileStore filestore;
+		FileStore* filestore;
 };
