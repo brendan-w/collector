@@ -44,7 +44,7 @@ void Config::load_defaults()
 	//get the pathname for the current working directory
 	cwd_path = std::string(getcwd(NULL, 0));
 
-	tag_delim = " _-+";
+	tag_delim = "/._-+ ";
 	font_path = bin_path + "../assets/MonoLiberation.ttf";
 	
 	fullscreen = false;

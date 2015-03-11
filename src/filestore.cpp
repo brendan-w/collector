@@ -1,7 +1,6 @@
 
 
 #include <string>
-#include <vector>
 #include <iostream>
 #include <stdio.h>
 
@@ -16,8 +15,12 @@ FileStore::FileStore()
 	exec_find();
 
 	std::cout << "done: " << files.size() << std::endl;
-	std::cout << "bin path: " << config->get_bin_path() << std::endl;
-	std::cout << "cwd path: " << config->get_cwd_path() << std::endl;
+
+	for(size_t i = 0; i < files.size(); i++)
+	{
+		//get all tags, relative to the current working directory
+		files[i]->get_tags();
+	}
 }
 
 
