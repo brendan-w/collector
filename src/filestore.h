@@ -23,7 +23,7 @@ class FileStore
 
 		//primary accessors
 		tag_set auto_complete(const std::string &partial_tag);
-		file_set query(std::string tag);
+		file_set query(const std::string &tag);
 
 	private:
 		std::string root;

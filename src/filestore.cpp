@@ -21,13 +21,19 @@ FileStore::FileStore()
 
 	char *line = NULL;
 	size_t size = 0;
+	size_t root_path_length = config->cwd_path.length() + 1;
 
 	while(!feof(pipe))
 	{
 		if(getline(&line, &size, pipe) != -1)
 		{
 			std::string path = std::string(line);
-			path.pop_back(); //pop the ending newline
+			
+			//pop the ending newline
+			path.pop_back();
+
+			//remove root working directory
+			path = path.substr(root_path_length, std::string::npos);
 
 			//create a new File object, and save it in the vector
 			insert_file(new File(path));
@@ -43,6 +49,7 @@ FileStore::FileStore()
 	}
 	*/
 	std::cout << "Total: " << files.size() << std::endl;
+	std::cout << "Total Tags: " << tags.size() << std::endl;
 }
 
 
@@ -58,12 +65,22 @@ FileStore::~FileStore()
 }
 
 
-tag_set FileStore::auto_complete(const std::string &partial_tag)
+tag_set FileStore::auto_complete(const std::string & partial_tag)
 {
 	tag_set result;
 	return result;
 }
 
+file_set FileStore::query(const std::string & tag)
+{
+	tag_map::const_iterator result = tags.find(tag);
+
+	file_set set;
+	if(result != tags.end())
+		set = result->second;
+
+	return set;
+}
 
 
 
@@ -77,10 +94,12 @@ void FileStore::insert_file(File* file)
 
 	//get all tags, relative to the current working directory
 	tag_set file_tags = get_tags(file);
-	
+
 	for(std::string t: file_tags)
 	{
-		tags[t].insert(file);
+		//if it's not in the set, add it. (faster than .emplace())
+		if(tags.find(t) == tags.end())
+			tags[t].insert(file);
 	}
 }
 
@@ -91,7 +110,7 @@ tag_set FileStore::get_tags(File* file)
 	tag_set tags;
 	std::string path = file->get_file_path();
 
-	size_t prev = config->cwd_path.length() + 1; //exclude root dir and path delimeter
+	size_t prev = 0;
 	size_t pos = 0;
 
 	//while there is another delimeter
@@ -114,7 +133,7 @@ tag_set FileStore::get_tags(File* file)
 }
 
 
-unsigned int FileStore::levenshtein_distance(const std::string &s1, const std::string &s2) {
+unsigned int FileStore::levenshtein_distance(const std::string & s1, const std::string & s2) {
 	const size_t len1 = s1.size(), len2 = s2.size();
 	std::vector<unsigned int> col(len2+1), prevCol(len2+1);
 
