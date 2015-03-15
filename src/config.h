@@ -2,11 +2,11 @@
 #pragma once
 
 #include <string>
-
-//use these keys with get_color()
+#include <SDL.h>
 
 #define NUM_COLORS 4
 
+//use these keys with get_color()
 enum Color {
 	BACKGROUND = 0,
 	FILL,
@@ -19,28 +19,7 @@ class Config
 	public:
 		Config();
 		~Config();
-		void load_defaults();
-		void load_file();
-		
-		std::string get_find_cmd();
-		std::string get_bin_path();
-		std::string get_cwd_path();
-		std::string get_tag_delim();
-		
-		Uint32 get_window_flags();
-		Uint32 get_render_flags();
-		int get_window_x();
-		int get_window_y();
-		int get_window_w();
-		int get_window_h();
 
-		std::string get_font_path();
-		int get_font_size();
-
-		SDL_Color get_color(Color c);
-
-
-	private:
 		std::string find_cmd;
 		std::string bin_path;
 		std::string cwd_path;
@@ -53,8 +32,21 @@ class Config
 		int window_w;
 		int window_h;
 
+		SDL_Color colors[NUM_COLORS];
+
 		std::string font_path;
 		int font_size;
 
-		SDL_Color colors[NUM_COLORS];
+		unsigned int max_suggest;
+
+		const int CLI_height = 20;
+		const int CLI_padding = 4;
+
+		//a few handy accessors
+		Uint32 get_window_flags();
+		Uint32 get_render_flags();
+		SDL_Color get_color(Color c);
 };
+
+//declared and instantiated in collector.cpp
+extern Config* config;

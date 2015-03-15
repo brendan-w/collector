@@ -5,9 +5,6 @@
 #include <vector>
 #include "text.h"
 
-const int CLI_height = 20;
-const int CLI_padding = 4;
-
 class CLI
 {
 	public:

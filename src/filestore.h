@@ -20,6 +20,11 @@ class FileStore
 	public:
 		FileStore();
 		~FileStore();
+
+		//primary accessors
+		tag_set auto_complete(const std::string &partial_tag);
+		file_set query(std::string tag);
+
 	private:
 		std::string root;
 		file_vector files;
@@ -27,4 +32,5 @@ class FileStore
 
 		void insert_file(File* file);
 		tag_set get_tags(File* file);
+		unsigned int levenshtein_distance(const std::string &s1, const std::string &s2);
 };

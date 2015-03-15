@@ -5,9 +5,9 @@
 #include <SDL.h>
 
 #include "collector.h"
+#include "config.h"
 #include "text.h"
 #include "cli.h"
-
 
 
 CLI::CLI()
@@ -153,28 +153,28 @@ void CLI::render()
 
 	SDL_Rect current_rect = {
 		0,
-		win_h - CLI_height,
+		win_h - config->CLI_height,
 		win_w,
-		CLI_height
+		config->CLI_height
 	};
 
 	setRenderDrawColor(renderer, config->get_color(HIGHLIGHT));
 
 	//draw each tags text
-	int x = CLI_padding;
+	int x = config->CLI_padding;
 	for(unsigned int i = 0; i < tags.size(); i++)
 	{
 		Text* t = tags[i];
 		
 		if(i == current)
 		{
-			current_rect.x = x - CLI_padding;
-			current_rect.w = t->width() + (CLI_padding * 2);
+			current_rect.x = x - config->CLI_padding;
+			current_rect.w = t->width() + (config->CLI_padding * 2);
 			SDL_RenderFillRect(renderer, &current_rect);
 		}
 
 		t->render(x, win_h - 16);
-		x += t->width() + (CLI_padding * 2);
+		x += t->width() + (config->CLI_padding * 2);
 	}
 }
 

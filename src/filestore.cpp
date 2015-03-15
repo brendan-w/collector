@@ -1,18 +1,20 @@
 
 
+#include <vector>
 #include <string>
 #include <iostream>
 #include <stdio.h>
 
-#include "filestore.h"
+#include "config.h"
 #include "file.h"
-#include "collector.h"
+#include "filestore.h"
+
 
 
 FileStore::FileStore()
 {
 	//run command to return /n delimited list of files in the current directory
-	FILE* pipe = popen(config->get_find_cmd().c_str(), "r");
+	FILE* pipe = popen(config->find_cmd.c_str(), "r");
 
 	if(!pipe)
 		return;
@@ -56,6 +58,19 @@ FileStore::~FileStore()
 }
 
 
+tag_set FileStore::auto_complete(const std::string &partial_tag)
+{
+	tag_set result;
+	return result;
+}
+
+
+
+
+
+
+
+
 void FileStore::insert_file(File* file)
 {
 	files.push_back(file);
@@ -67,7 +82,6 @@ void FileStore::insert_file(File* file)
 	{
 		tags[t].insert(file);
 	}
-	
 }
 
 //extracts tags from the file's path and name
@@ -77,11 +91,11 @@ tag_set FileStore::get_tags(File* file)
 	tag_set tags;
 	std::string path = file->get_file_path();
 
-	size_t prev = config->get_cwd_path().length() + 1; //exclude root dir and path delimeter
+	size_t prev = config->cwd_path.length() + 1; //exclude root dir and path delimeter
 	size_t pos = 0;
 
 	//while there is another delimeter
-    while((pos = path.find_first_of(config->get_tag_delim(), prev)) != std::string::npos)
+    while((pos = path.find_first_of(config->tag_delim, prev)) != std::string::npos)
     {
         if(pos > prev)
         {
@@ -97,4 +111,29 @@ tag_set FileStore::get_tags(File* file)
     }
 
 	return tags;
+}
+
+
+unsigned int FileStore::levenshtein_distance(const std::string &s1, const std::string &s2) {
+	const size_t len1 = s1.size(), len2 = s2.size();
+	std::vector<unsigned int> col(len2+1), prevCol(len2+1);
+
+	for(unsigned int i = 0; i < prevCol.size(); i++)
+	{
+		prevCol[i] = i;
+	}
+
+	for(unsigned int i = 0; i < len1; i++)
+	{
+		col[0] = i+1;
+		for (unsigned int j = 0; j < len2; j++)
+		{
+			col[j+1] = std::min(std::min(prevCol[1 + j] + 1, col[j] + 1),
+								prevCol[j] + (s1[i]==s2[j] ? 0 : 1));
+		}
+
+		col.swap(prevCol);
+	}
+
+	return prevCol[len2];
 }

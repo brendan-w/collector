@@ -108,10 +108,10 @@ bool init()
 	}
 
 	window = SDL_CreateWindow("Collector",
-                              config->get_window_x(),
-                              config->get_window_y(),
-                              config->get_window_w(),
-                              config->get_window_h(),
+                              config->window_x,
+                              config->window_y,
+                              config->window_w,
+                              config->window_h,
                               config->get_window_flags());
 	if(window == NULL)
 	{
@@ -141,11 +141,11 @@ bool init()
 		return false;
 	}
 
-	font = TTF_OpenFont(config->get_font_path().c_str(),
-						config->get_font_size());
+	font = TTF_OpenFont(config->font_path.c_str(),
+						config->font_size);
 	if(font == NULL)
 	{
-		print_TTF_error("Failed to load font: " + config->get_font_path());
+		print_TTF_error("Failed to load font: " + config->font_path);
 		return false;
 	}
 
