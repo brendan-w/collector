@@ -35,11 +35,12 @@ FileStore::FileStore()
 	pclose(pipe);
 	
 
-
+	/*
 	for(auto it: tags)
 	{
 		std::cout << it.first << std::endl;
 	}
+	*/
 
 	std::cout << "Total: " << files.size() << std::endl;
 }
