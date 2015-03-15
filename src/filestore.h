@@ -3,10 +3,14 @@
 
 
 #include <string>
-#include <vector>
-#include <set>
+#include <unordered_set>
+#include <unordered_map>
 #include "file.h"
 
+
+typedef std::unordered_set<std::string> tag_set;
+typedef std::unordered_set<File*> file_set;
+typedef std::unordered_map<std::string, file_set> tag_map;
 
 
 class FileStore
@@ -16,7 +20,8 @@ class FileStore
 		~FileStore();
 	private:
 		std::string root;
-		std::vector<File*> files;
-		std::set<std::string> tags;
+		file_set files;
+		tag_map tags;
+		tag_set get_tags(File* file);
 		void exec_find();
 };
