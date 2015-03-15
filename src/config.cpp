@@ -27,6 +27,13 @@ Config::~Config()
 
 void Config::load_defaults()
 {
+	//use the executable location to find the assets
+	bin_path = std::string(SDL_GetBasePath());
+
+	//get the pathname for the current working directory
+	// cwd_path = std::string(getcwd(NULL, 0));
+	cwd_path = "~/";
+
 	//lists all items in the current directory and below
 	//only returns files
 	//excludes dot-files and dot-folders
@@ -37,12 +44,6 @@ void Config::load_defaults()
 	#else
 		find_cmd = "find " + cwd_path + " -type f -path \"*\" ! -path \"*/.*\" ! -perm -o=x";
 	#endif
-
-	//use the executable location to find the assets
-	bin_path = std::string(SDL_GetBasePath());
-
-	//get the pathname for the current working directory
-	cwd_path = std::string(getcwd(NULL, 0));
 
 	tag_delim = "/._-+ ";
 	font_path = bin_path + "../assets/MonoLiberation.ttf";

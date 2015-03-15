@@ -11,37 +11,64 @@
 
 FileStore::FileStore()
 {
-	//fill the files vector with all valid file paths found
-	exec_find();
+	//run command to return /n delimited list of files in the current directory
+	FILE* pipe = popen(config->get_find_cmd().c_str(), "r");
 
-	for(File* file: files)
+	if(!pipe)
+		return;
+
+	char *line = NULL;
+	size_t size = 0;
+
+	while(!feof(pipe))
 	{
-		//get all tags, relative to the current working directory
-		tag_set file_tags = get_tags(file);
-
-		for(std::string t: file_tags)
+		if(getline(&line, &size, pipe) != -1)
 		{
-			tags[t].insert(file);
+			std::string path = std::string(line);
+			path.pop_back(); //pop the ending newline
+
+			//create a new File object, and save it in the vector
+			insert_file(new File(path));
 		}
 	}
+
+	pclose(pipe);
+	
+
 
 	for(auto it: tags)
 	{
 		std::cout << it.first << std::endl;
 	}
+
+	std::cout << "Total: " << files.size() << std::endl;
 }
 
 
 FileStore::~FileStore()
 {
-	for(auto file_it = files.begin(); file_it != files.end(); ++file_it)
+	for(File* file: files)
 	{
-		delete *file_it;
+		delete file;
 	}
+
 	files.clear();
 	tags.clear();
 }
 
+
+void FileStore::insert_file(File* file)
+{
+	files.push_back(file);
+
+	//get all tags, relative to the current working directory
+	tag_set file_tags = get_tags(file);
+
+	for(std::string t: file_tags)
+	{
+		tags[t].insert(file);
+	}
+}
 
 //extracts tags from the file's path and name
 //splits a string on multiple delimeters
@@ -70,31 +97,4 @@ tag_set FileStore::get_tags(File* file)
     }
 
 	return tags;
-}
-
-
-void FileStore::exec_find()
-{
-	//run command to return /n delimited list of files in the current directory
-	FILE* pipe = popen(config->get_find_cmd().c_str(), "r");
-
-	if(!pipe)
-		return;
-
-	char *line = NULL;
-	size_t size = 0;
-
-	while(!feof(pipe))
-	{
-		if(getline(&line, &size, pipe) != -1)
-		{
-			std::string path = std::string(line);
-			path.pop_back(); //pop the ending newline
-
-			//create a new File object, and save it in the vector
-			files.insert(new File(path));
-		}
-	}
-
-	pclose(pipe);
 }
