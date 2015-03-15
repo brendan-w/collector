@@ -34,14 +34,12 @@ FileStore::FileStore()
 
 	pclose(pipe);
 	
-
 	/*
 	for(auto it: tags)
 	{
 		std::cout << it.first << std::endl;
 	}
 	*/
-
 	std::cout << "Total: " << files.size() << std::endl;
 }
 
@@ -64,11 +62,12 @@ void FileStore::insert_file(File* file)
 
 	//get all tags, relative to the current working directory
 	tag_set file_tags = get_tags(file);
-
+	
 	for(std::string t: file_tags)
 	{
 		tags[t].insert(file);
 	}
+	
 }
 
 //extracts tags from the file's path and name
@@ -78,7 +77,7 @@ tag_set FileStore::get_tags(File* file)
 	tag_set tags;
 	std::string path = file->get_file_path();
 
-	size_t prev = 0;
+	size_t prev = config->get_cwd_path().length() + 1; //exclude root dir and path delimeter
 	size_t pos = 0;
 
 	//while there is another delimeter
