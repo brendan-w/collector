@@ -16,10 +16,11 @@ class File
 		void unload();
 		void render();
 
-		std::string get_file_path();
-		void set_file_path(std::string new_path);
+		std::string get_path();
+		void set_path(std::string new_path);
+
+		SDL_Rect rect;
 	private:
 		std::string path;
-		SDL_Rect rect;
 		Texture* texture;
 };

@@ -1,6 +1,5 @@
 
 #include <string.h>
-#include <linux/limits.h> //for PATH_MAX
 
 #include <SDL.h>
 #include "config.h"
@@ -8,20 +7,26 @@
 
 #ifdef _WIN32
 	#include <direct.h>
-    #define getcwd _getcwd
+	#define getcwd _getcwd
+	const char PATH_SEP = '\\';
 #else
-	#include <unistd.h>
+	#include <unistd.h> //getcwd()
+	const char PATH_SEP = '/';
 #endif
 
 
 Config::Config()
 {
+	/*
+		Set default configuration before reading config file
+	*/
+
 	//use the executable location to find the assets
 	bin_path = std::string(SDL_GetBasePath());
 
 	//get the pathname for the current working directory
 	cwd_path = std::string(getcwd(NULL, 0));
-	// cwd_path = "~/";
+	// cwd_path = "~/cool/Lasers/";
 
 	//lists all items in the current directory and below
 	//only returns files
@@ -34,7 +39,9 @@ Config::Config()
 		find_cmd = "find " + cwd_path + " -type f -path \"*\" ! -path \"*/.*\" ! -perm -o=x";
 	#endif
 
-	tag_delim = "/._-+ ";
+	tag_delim = "._-+ ";
+	tag_delim += PATH_SEP;
+
 	font_path = bin_path + "../assets/MonoLiberation.ttf";
 	
 	fullscreen = false;
@@ -45,7 +52,7 @@ Config::Config()
 	window_h = 480;
 
 	colors[BACKGROUND] = { 0,   0,   0,   255};
-	colors[FILL]       = { 40,  40,  40,  255};
+	colors[FILL]       = { 50,  50,  50,  255};
 	colors[HIGHLIGHT]  = { 18,  53,  70,  255};
 	colors[CLI_TEXT]   = { 255, 255, 255, 255};
 	

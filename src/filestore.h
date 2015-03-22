@@ -25,9 +25,9 @@ class FileStore
 		tag_set auto_complete(const std::string &partial_tag);
 		file_set query(const std::string &tag);
 
-	private:
-		std::string root;
 		file_vector files;
+
+	private:
 		tag_map tags;
 
 		void insert_file(File* file);

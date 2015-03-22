@@ -55,6 +55,14 @@ int main(int argc, char * argv[])
 					running = false;
 					break;
 
+				case SDL_WINDOWEVENT:
+					if(e.window.event == SDL_WINDOWEVENT_RESIZED)
+						SDL_GetWindowSize(window,
+										  &(config->window_w),
+										  &(config->window_h));
+					// else if(e.window.event == SDL_WINDOWEVENT_MOVED)
+					break;
+
 				// cli.cpp handles all keyboard input
 				// and creates new events when needed
 				case SDL_KEYDOWN:
@@ -78,6 +86,7 @@ int main(int argc, char * argv[])
 		SDL_RenderClear(renderer);
 
 		cli.render();
+		display.render();
 
 		SDL_RenderPresent(renderer);
 		SDL_Delay(33);

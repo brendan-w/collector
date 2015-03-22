@@ -48,6 +48,7 @@ FileStore::FileStore()
 		std::cout << it.first << std::endl;
 	}
 	*/
+
 	std::cout << "Total: " << files.size() << std::endl;
 	std::cout << "Total Tags: " << tags.size() << std::endl;
 }
@@ -82,12 +83,6 @@ file_set FileStore::query(const std::string & tag)
 	return set;
 }
 
-
-
-
-
-
-
 void FileStore::insert_file(File* file)
 {
 	files.push_back(file);
@@ -108,7 +103,7 @@ void FileStore::insert_file(File* file)
 tag_set FileStore::get_tags(File* file)
 {
 	tag_set tags;
-	std::string path = file->get_file_path();
+	std::string path = file->get_path();
 
 	size_t prev = 0;
 	size_t pos = 0;

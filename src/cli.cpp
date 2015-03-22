@@ -147,14 +147,10 @@ void CLI::handle_text(SDL_TextInputEvent &e)
 
 void CLI::render()
 {
-	int win_w = 0;
-	int win_h = 0;
-	SDL_GetWindowSize(window, &win_w, &win_h);
-
 	SDL_Rect current_rect = {
 		0,
-		win_h - config->CLI_height,
-		win_w,
+		config->window_h - config->CLI_height,
+		config->window_w,
 		config->CLI_height
 	};
 
@@ -173,7 +169,7 @@ void CLI::render()
 			SDL_RenderFillRect(renderer, &current_rect);
 		}
 
-		t->render(x, win_h - 16);
+		t->render(x, config->window_h - 16);
 		x += t->width() + (config->CLI_padding * 2);
 	}
 }

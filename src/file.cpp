@@ -27,12 +27,12 @@ File::~File()
 	}
 }
 
-std::string File::get_file_path()
+std::string File::get_path()
 {
 	return path;
 }
 
-void File::set_file_path(std::string new_path)
+void File::set_path(std::string new_path)
 {
 
 }
