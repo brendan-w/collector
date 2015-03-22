@@ -32,5 +32,4 @@ class FileStore
 
 		void insert_file(File* file);
 		tag_set get_tags(File* file);
-		unsigned int levenshtein_distance(const std::string &s1, const std::string &s2);
 };

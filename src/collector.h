@@ -11,7 +11,7 @@ extern SDL_Window* window;
 extern SDL_Renderer* renderer;
 extern TTF_Font* font;
 
-//program-wide utils
+//SDL utils
 void setRenderDrawColor(SDL_Renderer* r, SDL_Color color);
 void print_message(std::string message);
 void print_SDL_error(std::string message);

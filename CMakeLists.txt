@@ -19,6 +19,7 @@ include_directories(
 
 set(SOURCE_FILES
 	"src/collector.cpp"
+	"src/utils.cpp"
 	"src/display.cpp"
 	"src/cli.cpp"
 	"src/filestore.cpp"

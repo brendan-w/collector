@@ -206,7 +206,7 @@ void close()
 
 
 /*
-	General program-wide utils
+	General SDL utils
 */
 
 
