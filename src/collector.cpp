@@ -25,7 +25,7 @@ SDL_Renderer* renderer = NULL;
 TTF_Font* font = NULL;
 
 //SDL userevent types
-Uint32 CLI_CHANGE;
+Uint32 NEW_SELECTOR;
 
 
 int main(int argc, char * argv[])
@@ -77,8 +77,8 @@ int main(int argc, char * argv[])
 					break;
 
 				case SDL_USEREVENT:
-					if(e.user.type == CLI_CHANGE)
-						display.cli_change(e.user.data1);
+					if(e.user.type == NEW_SELECTOR)
+						display.new_selector(e.user.data1);
 					break;
 
 				default:
@@ -179,10 +179,10 @@ bool init()
 		Register Custom User Events
 	*/
 
-	CLI_CHANGE = SDL_RegisterEvents(1);
-	if(CLI_CHANGE == ((Uint32) -1 ))
+	NEW_SELECTOR = SDL_RegisterEvents(1);
+	if(NEW_SELECTOR == ((Uint32) -1 ))
 	{
-		print_message("Failed to register custom event: CLI_CHANGE");
+		print_message("Failed to register custom event: NEW_SELECTOR");
 		return false;
 	}
 

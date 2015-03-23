@@ -1,12 +1,17 @@
 
+/*
+	The CLI class is a frontend and factory for Selector objects,
+	which are used to query the filestore.
+*/
+
 
 #include <string>
 #include <vector>
 
-
 #include <SDL.h>
 
 #include "collector.h"
+#include "selector.h"
 #include "config.h"
 #include "text.h"
 #include "cli.h"
@@ -90,7 +95,7 @@ void CLI::handle_key(SDL_KeyboardEvent &e)
 			{
 				s.pop_back();
 				current_tag()->set_text(s);
-				send_cli_change();
+				send_new_selector();
 			}
 			break;
 		}
@@ -103,7 +108,7 @@ void CLI::handle_key(SDL_KeyboardEvent &e)
 			break;
 		case SDLK_DELETE:
 			delete_tag();
-			send_cli_change();
+			send_new_selector();
 			break;
 		case SDLK_TAB:
 			//autocomplete
@@ -145,7 +150,7 @@ void CLI::handle_text(SDL_TextInputEvent &e)
 	{
 		Text* t = current_tag();
 		t->set_text(t->get_text() += e.text);
-		send_cli_change();
+		send_new_selector();
 	}
 
 }
@@ -190,22 +195,20 @@ void CLI::send_quit()
 	SDL_PushEvent(&e);
 }
 
-void CLI::send_cli_change()
+void CLI::send_new_selector()
 {
 	SDL_Event e;
 	e.type = SDL_USEREVENT;
-	e.user.type = CLI_CHANGE;
+	e.user.type = NEW_SELECTOR;
 
-	std::vector<std::string>* tag_list = new std::vector<std::string>;
+	Selector* selector = new Selector;
 
-	for(unsigned int i = 0; i < tags.size(); i++)
+	for(Text* t: tags)
 	{
-		Text* t = tags[i];
-		if(t->get_text().length() > 0)
-			tag_list->push_back(t->get_text());
+		selector->add_operation(t->get_text());
 	}
 
-	e.user.data1 = (void*) tag_list;
+	e.user.data1 = (void*) selector;
 
 	SDL_PushEvent(&e);
 }

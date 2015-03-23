@@ -7,7 +7,8 @@
 #define NUM_COLORS 4
 
 //use these keys with get_color()
-enum Color {
+enum Color
+{
 	BACKGROUND = 0,
 	FILL,
 	HIGHLIGHT,

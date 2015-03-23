@@ -23,5 +23,5 @@ class CLI
 		Text* current_tag();
 
 		void send_quit();
-		void send_cli_change();
+		void send_new_selector();
 };

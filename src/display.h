@@ -11,7 +11,7 @@ class Display
 		~Display();
 		void handleEvent();
 		void render();
-		void cli_change(void* e_data);
+		void new_selector(void* e_data);
 
 	private:
 		FileStore* filestore;

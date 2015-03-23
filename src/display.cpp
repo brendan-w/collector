@@ -4,11 +4,12 @@
 #include <vector>
 #include <string>
 
-#include "display.h"
 #include "collector.h"
 #include "config.h"
+#include "selector.h"
 #include "filestore.h"
 #include "file.h"
+#include "display.h"
 
 
 
@@ -46,16 +47,18 @@ void Display::render()
 	}
 }
 
-void Display::cli_change(void* e_data)
+void Display::new_selector(void* e_data)
 {
-	std::vector<std::string>* cli_text = (std::vector<std::string>*) e_data;
+	Selector* selector = (Selector*) e_data;
 
-	for(std::string s: *cli_text)
+	Tag_operations ops = selector->get_operations();
+
+	for(Tag_operation* op: ops)
 	{
-		std::cout << s << " ";
+		std::cout << op->get_tag() << " ";
 	}
 
 	std::cout << std::endl;
 
-	delete cli_text;
+	delete selector;
 }
