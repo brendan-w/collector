@@ -1,6 +1,8 @@
 
 
-#include <string.h>
+#include <string>
+#include <vector>
+
 
 #include <SDL.h>
 
@@ -88,6 +90,7 @@ void CLI::handle_key(SDL_KeyboardEvent &e)
 			{
 				s.pop_back();
 				current_tag()->set_text(s);
+				send_cli_change();
 			}
 			break;
 		}
@@ -100,6 +103,7 @@ void CLI::handle_key(SDL_KeyboardEvent &e)
 			break;
 		case SDLK_DELETE:
 			delete_tag();
+			send_cli_change();
 			break;
 		case SDLK_TAB:
 			//autocomplete
@@ -141,7 +145,9 @@ void CLI::handle_text(SDL_TextInputEvent &e)
 	{
 		Text* t = current_tag();
 		t->set_text(t->get_text() += e.text);
+		send_cli_change();
 	}
+
 }
 
 
@@ -181,5 +187,25 @@ void CLI::send_quit()
 	e.type = SDL_QUIT;
 
 	//SDL copies memory into event queue, so this is memory safe
+	SDL_PushEvent(&e);
+}
+
+void CLI::send_cli_change()
+{
+	SDL_Event e;
+	e.type = SDL_USEREVENT;
+	e.user.type = CLI_CHANGE;
+
+	std::vector<std::string>* tag_list = new std::vector<std::string>;
+
+	for(unsigned int i = 0; i < tags.size(); i++)
+	{
+		Text* t = tags[i];
+		if(t->get_text().length() > 0)
+			tag_list->push_back(t->get_text());
+	}
+
+	e.user.data1 = (void*) tag_list;
+
 	SDL_PushEvent(&e);
 }

@@ -1,7 +1,8 @@
 
 
 #include <iostream>
-
+#include <vector>
+#include <string>
 
 #include "display.h"
 #include "collector.h"
@@ -43,4 +44,18 @@ void Display::render()
 			y += inc;
 		}
 	}
+}
+
+void Display::cli_change(void* e_data)
+{
+	std::vector<std::string>* cli_text = (std::vector<std::string>*) e_data;
+
+	for(std::string s: *cli_text)
+	{
+		std::cout << s << " ";
+	}
+
+	std::cout << std::endl;
+
+	delete cli_text;
 }

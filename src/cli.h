@@ -21,5 +21,7 @@ class CLI
 		void destroy_tags();
 		void delete_tag();
 		Text* current_tag();
+
 		void send_quit();
+		void send_cli_change();
 };

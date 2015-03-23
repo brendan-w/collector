@@ -113,7 +113,7 @@ tag_set FileStore::get_tags(File* file)
 	tag_set tags;
 	std::string path = file->get_path();
 
-	to_lower(path);
+	// to_lower(path);
 
 	size_t prev = 0;
 	size_t pos = 0;

@@ -24,6 +24,9 @@ SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
 TTF_Font* font = NULL;
 
+//SDL userevent types
+Uint32 CLI_CHANGE;
+
 
 int main(int argc, char * argv[])
 {
@@ -74,6 +77,8 @@ int main(int argc, char * argv[])
 					break;
 
 				case SDL_USEREVENT:
+					if(e.user.type == CLI_CHANGE)
+						display.cli_change(e.user.data1);
 					break;
 
 				default:
@@ -167,6 +172,17 @@ bool init()
 	if((IMG_Init(flags) & flags) != flags)
 	{
 		print_IMG_error("SDL_image could not initialize");
+		return false;
+	}
+
+	/*
+		Register Custom User Events
+	*/
+
+	CLI_CHANGE = SDL_RegisterEvents(1);
+	if(CLI_CHANGE == ((Uint32) -1 ))
+	{
+		print_message("Failed to register custom event: CLI_CHANGE");
 		return false;
 	}
 
