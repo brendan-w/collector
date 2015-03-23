@@ -70,6 +70,7 @@ FileStore::~FileStore()
 tag_set FileStore::auto_complete(const std::string & partial_tag)
 {
 	tag_set result;
+	result.insert(fuzzy_match(partial_tag));
 	return result;
 }
 
@@ -103,12 +104,16 @@ void FileStore::insert_file(File* file)
 	}
 }
 
+
+
 //extracts tags from the file's path and name
 //splits a string on multiple delimeters
 tag_set FileStore::get_tags(File* file)
 {
 	tag_set tags;
 	std::string path = file->get_path();
+
+	to_lower(path);
 
 	size_t prev = 0;
 	size_t pos = 0;
@@ -130,4 +135,30 @@ tag_set FileStore::get_tags(File* file)
     }
 
 	return tags;
+}
+
+
+//return the tag with the nearest edit distance
+std::string FileStore::fuzzy_match(const std::string & partial_tag)
+{
+	std::string nearest_str = "";
+	size_t nearest = 0;
+
+	//prepopulate the initial result
+	auto it = tags.begin();
+	nearest_str = it->first;
+	nearest = levenshtein_distance(partial_tag, nearest_str);
+	++it;
+
+	for( ; it != tags.end(); ++it )
+	{
+		size_t dist = levenshtein_distance(partial_tag, it->first);
+		if(dist < nearest)
+		{
+			nearest = dist;
+			nearest_str = it->first;
+		}
+	}
+
+	return nearest_str;
 }

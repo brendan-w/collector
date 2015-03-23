@@ -32,4 +32,5 @@ class FileStore
 
 		void insert_file(File* file);
 		tag_set get_tags(File* file);
+		std::string fuzzy_match(const std::string & partial_tag);
 };

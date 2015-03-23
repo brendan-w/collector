@@ -24,22 +24,22 @@ Display::~Display()
 void Display::render()
 {
 
-	int x = 2;
-	int y = 2;
-	int inc = 8;
+	int x = 1;
+	int y = 1;
+	int inc = 6;
 
 	setRenderDrawColor(renderer, config->get_color(FILL));
 
 	for(File* file: filestore->files)
 	{
-		file->rect = { x, y, 6, 6 };
+		file->rect = { x, y, 5, 5 };
 
 		SDL_RenderFillRect(renderer, &(file->rect));
 
 		x += inc;
 		if(x > config->window_w)
 		{
-			x = 2;
+			x = 1;
 			y += inc;
 		}
 	}
