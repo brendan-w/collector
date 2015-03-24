@@ -4,6 +4,8 @@
 #include <SDL.h>
 
 #include "cli.h"
+#include "grid.h"
+#include "file.h"
 
 
 class Display
@@ -11,13 +13,14 @@ class Display
 	public:
 		Display();
 		~Display();
-		void render();
-		void on_resize();
+		void render(file_list::iterator begin, file_list::iterator end);
+		void on_resize(file_list::iterator begin, file_list::iterator end);
 		void on_key(SDL_KeyboardEvent &e);
 		void on_text(SDL_TextInputEvent &e);
 
 	private:
 		CLI* cli;
+		Grid* grid;
 
 		void send_quit();
 		void send_selector();

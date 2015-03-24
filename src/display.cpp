@@ -6,6 +6,9 @@
 
 #include "collector.h"
 #include "config.h"
+#include "file.h"
+#include "cli.h"
+#include "grid.h"
 #include "display.h"
 
 
@@ -13,27 +16,32 @@
 Display::Display()
 {
 	cli = new CLI;
+	grid = new Grid;
 }
 
 Display::~Display()
 {
 	delete cli;
+	delete grid;
 }
 
-void Display::on_resize()
+void Display::on_resize(file_list::iterator begin, file_list::iterator end)
 {
 	SDL_GetWindowSize(window,
 					  &(config->window_w),
 					  &(config->window_h));
+
+	grid->layout(begin, end);
 }
 
 void Display::on_key(SDL_KeyboardEvent &e)
 {
-
 	switch(e.keysym.sym)
 	{
 		case SDLK_ESCAPE:
 			send_quit();
+			break;
+		case SDLK_RETURN:
 			break;
 		default:
 			cli->on_key(e);
@@ -48,30 +56,10 @@ void Display::on_text(SDL_TextInputEvent &e)
 	send_selector();
 }
 
-void Display::render()
+void Display::render(file_list::iterator begin, file_list::iterator end)
 {
-	cli->render();	
-	/*
-	int x = 1;
-	int y = 1;
-	int inc = 6;
-
-	setRenderDrawColor(renderer, config->get_color(FILL));
-
-	for(File* file: filestore->get_files())
-	{
-		file->rect = { x, y, 5, 5 };
-
-		SDL_RenderFillRect(renderer, &(file->rect));
-
-		x += inc;
-		if(x > config->window_w)
-		{
-			x = 1;
-			y += inc;
-		}
-	}
-	*/
+	grid->render(begin, end);
+	cli->render();
 }
 
 void Display::send_quit()
@@ -85,5 +73,5 @@ void Display::send_quit()
 
 void Display::send_selector()
 {
-	
+
 }

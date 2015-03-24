@@ -22,6 +22,7 @@ set(SOURCE_FILES
 	"src/utils.cpp"
 	"src/display.cpp"
 	"src/cli.cpp"
+	"src/grid.cpp"
 	"src/filestore.cpp"
 	"src/file.cpp"
 	"src/selector.cpp"

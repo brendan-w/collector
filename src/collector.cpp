@@ -41,7 +41,8 @@ int main(int argc, char * argv[])
 	}
 
 	//trigger the initial screen cleanup
-	display->on_resize();
+	display->on_resize(filestore->begin(),
+					   filestore->end());
 
 	//main event loop
 	SDL_Event e;
@@ -63,8 +64,8 @@ int main(int argc, char * argv[])
 
 				case SDL_WINDOWEVENT:
 					if(e.window.event == SDL_WINDOWEVENT_RESIZED)
-						display->on_resize();
-					// else if(e.window.event == SDL_WINDOWEVENT_MOVED)
+						display->on_resize(filestore->begin(),
+										   filestore->end());
 					break;
 
 				case SDL_KEYDOWN:
@@ -89,7 +90,8 @@ int main(int argc, char * argv[])
 		setRenderDrawColor(renderer, config->get_color(BACKGROUND));
 		SDL_RenderClear(renderer);
 
-		display->render();
+		display->render(filestore->begin(),
+						filestore->end());
 
 		SDL_RenderPresent(renderer);
 		SDL_Delay(33);

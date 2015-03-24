@@ -37,10 +37,6 @@ void CLI::on_key(SDL_KeyboardEvent &e)
 		case SDLK_BACKSPACE:
 			backspace();
 			break;
-		case SDLK_RETURN:
-			destroy_tags();
-			new_tag();
-			break;
 		case SDLK_DELETE:
 			delete_tag();
 			break;

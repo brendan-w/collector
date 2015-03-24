@@ -24,7 +24,8 @@ class FileStore
 		file_set* select(Selector* selector);
 
 		//getters/setters
-		const file_list get_files() { return files; };
+		file_list::iterator begin() { return files.begin(); };
+		file_list::iterator end()   { return files.end(); };
 
 	private:
 		file_list files;
