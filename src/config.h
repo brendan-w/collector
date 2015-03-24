@@ -39,7 +39,7 @@ class Config
 		int font_size;
 
 		size_t max_suggest;
-
+		size_t scroll_speed;
 		int file_size;
 		const int file_padding = 1;
 		const int CLI_height = 20;

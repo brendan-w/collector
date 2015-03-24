@@ -59,8 +59,9 @@ Config::Config()
 	
 	font_size = 12;
 
-	file_size = 5;
 	max_suggest = 4;
+	scroll_speed = 20;
+	file_size = 5;
 }
 
 Config::~Config()

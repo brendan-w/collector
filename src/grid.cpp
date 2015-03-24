@@ -24,28 +24,31 @@ Grid::~Grid()
 
 void Grid::render(file_list::iterator begin, file_list::iterator end)
 {
+	//draw the files
 	setRenderDrawColor(renderer, config->get_color(FILL));
 
-	int old_x = (*begin)->rect.x;
-	int old_y = (*begin)->rect.y;
-
-	begin++;
+	// int old_x = (*begin)->rect.x;
+	// int old_y = (*begin)->rect.y;
+	// begin++;
 
 	for(auto it = begin; it != end; ++it)
 	{
 		File* file = *it;
-		SDL_RenderDrawLine(renderer, old_x, old_y, file->rect.x, file->rect.y);
-		old_x = file->rect.x;
-		old_y = file->rect.y;
+		SDL_Rect rect = file->rect;
+		rect.y -= scroll; //adjust position for scroll
 
-		// SDL_RenderFillRect(renderer, &(file->rect));
+		// SDL_RenderDrawLine(renderer, old_x, old_y, file->rect.x, file->rect.y);
+		// old_x = file->rect.x;
+		// old_y = file->rect.y;
+
+		if(rectInWindow(rect))
+			SDL_RenderFillRect(renderer, &rect);
 	}
 }
 
 //generate the hilbert curve for this fileset
 void Grid::layout(file_list::iterator begin, file_list::iterator end)
 {
-
 	//find the number of files wide the display is
 	int width = config->window_w / (config->file_size + config->file_padding);
 
@@ -74,4 +77,12 @@ void Grid::layout(file_list::iterator begin, file_list::iterator end)
 	}
 
 	std::cout << grid_size << std::endl;
+}
+
+void Grid::on_wheel(SDL_MouseWheelEvent &e)
+{
+	scroll -= (e.y * config->scroll_speed);
+
+	if(scroll < 0) scroll = 0;
+	else if(scroll > max_scroll) scroll = max_scroll;
 }

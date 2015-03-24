@@ -30,6 +30,7 @@ Display* display = NULL;
 
 //SDL userevent types
 Uint32 SELECTOR;
+Uint32 SELECTION;
 
 
 int main(int argc, char * argv[])
@@ -58,7 +59,6 @@ int main(int argc, char * argv[])
 			switch(e.type)
 			{
 				case SDL_QUIT:
-				case SDL_MOUSEBUTTONDOWN:
 					running = false;
 					break;
 
@@ -74,6 +74,13 @@ int main(int argc, char * argv[])
 
 				case SDL_TEXTINPUT:
 					display->on_text(e.text);
+					break;
+
+				case SDL_MOUSEBUTTONDOWN:
+					break;
+
+				case SDL_MOUSEWHEEL:
+					display->on_wheel(e.wheel);
 					break;
 
 				case SDL_USEREVENT:
@@ -178,12 +185,15 @@ bool init()
 		Register Custom User Events
 	*/
 
-	SELECTOR = SDL_RegisterEvents(1);
-	if(SELECTOR == ((Uint32) -1 ))
+	Uint32 begin = SDL_RegisterEvents(2);
+	if(begin == ((Uint32) -1 ))
 	{
 		print_message("Failed to register custom event: SELECTOR");
 		return false;
 	}
+
+	SELECTOR  = begin;
+	SELECTION = begin + 1;
 
 	/*
 		Create the display
@@ -256,6 +266,17 @@ void setRenderDrawColor(SDL_Renderer* r, SDL_Color color)
                            color.g,
                            color.b,
                            color.a);
+}
+
+bool rectInWindow(SDL_Rect &rect)
+{
+	SDL_Rect screen = {
+		0,
+		0,
+		config->window_w,
+		config->window_h
+	};
+	return SDL_HasIntersection(&screen, &rect);
 }
 
 void print_message(std::string message)

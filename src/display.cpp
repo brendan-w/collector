@@ -56,6 +56,11 @@ void Display::on_text(SDL_TextInputEvent &e)
 	send_selector();
 }
 
+void Display::on_wheel(SDL_MouseWheelEvent &e)
+{
+	grid->on_wheel(e);
+}
+
 void Display::render(file_list::iterator begin, file_list::iterator end)
 {
 	grid->render(begin, end);

@@ -13,9 +13,11 @@ extern TTF_Font* font;
 
 //SDL userevent types
 extern Uint32 SELECTOR;
+extern Uint32 SELECTION;
 
 //SDL utils
 void setRenderDrawColor(SDL_Renderer* r, SDL_Color color);
+bool rectInWindow(SDL_Rect &rect);
 void print_message(std::string message);
 void print_SDL_error(std::string message);
 void print_TTF_error(std::string message);

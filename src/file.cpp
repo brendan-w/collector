@@ -14,9 +14,6 @@ File::File(std::string file_path)
 {
 	path = file_path;
 	texture = NULL;
-
-	// std::cout << "path: " << path << std::endl;
-
 }
 
 File::~File()

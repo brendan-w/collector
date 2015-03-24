@@ -17,6 +17,7 @@ class Display
 		void on_resize(file_list::iterator begin, file_list::iterator end);
 		void on_key(SDL_KeyboardEvent &e);
 		void on_text(SDL_TextInputEvent &e);
+		void on_wheel(SDL_MouseWheelEvent &e);
 
 	private:
 		CLI* cli;
