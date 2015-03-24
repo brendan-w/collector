@@ -11,9 +11,6 @@
 
 Tag_operation::Tag_operation(std::string input)
 {
-	tag = "";
-	op = NONE;
-
 	if(input.length() > 0)
 	{
 		//the first character may hold an operation indicator
@@ -39,17 +36,6 @@ Tag_operation::~Tag_operation()
 {
 
 }
-
-std::string Tag_operation::get_tag()
-{
-	return tag;
-}
-
-Set_operation Tag_operation::get_op()
-{
-	return op;
-}
-
 
 
 /*
@@ -77,9 +63,4 @@ void Selector::add_operation(std::string input)
 		Tag_operation* tag = new Tag_operation(input);
 		tags.push_back(tag);
 	}
-}
-
-const Tag_operations Selector::get_operations()
-{
-	return tags;
 }

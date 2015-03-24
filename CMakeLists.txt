@@ -25,6 +25,7 @@ set(SOURCE_FILES
 	"src/filestore.cpp"
 	"src/file.cpp"
 	"src/selector.cpp"
+	"src/selection.cpp"
 	"src/texture.cpp"
 	"src/text.cpp"
 	"src/config.cpp"

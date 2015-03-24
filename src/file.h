@@ -2,7 +2,11 @@
 #pragma once
 
 #include <string>
+#include <list>
+#include <unordered_set>
+
 #include <SDL.h>
+
 #include "texture.h"
 
 
@@ -24,3 +28,7 @@ class File
 		std::string path;
 		Texture* texture;
 };
+
+
+typedef std::list<File*> file_list;
+typedef std::unordered_set<File*> file_set;

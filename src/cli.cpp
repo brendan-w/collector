@@ -19,14 +19,102 @@
 
 CLI::CLI()
 {
-	//create the initial empty tag field
-	new_tag();
+	new_tag(); //create the initial empty tag field
 }
 
 
 CLI::~CLI()
 {
 	destroy_tags();
+}
+
+
+
+void CLI::on_key(SDL_KeyboardEvent &e)
+{
+	switch(e.keysym.sym)
+	{
+		case SDLK_BACKSPACE:
+			backspace();
+			break;
+		case SDLK_RETURN:
+			destroy_tags();
+			new_tag();
+			break;
+		case SDLK_DELETE:
+			delete_tag();
+			break;
+		case SDLK_TAB:
+			//autocomplete
+			break;
+		case SDLK_UP:
+			break;
+		case SDLK_DOWN:
+			break;
+		case SDLK_LEFT:
+			if(current > 0)
+				current--;
+			break;
+		case SDLK_RIGHT:
+			if(current < (tags.size() - 1))
+				current++;
+			break;
+		default:
+			break;
+	}
+}
+
+
+void CLI::on_text(SDL_TextInputEvent &e)
+{
+	//space bar starts a new tag
+	if(e.text[0] == ' ')
+	{
+		//if the last tag is empty, skip to it (rather than adding another)
+		if(tags[tags.size() - 1]->get_text().length() == 0)
+		{
+			current = tags.size() - 1;
+		}
+		else
+		{
+			new_tag();
+		}
+	}
+	else
+	{
+		Text* t = current_tag();
+		t->set_text(t->get_text() += e.text);
+	}
+}
+
+
+void CLI::render()
+{
+	SDL_Rect current_rect = {
+		0,
+		config->window_h - config->CLI_height,
+		config->window_w,
+		config->CLI_height
+	};
+
+	setRenderDrawColor(renderer, config->get_color(HIGHLIGHT));
+
+	//draw each tags text
+	int x = config->CLI_padding;
+	for(unsigned int i = 0; i < tags.size(); i++)
+	{
+		Text* t = tags[i];
+		
+		if(i == current)
+		{
+			current_rect.x = x - config->CLI_padding;
+			current_rect.w = t->width() + (config->CLI_padding * 2);
+			SDL_RenderFillRect(renderer, &current_rect);
+		}
+
+		t->render(x, config->window_h - 16);
+		x += t->width() + (config->CLI_padding * 2);
+	}
 }
 
 
@@ -83,123 +171,22 @@ void CLI::delete_tag()
 	}
 }
 
-
-void CLI::handle_key(SDL_KeyboardEvent &e)
+void CLI::backspace()
 {
-	switch(e.keysym.sym)
+	std::string s = current_tag()->get_text();
+	if(s.length() > 0)
 	{
-		case SDLK_BACKSPACE:
-		{
-			std::string s = current_tag()->get_text();
-			if(s.length() > 0)
-			{
-				s.pop_back();
-				current_tag()->set_text(s);
-				send_new_selector();
-			}
-			break;
-		}
-		case SDLK_RETURN:
-			destroy_tags();
-			new_tag();
-			break;
-		case SDLK_ESCAPE:
-			send_quit();
-			break;
-		case SDLK_DELETE:
-			delete_tag();
-			send_new_selector();
-			break;
-		case SDLK_TAB:
-			//autocomplete
-			break;
-		case SDLK_UP:
-			break;
-		case SDLK_DOWN:
-			break;
-		case SDLK_LEFT:
-			if(current > 0)
-				current--;
-			break;
-		case SDLK_RIGHT:
-			if(current < (tags.size() - 1))
-				current++;
-			break;
-		default:
-			break;
+		s.pop_back();
+		current_tag()->set_text(s);
 	}
 }
 
-
-void CLI::handle_text(SDL_TextInputEvent &e)
-{
-	//space bar starts a new tag
-	if(e.text[0] == ' ')
-	{
-		//if the last tag is empty, skip to it (rather than adding another)
-		if(tags[tags.size() - 1]->get_text().length() == 0)
-		{
-			current = tags.size() - 1;
-		}
-		else
-		{
-			new_tag();
-		}
-	}
-	else
-	{
-		Text* t = current_tag();
-		t->set_text(t->get_text() += e.text);
-		send_new_selector();
-	}
-
-}
-
-
-void CLI::render()
-{
-	SDL_Rect current_rect = {
-		0,
-		config->window_h - config->CLI_height,
-		config->window_w,
-		config->CLI_height
-	};
-
-	setRenderDrawColor(renderer, config->get_color(HIGHLIGHT));
-
-	//draw each tags text
-	int x = config->CLI_padding;
-	for(unsigned int i = 0; i < tags.size(); i++)
-	{
-		Text* t = tags[i];
-		
-		if(i == current)
-		{
-			current_rect.x = x - config->CLI_padding;
-			current_rect.w = t->width() + (config->CLI_padding * 2);
-			SDL_RenderFillRect(renderer, &current_rect);
-		}
-
-		t->render(x, config->window_h - 16);
-		x += t->width() + (config->CLI_padding * 2);
-	}
-}
-
-
-void CLI::send_quit()
-{
-	SDL_Event e;
-	e.type = SDL_QUIT;
-
-	//SDL copies memory into event queue, so this is memory safe
-	SDL_PushEvent(&e);
-}
-
-void CLI::send_new_selector()
+/*
+void CLI::send_selector()
 {
 	SDL_Event e;
 	e.type = SDL_USEREVENT;
-	e.user.type = NEW_SELECTOR;
+	e.user.type = SELECTOR;
 
 	Selector* selector = new Selector;
 
@@ -212,3 +199,4 @@ void CLI::send_new_selector()
 
 	SDL_PushEvent(&e);
 }
+*/

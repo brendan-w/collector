@@ -2,10 +2,12 @@
 
 #include <string>
 #include <iostream>
+#include <algorithm>
 #include <stdio.h>
 
 #include "config.h"
 #include "utils.h"
+#include "selector.h"
 #include "file.h"
 #include "filestore.h"
 
@@ -73,7 +75,28 @@ tag_set FileStore::auto_complete(const std::string & partial_tag)
 	return result;
 }
 
-file_set FileStore::query(const std::string & tag)
+file_set* FileStore::select(Selector* selector)
+{
+	//file_set* result = new file_set;
+	Tag_operations ops = selector->get_operations();
+
+	for(Tag_operation* op: ops)
+	{
+		std::cout << op->get_tag() << " ";
+	}
+
+	std::cout << std::endl;
+
+	//return result;
+	delete selector;
+	return NULL;
+}
+
+
+
+
+
+file_set FileStore::set_for_tag(const std::string & tag)
 {
 	tag_map::const_iterator result = tags.find(tag);
 
@@ -84,16 +107,12 @@ file_set FileStore::query(const std::string & tag)
 	return set;
 }
 
-
-
-
-
 void FileStore::insert_file(File* file)
 {
 	files.push_back(file);
 
 	//get all tags, relative to the current working directory
-	tag_set file_tags = get_tags(file);
+	tag_set file_tags = tags_for_file(file);
 
 	for(std::string t: file_tags)
 	{
@@ -107,7 +126,7 @@ void FileStore::insert_file(File* file)
 
 //extracts tags from the file's path and name
 //splits a string on multiple delimeters
-tag_set FileStore::get_tags(File* file)
+tag_set FileStore::tags_for_file(File* file)
 {
 	tag_set tags;
 	std::string path = file->get_path();

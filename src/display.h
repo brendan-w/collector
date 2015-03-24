@@ -1,7 +1,9 @@
 
 #pragma once
 
-#include "filestore.h"
+#include <SDL.h>
+
+#include "cli.h"
 
 
 class Display
@@ -9,10 +11,14 @@ class Display
 	public:
 		Display();
 		~Display();
-		void handleEvent();
 		void render();
-		void new_selector(void* e_data);
+		void on_resize();
+		void on_key(SDL_KeyboardEvent &e);
+		void on_text(SDL_TextInputEvent &e);
 
 	private:
-		FileStore* filestore;
+		CLI* cli;
+
+		void send_quit();
+		void send_selector();
 };

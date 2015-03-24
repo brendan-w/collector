@@ -49,8 +49,8 @@ Config::Config()
 	resizable = true;
 	window_x = SDL_WINDOWPOS_UNDEFINED;
 	window_y = SDL_WINDOWPOS_UNDEFINED;
-	window_w = 640;
-	window_h = 480;
+	window_w = 1024;
+	window_h = 768;
 
 	colors[BACKGROUND] = { 0,   0,   0,   255};
 	colors[FILL]       = { 50,  50,  50,  255};

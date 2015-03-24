@@ -8,9 +8,9 @@
 #include <SDL_image.h>
 
 #include "collector.h"
+#include "filestore.h"
 #include "config.h"
 #include "display.h"
-#include "cli.h"
 
 
 //forward declare
@@ -24,8 +24,12 @@ SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
 TTF_Font* font = NULL;
 
+//the two main components
+FileStore* filestore = NULL;
+Display* display = NULL;
+
 //SDL userevent types
-Uint32 NEW_SELECTOR;
+Uint32 SELECTOR;
 
 
 int main(int argc, char * argv[])
@@ -36,9 +40,8 @@ int main(int argc, char * argv[])
 		return EXIT_FAILURE;
 	}
 
-	//create the two main screen elements
-	Display display;
-	CLI cli;
+	//trigger the initial screen cleanup
+	display->on_resize();
 
 	//main event loop
 	SDL_Event e;
@@ -60,25 +63,21 @@ int main(int argc, char * argv[])
 
 				case SDL_WINDOWEVENT:
 					if(e.window.event == SDL_WINDOWEVENT_RESIZED)
-						SDL_GetWindowSize(window,
-										  &(config->window_w),
-										  &(config->window_h));
+						display->on_resize();
 					// else if(e.window.event == SDL_WINDOWEVENT_MOVED)
 					break;
 
-				// cli.cpp handles all keyboard input
-				// and creates new events when needed
 				case SDL_KEYDOWN:
-					cli.handle_key(e.key);
+					display->on_key(e.key);
 					break;
 
 				case SDL_TEXTINPUT:
-					cli.handle_text(e.text);
+					display->on_text(e.text);
 					break;
 
 				case SDL_USEREVENT:
-					if(e.user.type == NEW_SELECTOR)
-						display.new_selector(e.user.data1);
+					if(e.user.type == SELECTOR)
+						filestore->select( (Selector*) e.user.data1 );
 					break;
 
 				default:
@@ -90,8 +89,7 @@ int main(int argc, char * argv[])
 		setRenderDrawColor(renderer, config->get_color(BACKGROUND));
 		SDL_RenderClear(renderer);
 
-		cli.render();
-		display.render();
+		display->render();
 
 		SDL_RenderPresent(renderer);
 		SDL_Delay(33);
@@ -148,7 +146,6 @@ bool init()
 		SDL2_ttf
 	*/
 
-	//Initialize SDL_ttf
 	if(TTF_Init() != 0)
 	{
 		print_TTF_error("SDL_ttf could not initialize");
@@ -179,18 +176,42 @@ bool init()
 		Register Custom User Events
 	*/
 
-	NEW_SELECTOR = SDL_RegisterEvents(1);
-	if(NEW_SELECTOR == ((Uint32) -1 ))
+	SELECTOR = SDL_RegisterEvents(1);
+	if(SELECTOR == ((Uint32) -1 ))
 	{
-		print_message("Failed to register custom event: NEW_SELECTOR");
+		print_message("Failed to register custom event: SELECTOR");
 		return false;
 	}
+
+	/*
+		Create the display
+	*/
+
+	display = new Display;
+
+	/*
+		Init the FileStore (performs the `find` scan)
+	*/
+
+	filestore = new FileStore;
 
 	return true;
 }
 
 void close()
 {
+	/*
+		FileStore
+	*/
+
+	delete filestore;
+
+	/*
+		Display
+	*/
+
+	delete display;
+
 	/*
 		SDL2_image
 	*/

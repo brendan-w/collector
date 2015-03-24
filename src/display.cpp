@@ -1,38 +1,64 @@
 
 
-#include <iostream>
-#include <vector>
 #include <string>
+
+#include <SDL.h>
 
 #include "collector.h"
 #include "config.h"
-#include "selector.h"
-#include "filestore.h"
-#include "file.h"
 #include "display.h"
 
 
 
 Display::Display()
 {
-	filestore = new FileStore;
+	cli = new CLI;
 }
 
 Display::~Display()
 {
-	delete filestore;
+	delete cli;
+}
+
+void Display::on_resize()
+{
+	SDL_GetWindowSize(window,
+					  &(config->window_w),
+					  &(config->window_h));
+}
+
+void Display::on_key(SDL_KeyboardEvent &e)
+{
+
+	switch(e.keysym.sym)
+	{
+		case SDLK_ESCAPE:
+			send_quit();
+			break;
+		default:
+			cli->on_key(e);
+	}
+
+	send_selector();
+}
+
+void Display::on_text(SDL_TextInputEvent &e)
+{
+	cli->on_text(e);
+	send_selector();
 }
 
 void Display::render()
 {
-
+	cli->render();	
+	/*
 	int x = 1;
 	int y = 1;
 	int inc = 6;
 
 	setRenderDrawColor(renderer, config->get_color(FILL));
 
-	for(File* file: filestore->files)
+	for(File* file: filestore->get_files())
 	{
 		file->rect = { x, y, 5, 5 };
 
@@ -45,20 +71,19 @@ void Display::render()
 			y += inc;
 		}
 	}
+	*/
 }
 
-void Display::new_selector(void* e_data)
+void Display::send_quit()
 {
-	Selector* selector = (Selector*) e_data;
+	SDL_Event e;
+	e.type = SDL_QUIT;
 
-	Tag_operations ops = selector->get_operations();
+	//SDL copies memory into event queue, so this is memory safe
+	SDL_PushEvent(&e);
+}
 
-	for(Tag_operation* op: ops)
-	{
-		std::cout << op->get_tag() << " ";
-	}
-
-	std::cout << std::endl;
-
-	delete selector;
+void Display::send_selector()
+{
+	
 }
