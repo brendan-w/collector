@@ -25,6 +25,7 @@ class Config
 		std::string bin_path;
 		std::string cwd_path;
 		std::string tag_delim;
+		std::string font_path;
 
 		bool fullscreen;
 		bool resizable;
@@ -35,9 +36,8 @@ class Config
 
 		SDL_Color colors[NUM_COLORS];
 
-		std::string font_path;
-		int font_size;
 
+		int font_size;
 		size_t max_suggest;
 		size_t scroll_speed;
 		int file_size;

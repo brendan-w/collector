@@ -79,7 +79,7 @@ static void rot(int n, int *x, int *y, int rx, int ry)
 }
 
 //convert (x,y) to d
-int xy2d (int n, int x, int y)
+static int xy2d (int n, int x, int y)
 {
     int rx, ry, s, d=0;
     for(s=n/2; s>0; s/=2)
@@ -93,7 +93,7 @@ int xy2d (int n, int x, int y)
 }
  
 //convert d to (x,y)
-void d2xy(int n, int d, int *x, int *y)
+static void d2xy(int n, int d, int *x, int *y)
 {
     int rx, ry, s, t=d;
     *x = *y = 0;
@@ -106,4 +106,30 @@ void d2xy(int n, int d, int *x, int *y)
         *y += s * ry;
         t /= 4;
     }
+}
+
+/*
+	Custom accessors for Hilbert generators
+	Applies transformation for sensical vertical tiling.
+
+		Flips over y = x;
+*/
+
+static void swap(int* x, int* y)
+{
+	int tx = *x;
+	*x = *y;
+	*y = tx;	
+}
+
+void hilbert_d_to_point(int n, int d, int *x, int *y)
+{
+	d2xy(n, d, x, y);
+	swap(x, y);
+}
+
+int hilbert_point_to_d(int n, int x, int y)
+{
+	swap(&x, &y);
+	return xy2d(n, x, y);
 }

@@ -42,7 +42,6 @@ Config::Config()
 
 	tag_delim = "._-+ ";
 	tag_delim += PATH_SEP;
-
 	font_path = bin_path + "../assets/MonoLiberation.ttf";
 	
 	fullscreen = false;
@@ -58,7 +57,6 @@ Config::Config()
 	colors[CLI_TEXT]   = { 255, 255, 255, 255};
 	
 	font_size = 12;
-
 	max_suggest = 4;
 	scroll_speed = 20;
 	file_size = 5;

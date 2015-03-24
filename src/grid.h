@@ -13,9 +13,10 @@ class Grid
 		void layout(file_list::iterator begin, file_list::iterator end);
 
 		void on_wheel(SDL_MouseWheelEvent &e);
-	private:
 
-		int scroll = 0;
+	private:
+		int x_offset = 0; //used for centering the column of files
+		int y_offset = 0; //used for vertical scrolling
 		int max_scroll = 200;
 };
 
