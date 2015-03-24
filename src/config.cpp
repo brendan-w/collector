@@ -26,8 +26,8 @@ Config::Config()
 
 	//get the pathname for the current working directory
 	// cwd_path = std::string(getcwd(NULL, 0));
-	// cwd_path = "~/cool/Lasers/";
-	cwd_path = "~/cool/";
+	cwd_path = "~/Andromeda/";
+	// cwd_path = "~/cool/";
 
 	//lists all items in the current directory and below
 	//only returns files
@@ -49,8 +49,8 @@ Config::Config()
 	resizable = true;
 	window_x = SDL_WINDOWPOS_UNDEFINED;
 	window_y = SDL_WINDOWPOS_UNDEFINED;
-	window_w = 1024;
-	window_h = 768;
+	window_w = 640;
+	window_h = 480;
 
 	colors[BACKGROUND] = { 0,   0,   0,   255};
 	colors[FILL]       = { 50,  50,  50,  255};
@@ -59,6 +59,7 @@ Config::Config()
 	
 	font_size = 12;
 
+	file_size = 5;
 	max_suggest = 4;
 }
 

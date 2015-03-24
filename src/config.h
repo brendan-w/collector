@@ -38,8 +38,10 @@ class Config
 		std::string font_path;
 		int font_size;
 
-		unsigned int max_suggest;
+		size_t max_suggest;
 
+		int file_size;
+		const int file_padding = 1;
 		const int CLI_height = 20;
 		const int CLI_padding = 4;
 

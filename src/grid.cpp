@@ -1,5 +1,6 @@
 
 
+#include <iostream>
 
 #include <SDL.h>
 
@@ -16,36 +17,57 @@ Grid::Grid()
 
 Grid::~Grid()
 {
-	
+
 }
 
 void Grid::render(file_list::iterator begin, file_list::iterator end)
 {
 	setRenderDrawColor(renderer, config->get_color(FILL));
 
-	for( ; begin != end; ++begin)
+	int old_x = (*begin)->rect.x;
+	int old_y = (*begin)->rect.y;
+
+	begin++;
+
+	for(auto it = begin; it != end; ++it)
 	{
-		File* file = *begin;
-		SDL_RenderFillRect(renderer, &(file->rect));
+		File* file = *it;
+		SDL_RenderDrawLine(renderer, old_x, old_y, file->rect.x, file->rect.y);
+		old_x = file->rect.x;
+		old_y = file->rect.y;
+
+		// SDL_RenderFillRect(renderer, &(file->rect));
 	}
 }
 
+//generate the hilbert curve for this fileset
 void Grid::layout(file_list::iterator begin, file_list::iterator end)
 {
-	int x = 1;
-	int y = 1;
-	int inc = 6;
+	//raster layout
+	
+	int x = config->file_padding;
+	int y = config->file_padding;
+	int inc = config->file_size + config->file_padding;
 
-	for( ; begin != end; ++begin)
+	for(auto it = begin; it != end; ++it)
 	{
-		File* file = *begin;
-		file->rect = { x, y, 5, 5 };
+		File* file = *it;
+		file->rect = {
+			x,
+			y,
+			config->file_size,
+			config->file_size };
 
 		x += inc;
 		if(x > config->window_w)
 		{
-			x = 1;
+			x = config->file_padding;
 			y += inc;
 		}
 	}
+
+	//size of the hilbert curve (number of squares (files) wide)
+	int size = config->window_w / (config->file_size + config->file_padding);
+
+	std::cout << size << std::endl;
 }
