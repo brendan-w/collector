@@ -7,6 +7,8 @@
 #include "utils.h"
 
 
+//Courtesy of:
+//https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#C.2B.2B
 size_t levenshtein_distance(const std::string & s1, const std::string & s2) {
 	const size_t len1 = s1.size(), len2 = s2.size();
 	std::vector<size_t> col(len2+1), prevCol(len2+1);
@@ -34,4 +36,74 @@ size_t levenshtein_distance(const std::string & s1, const std::string & s2) {
 void to_lower(std::string & s)
 {
 	std::transform(s.begin(), s.end(), s.begin(), ::tolower);
+}
+
+
+
+/*
+    Hilbert curve generators
+
+    ╷ ┌───┐ ┌───┐ ╷
+    └─┘ ┌─┘ └─┐ └─┘
+    ┌─┐ └─┐ ┌─┘ ┌─┐
+    │ └───┘ └───┘ │
+    └─┐ ┌─────┐ ┌─┘
+    ┌─┘ └─┐ ┌─┘ └─┐
+    │ ┌─┐ │ │ ┌─┐ │
+    └─┘ └─┘ └─┘ └─┘
+
+    Courtesy of:
+    https://en.wikipedia.org/wiki/Hilbert_curve
+
+    n = width of square (must be a power of 2)
+    d = distance along curve
+    x,y = cell coordinate of point on curve
+*/
+ 
+//rotate/flip a quadrant appropriately
+static void rot(int n, int *x, int *y, int rx, int ry)
+{
+    if(ry == 0)
+    {
+        if(rx == 1)
+        {
+            *x = n-1 - *x;
+            *y = n-1 - *y;
+        }
+ 
+        //Swap x and y
+        int t  = *x;
+        *x = *y;
+        *y = t;
+    }
+}
+
+//convert (x,y) to d
+int xy2d (int n, int x, int y)
+{
+    int rx, ry, s, d=0;
+    for(s=n/2; s>0; s/=2)
+    {
+        rx = (x & s) > 0;
+        ry = (y & s) > 0;
+        d += s * s * ((3 * rx) ^ ry);
+        rot(s, &x, &y, rx, ry);
+    }
+    return d;
+}
+ 
+//convert d to (x,y)
+void d2xy(int n, int d, int *x, int *y)
+{
+    int rx, ry, s, t=d;
+    *x = *y = 0;
+    for(s=1; s<n; s*=2)
+    {
+        rx = 1 & (t/2);
+        ry = 1 & (t ^ rx);
+        rot(s, x, y, rx, ry);
+        *x += s * rx;
+        *y += s * ry;
+        t /= 4;
+    }
 }

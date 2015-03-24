@@ -1,12 +1,14 @@
 
 
 #include <iostream>
+#include <cmath> //log2()
 
 #include <SDL.h>
 
 #include "collector.h"
 #include "config.h"
 #include "file.h"
+#include "utils.h"
 #include "grid.h"
 
 
@@ -43,31 +45,33 @@ void Grid::render(file_list::iterator begin, file_list::iterator end)
 //generate the hilbert curve for this fileset
 void Grid::layout(file_list::iterator begin, file_list::iterator end)
 {
-	//raster layout
-	
-	int x = config->file_padding;
-	int y = config->file_padding;
-	int inc = config->file_size + config->file_padding;
 
+	//find the number of files wide the display is
+	int width = config->window_w / (config->file_size + config->file_padding);
+
+	//find nearest power of 2 for the size of the H curve
+	int grid_size = exp2(ceil(log2( (double) width)));
+
+	const int multiplier = config->file_size + config->file_padding;
+
+	int d = 0;
 	for(auto it = begin; it != end; ++it)
 	{
 		File* file = *it;
-		file->rect = {
-			x,
-			y,
-			config->file_size,
-			config->file_size };
 
-		x += inc;
-		if(x > config->window_w)
-		{
-			x = config->file_padding;
-			y += inc;
-		}
+		//compute the Hilbert position
+		int x = 0, y = 0;
+		d2xy(grid_size, d, &x, &y);
+
+		file->rect = {
+			(x * multiplier) + config->file_padding,
+			(y * multiplier) + config->file_padding,
+			config->file_size,
+			config->file_size
+		};
+
+		d++;
 	}
 
-	//size of the hilbert curve (number of squares (files) wide)
-	int size = config->window_w / (config->file_size + config->file_padding);
-
-	std::cout << size << std::endl;
+	std::cout << grid_size << std::endl;
 }
