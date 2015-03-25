@@ -93,8 +93,6 @@ void Grid::layout(file_list::iterator begin, file_list::iterator end)
 		d = (d + 1) % d_per_hilbert;
 		if(d == 0) i++;
 	}
-
-	std::cout << i << std::endl;
 }
 
 void Grid::on_wheel(SDL_MouseWheelEvent &e)

@@ -3,6 +3,7 @@
 
 #include <SDL.h>
 
+#include "displayobject.h"
 #include "cli.h"
 #include "grid.h"
 #include "file.h"
@@ -20,8 +21,8 @@ class Display
 		void on_wheel(SDL_MouseWheelEvent &e);
 
 	private:
-		CLI* cli;
-		Grid* grid;
+		DisplayObject* cli;
+		DisplayObject* grid;
 
 		void send_quit();
 		void send_selector();

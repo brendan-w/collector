@@ -1,10 +1,11 @@
 
 #pragma once
 
+#include "displayobject.h"
 #include "file.h"
 
 
-class Grid
+class Grid : public virtual DisplayObject
 {
 	public:
 		Grid();

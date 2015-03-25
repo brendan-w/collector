@@ -3,9 +3,12 @@
 
 #include <string>
 #include <vector>
+
+#include "displayobject.h"
+#include "selector.h"
 #include "text.h"
 
-class CLI
+class CLI : public DisplayObject
 {
 	public:
 		CLI();
@@ -13,6 +16,7 @@ class CLI
 		void render();
 		void on_key(SDL_KeyboardEvent &e);
 		void on_text(SDL_TextInputEvent &e);
+		void fill_selector(Selector* selector);
 	private:
 		std::vector<Text*> tags;
 		unsigned int current;

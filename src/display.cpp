@@ -78,5 +78,15 @@ void Display::send_quit()
 
 void Display::send_selector()
 {
+	Selector* selector = new Selector;
 
+	//ask the various components for their data
+	cli->fill_selector(selector);
+
+	//wrap in SDL_Event, and push into queue
+	SDL_Event e;
+	e.type = SDL_USEREVENT;
+	e.user.type = SELECTOR;
+	e.user.data1 = (void*) selector;
+	SDL_PushEvent(&e);
 }

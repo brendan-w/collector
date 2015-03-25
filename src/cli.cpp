@@ -4,7 +4,6 @@
 	which are used to query the filestore.
 */
 
-
 #include <string>
 #include <vector>
 
@@ -27,7 +26,6 @@ CLI::~CLI()
 {
 	destroy_tags();
 }
-
 
 
 void CLI::on_key(SDL_KeyboardEvent &e)
@@ -86,6 +84,9 @@ void CLI::on_text(SDL_TextInputEvent &e)
 
 void CLI::render()
 {
+	//draw the background
+	setRenderDrawColor(renderer, config->get_color(OVERLAY));
+
 	SDL_Rect current_rect = {
 		0,
 		config->window_h - config->CLI_height,
@@ -93,9 +94,12 @@ void CLI::render()
 		config->CLI_height
 	};
 
-	setRenderDrawColor(renderer, config->get_color(HIGHLIGHT));
+	SDL_RenderFillRect(renderer, &current_rect);
+
 
 	//draw each tags text
+	setRenderDrawColor(renderer, config->get_color(HIGHLIGHT));
+
 	int x = config->CLI_padding;
 	for(unsigned int i = 0; i < tags.size(); i++)
 	{
@@ -110,6 +114,15 @@ void CLI::render()
 
 		t->render(x, config->window_h - 16);
 		x += t->width() + (config->CLI_padding * 2);
+	}
+}
+
+
+void CLI::fill_selector(Selector* selector)
+{
+	for(Text* t: tags)
+	{
+		selector->add_operation(t->get_text());
 	}
 }
 
@@ -176,23 +189,3 @@ void CLI::backspace()
 		current_tag()->set_text(s);
 	}
 }
-
-/*
-void CLI::send_selector()
-{
-	SDL_Event e;
-	e.type = SDL_USEREVENT;
-	e.user.type = SELECTOR;
-
-	Selector* selector = new Selector;
-
-	for(Text* t: tags)
-	{
-		selector->add_operation(t->get_text());
-	}
-
-	e.user.data1 = (void*) selector;
-
-	SDL_PushEvent(&e);
-}
-*/

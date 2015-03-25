@@ -5,8 +5,8 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
-#include "texture.h"
 #include "collector.h"
+#include "texture.h"
 
 
 Texture::Texture()
@@ -75,7 +75,8 @@ void Texture::render(int x, int y)
 	if((texture != NULL) && (w > 0) && (h > 0))
 	{
 		SDL_Rect dest = { x, y, w, h };
-		SDL_RenderCopy(renderer, texture, NULL, &dest);
+		if(rectInWindow(dest))
+			SDL_RenderCopy(renderer, texture, NULL, &dest);
 	}
 }
 

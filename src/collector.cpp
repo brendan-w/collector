@@ -151,6 +151,12 @@ bool init()
 
 	SDL_StartTextInput();
 
+	if(SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND) != 0)
+	{
+		print_SDL_error("SDL_SetRenderDrawBlendMode Error");
+		return false;
+	}
+
 	/*
 		SDL2_ttf
 	*/
@@ -188,7 +194,7 @@ bool init()
 	Uint32 begin = SDL_RegisterEvents(2);
 	if(begin == ((Uint32) -1 ))
 	{
-		print_message("Failed to register custom event: SELECTOR");
+		print_message("Failed to register custom events");
 		return false;
 	}
 
