@@ -33,42 +33,50 @@ Grid::~Grid()
 
 void Grid::render(file_list_it begin, file_list_it end, Selection* selection)
 {
-	//draw the files
-	render(begin, end);
-
-	//draw selected files
-	setRenderDrawColor(renderer, config->get_color(HIGHLIGHT));
-	file_set selected = selection->get_files();
-
-	for(File* file: selected)
+	//not very dry, but saves having to check for a null selection every iteration
+	if(selection != NULL)
 	{
-		render_file(file);
+		file_set selected_files = selection->get_files();
+
+		for(auto it = begin; it != end; ++it)
+		{
+			File* file = *it;
+			bool selected = selected_files.find(file) != selected_files.end();
+			render_file(file, selected);
+		}
+	}
+	else
+	{
+		render(begin, end);
 	}
 }
 
 void Grid::render(file_list_it begin, file_list_it end)
 {
-	//draw all files
-	setRenderDrawColor(renderer, config->get_color(FILL));
-
 	for(auto it = begin; it != end; ++it)
 	{
-		render_file(*it);
+		render_file(*it, false);
 	}
 }
 
-
-void Grid::render_file(File* file)
+void Grid::render_file(File* file, bool selected)
 {
-		SDL_Rect rect = {
-			file->point.x + x_offset, //adjust position for centering
-			file->point.y - y_offset, //adjust position for scroll
-			FILE_SIZE,
-			FILE_SIZE
-		};
+	SDL_Rect rect = {
+		file->point.x + x_offset, //adjust position for centering
+		file->point.y - y_offset, //adjust position for scroll
+		FILE_SIZE,
+		FILE_SIZE
+	};
 
-		if(rectInWindow(rect))
-			SDL_RenderFillRect(renderer, &rect);
+	if(rectInWindow(rect))
+	{
+		if(selected)
+			setRenderDrawColor(renderer, config->get_color(HIGHLIGHT));
+		else
+			setRenderDrawColor(renderer, config->get_color(FILL));
+
+		SDL_RenderFillRect(renderer, &rect);
+	}
 }
 
 //generates a stack of hilbert curves for this fileset

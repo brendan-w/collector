@@ -68,11 +68,7 @@ void Display::on_wheel(SDL_MouseWheelEvent &e)
 
 void Display::render(file_list::iterator begin, file_list::iterator end)
 {
-	if(selection == NULL)
-		grid->render(begin, end);
-	else
-		grid->render(begin, end, selection);
-
+	grid->render(begin, end, selection);
 	cli->render();
 }
 

@@ -24,7 +24,7 @@ class Grid : public virtual DisplayObject
 		int y_offset = 0; //used for vertical scrolling
 		int scroll_height = 0; //the height of the entire scrollable region
 
-		void render_file(File* file);
+		void render_file(File* file, bool selected);
 		void limit_scroll();
 };
 
