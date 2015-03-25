@@ -21,7 +21,7 @@ class Grid : public virtual DisplayObject
 	private:
 		int x_offset = 0; //used for centering the column of files
 		int y_offset = 0; //used for vertical scrolling
-		int max_scroll = 200;
+		int max_scroll = 0;
 
 		void render_file(File* file);
 		void limit_scroll();

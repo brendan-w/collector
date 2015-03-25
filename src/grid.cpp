@@ -133,6 +133,8 @@ void Grid::read_selection(Selection* selection)
 
 void Grid::limit_scroll()
 {
+	if(max_scroll < 0) max_scroll = 0;
+
 	if(y_offset < 0) y_offset = 0;
 	else if(y_offset > max_scroll) y_offset = max_scroll;
 }
