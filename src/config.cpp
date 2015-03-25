@@ -54,7 +54,7 @@ Config::Config()
 	colors[BACKGROUND]    = { 0,   0,   0,   255 };
 	colors[FILL]          = { 50,  50,  50,  255 };
 	colors[HIGHLIGHT]     = { 48,  141, 186, 255 };
-	colors[OVERLAY]       = { 0,   0,   0,   128 };
+	colors[OVERLAY]       = { 0,   0,   0,   175 };
 	colors[CLI_HIGHLIGHT] = { 48,  141, 186, 110 };
 	colors[CLI_TEXT]      = { 255, 255, 255, 255 };
 	
@@ -62,6 +62,9 @@ Config::Config()
 	max_suggest = 4;
 	scroll_speed = 50;
 	file_size = 7;
+	file_padding = 1;
+	CLI_height = 20;
+	CLI_padding = 4;
 }
 
 Config::~Config()

@@ -18,12 +18,12 @@ class File
 
 		void load();
 		void unload();
-		void render();
 
 		std::string get_path();
 		void set_path(std::string new_path);
 
-		SDL_Rect rect;
+		SDL_Point point;
+
 	private:
 		std::string path;
 		Texture* texture;

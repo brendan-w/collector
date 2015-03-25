@@ -38,14 +38,13 @@ class Config
 
 		SDL_Color colors[NUM_COLORS];
 
-
 		int font_size;
 		size_t max_suggest;
 		size_t scroll_speed;
 		int file_size;
-		const int file_padding = 1;
-		const int CLI_height = 20;
-		const int CLI_padding = 4;
+		int file_padding;
+		int CLI_height;
+		int CLI_padding;
 
 		//a few handy accessors
 		Uint32 get_window_flags();

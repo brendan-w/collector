@@ -31,5 +31,5 @@ std::string File::get_path()
 
 void File::set_path(std::string new_path)
 {
-
+	path = new_path;
 }
