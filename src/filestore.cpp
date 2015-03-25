@@ -131,46 +131,13 @@ void FileStore::insert_file(File* file)
 	files.push_back(file);
 
 	//get all tags, relative to the current working directory
-	tag_set file_tags = tags_for_file(file);
+	tag_set file_tags = file->get_tags();
 
 	for(std::string t: file_tags)
 	{
 		//add the file to the correct tag file_set
 		tags[t].insert(file);
 	}
-}
-
-
-
-//extracts tags from the file's path and name
-//splits a string on multiple delimeters
-tag_set FileStore::tags_for_file(File* file)
-{
-	tag_set tags;
-	std::string path = file->get_path();
-
-	to_lower(path);
-
-	size_t prev = 0;
-	size_t pos = 0;
-
-	//while there is another delimeter
-    while((pos = path.find_first_of(config->tag_delim, prev)) != std::string::npos)
-    {
-        if(pos > prev)
-        {
-            tags.insert(path.substr(prev, pos-prev));
-        }
-        prev = pos + 1;
-    }
-
-    //add the last tag to the set
-    if(prev < path.length())
-    {
-        tags.insert(path.substr(prev, std::string::npos));
-    }
-
-	return tags;
 }
 
 

@@ -10,6 +10,9 @@
 #include "texture.h"
 
 
+typedef std::unordered_set<std::string> tag_set;
+
+
 class File
 {
 	public:
@@ -19,8 +22,10 @@ class File
 		void load();
 		void unload();
 
-		std::string get_path();
-		void set_path(std::string new_path);
+		tag_set get_tags();
+
+		std::string get_path() { return path; }
+		void set_path(std::string new_path) { path = new_path; }
 
 		SDL_Point point;
 
@@ -29,8 +34,10 @@ class File
 		Texture* texture;
 };
 
+//file_list
 typedef std::list<File*> file_list;
 typedef file_list::iterator file_list_it;
 
+//file_set
 typedef std::unordered_set<File*> file_set;
 typedef file_set::iterator file_set_it;

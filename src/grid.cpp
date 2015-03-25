@@ -34,7 +34,7 @@ Grid::~Grid()
 void Grid::render(file_list_it begin, file_list_it end, Selection* selection)
 {
 	//not very dry, but saves having to check for a null selection every iteration
-	if(selection != NULL)
+	if((selection != NULL) && (selection->get_size() > 0))
 	{
 		file_set selected_files = selection->get_files();
 
@@ -47,7 +47,7 @@ void Grid::render(file_list_it begin, file_list_it end, Selection* selection)
 	}
 	else
 	{
-		render(begin, end);
+		render(begin, end);		
 	}
 }
 
@@ -131,6 +131,7 @@ void Grid::layout(file_list_it begin, file_list_it end)
 		scroll_height += config->CLI_height;
 	}
 
+	//since the window was resized, check the scroll position
 	limit_scroll();
 }
 

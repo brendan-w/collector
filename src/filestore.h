@@ -10,7 +10,6 @@
 #include "selection.h"
 
 
-typedef std::unordered_set<std::string> tag_set;
 typedef std::unordered_map<std::string, file_set> tag_map;
 
 
@@ -34,6 +33,5 @@ class FileStore
 
 		file_set set_for_tag(const std::string &tag);
 		void insert_file(File* file);
-		tag_set tags_for_file(File* file);
 		std::string fuzzy_match(const std::string & partial_tag);
 };
