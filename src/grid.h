@@ -24,5 +24,6 @@ class Grid : public virtual DisplayObject
 		int max_scroll = 200;
 
 		void render_file(File* file);
+		void limit_scroll();
 };
 

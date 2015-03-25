@@ -27,7 +27,7 @@ Config::Config()
 	//get the pathname for the current working directory
 	// cwd_path = std::string(getcwd(NULL, 0));
 	// cwd_path = "~/Andromeda/";
-	cwd_path = "~/cool/Bands/";
+	cwd_path = "~/cool/";
 
 	//lists all items in the current directory and below
 	//only returns files
@@ -60,7 +60,7 @@ Config::Config()
 	
 	font_size = 12;
 	max_suggest = 4;
-	scroll_speed = 20;
+	scroll_speed = 50;
 	file_size = 5;
 }
 

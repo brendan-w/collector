@@ -52,7 +52,7 @@ void Display::on_key(SDL_KeyboardEvent &e)
 			cli->on_key(e);
 	}
 
-	send_selector();
+	//send_selector();
 }
 
 void Display::on_text(SDL_TextInputEvent &e)

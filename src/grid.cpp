@@ -16,7 +16,8 @@
 #define FILE_SIZE config->file_size
 #define FILE_PAD config->file_padding
 #define FILE_OFFSET (FILE_SIZE + FILE_PAD)
-#define WINDOW_W config->window_w
+#define WINDOW_W (config->window_w)
+#define WINDOW_H (config->window_h)
 #define SQUARE(x) (x*x)
 
 
@@ -86,6 +87,8 @@ void Grid::layout(file_list_it begin, file_list_it end)
 	int i = 0; //which hilbert curve 
 	int d = 0; //distance along the current hilbert curve
 
+	max_scroll = 0;
+
 	for(auto it = begin; it != end; ++it)
 	{
 		File* file = *it;
@@ -101,21 +104,35 @@ void Grid::layout(file_list_it begin, file_list_it end)
 			FILE_SIZE
 		};
 
+		//update the maximum scroll limit
+		if(max_scroll < file->rect.y)
+		{
+			max_scroll = file->rect.y;
+		}
+
 		//handle looping over multiple hilbert curves
 		d = (d + 1) % d_per_hilbert;
 		if(d == 0) i++;
 	}
+
+	max_scroll += FILE_OFFSET; //don't forget the last line of files have thickness
+	max_scroll -= WINDOW_H;
+	limit_scroll();
 }
 
 void Grid::on_wheel(SDL_MouseWheelEvent &e)
 {
 	y_offset -= (e.y * config->scroll_speed);
-
-	if(y_offset < 0) y_offset = 0;
-	else if(y_offset > max_scroll) y_offset = max_scroll;
+	limit_scroll();
 }
 
 void Grid::read_selection(Selection* selection)
 {
 
+}
+
+void Grid::limit_scroll()
+{
+	if(y_offset < 0) y_offset = 0;
+	else if(y_offset > max_scroll) y_offset = max_scroll;
 }

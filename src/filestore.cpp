@@ -92,19 +92,20 @@ Selection* FileStore::select(Selector* selector)
 	*/
 
 	//dumb test selector
-	size_t n = selector->get_operations().size();
+	Tag_operations ops = selector->get_operations();
 
-	if(n < files.size())
+	if(ops.size() > 0)
 	{
-		file_list_it end = files.begin();
-		std::advance(end, n);
+		std::string tag = ops[0]->get_tag();
+		tag = fuzzy_match(tag);
 
-		for(auto it = files.begin(); it != end; ++it)
+		std::cout << tag << " : " << tags[tag].size() << std::endl;
+
+		for(auto it = tags[tag].begin(); it != tags[tag].end(); ++it)
 		{
 			selection->add_file(*it);
 		}
 	}
-
 
 	delete selector;
 	return selection;
@@ -134,9 +135,8 @@ void FileStore::insert_file(File* file)
 
 	for(std::string t: file_tags)
 	{
-		//if it's not in the set, add it. (faster than .emplace())
-		if(tags.find(t) == tags.end())
-			tags[t].insert(file);
+		//add the file to the correct tag file_set
+		tags[t].insert(file);
 	}
 }
 
@@ -149,7 +149,7 @@ tag_set FileStore::tags_for_file(File* file)
 	tag_set tags;
 	std::string path = file->get_path();
 
-	// to_lower(path);
+	to_lower(path);
 
 	size_t prev = 0;
 	size_t pos = 0;
