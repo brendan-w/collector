@@ -30,34 +30,46 @@ Grid::~Grid()
 
 }
 
-void Grid::render(file_list::iterator begin, file_list::iterator end)
+void Grid::render(file_list_it begin, file_list_it end, Selection* selection)
 {
 	//draw the files
-	setRenderDrawColor(renderer, config->get_color(FILL));
+	render(begin, end);
 
-	// int old_x = (*begin)->rect.x;
-	// int old_y = (*begin)->rect.y;
-	// begin++;
+	//draw selected files
+	setRenderDrawColor(renderer, config->get_color(HIGHLIGHT));
+	file_set selected = selection->get_files();
+
+	for(File* file: selected)
+	{
+		render_file(file);
+	}
+}
+
+void Grid::render(file_list_it begin, file_list_it end)
+{
+	//draw all files
+	setRenderDrawColor(renderer, config->get_color(FILL));
 
 	for(auto it = begin; it != end; ++it)
 	{
-		File* file = *it;
+		render_file(*it);
+	}
+}
+
+
+void Grid::render_file(File* file)
+{
 		SDL_Rect rect = file->rect;
 		rect.x += x_offset; //adjust position for centering
 		rect.y -= y_offset; //adjust position for scroll
 
-		// SDL_RenderDrawLine(renderer, old_x, old_y, file->rect.x, file->rect.y);
-		// old_x = file->rect.x;
-		// old_y = file->rect.y;
-
 		if(rectInWindow(rect))
 			SDL_RenderFillRect(renderer, &rect);
-	}
 }
 
 //generates a stack of hilbert curves for this fileset
 //updates every File->rect
-void Grid::layout(file_list::iterator begin, file_list::iterator end)
+void Grid::layout(file_list_it begin, file_list_it end)
 {
 	//find nearest power of 2 for the size of the H curve (flooring it)
 	const int grid_size = exp2(floor(log2( (double)(WINDOW_W / FILE_OFFSET) )));
@@ -101,4 +113,9 @@ void Grid::on_wheel(SDL_MouseWheelEvent &e)
 
 	if(y_offset < 0) y_offset = 0;
 	else if(y_offset > max_scroll) y_offset = max_scroll;
+}
+
+void Grid::read_selection(Selection* selection)
+{
+
 }

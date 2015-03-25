@@ -8,6 +8,7 @@
 #include "config.h"
 #include "utils.h"
 #include "selector.h"
+#include "selection.h"
 #include "file.h"
 #include "filestore.h"
 
@@ -75,21 +76,38 @@ tag_set FileStore::auto_complete(const std::string & partial_tag)
 	return result;
 }
 
-file_set* FileStore::select(Selector* selector)
-{
-	//file_set* result = new file_set;
-	Tag_operations ops = selector->get_operations();
 
+//turns Selectors into Selections
+Selection* FileStore::select(Selector* selector)
+{
+	Selection* selection = new Selection;
+
+	/*
+	Tag_operations ops = selector->get_operations();
 	for(Tag_operation* op: ops)
 	{
 		std::cout << op->get_tag() << " ";
 	}
-
 	std::cout << std::endl;
+	*/
 
-	//return result;
+	//dumb test selector
+	size_t n = selector->get_operations().size();
+
+	if(n < files.size())
+	{
+		file_list_it end = files.begin();
+		std::advance(end, n);
+
+		for(auto it = files.begin(); it != end; ++it)
+		{
+			selection->add_file(*it);
+		}
+	}
+
+
 	delete selector;
-	return NULL;
+	return selection;
 }
 
 

@@ -51,11 +51,12 @@ Config::Config()
 	window_w = 640;
 	window_h = 480;
 
-	colors[BACKGROUND] = { 0,   0,   0,   255};
-	colors[FILL]       = { 50,  50,  50,  255};
-	colors[HIGHLIGHT]  = { 18,  53,  70,  255};
-	colors[OVERLAY]    = { 0,   0,   0,   128};
-	colors[CLI_TEXT]   = { 255, 255, 255, 255};
+	colors[BACKGROUND]    = { 0,   0,   0,   255 };
+	colors[FILL]          = { 50,  50,  50,  255 };
+	colors[HIGHLIGHT]     = { 48,  141, 186, 255 };
+	colors[OVERLAY]       = { 0,   0,   0,   128 };
+	colors[CLI_HIGHLIGHT] = { 48,  141, 186, 110 };
+	colors[CLI_TEXT]      = { 255, 255, 255, 255 };
 	
 	font_size = 12;
 	max_suggest = 4;

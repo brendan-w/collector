@@ -4,7 +4,7 @@
 #include <string>
 #include <SDL.h>
 
-#define NUM_COLORS 5
+#define NUM_COLORS 6
 
 //use these keys with get_color()
 enum Color
@@ -13,6 +13,7 @@ enum Color
 	FILL,
 	HIGHLIGHT,
 	OVERLAY,
+	CLI_HIGHLIGHT,
 	CLI_TEXT
 };
 

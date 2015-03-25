@@ -98,7 +98,7 @@ void CLI::render()
 
 
 	//draw each tags text
-	setRenderDrawColor(renderer, config->get_color(HIGHLIGHT));
+	setRenderDrawColor(renderer, config->get_color(CLI_HIGHLIGHT));
 
 	int x = config->CLI_padding;
 	for(unsigned int i = 0; i < tags.size(); i++)
@@ -125,6 +125,16 @@ void CLI::fill_selector(Selector* selector)
 		selector->add_operation(t->get_text());
 	}
 }
+
+
+void CLI::read_selection(Selection* selection)
+{
+
+}
+
+
+
+
 
 
 //deallocates all Text objects in tags

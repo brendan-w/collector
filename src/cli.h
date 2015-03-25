@@ -16,7 +16,10 @@ class CLI : public DisplayObject
 		void render();
 		void on_key(SDL_KeyboardEvent &e);
 		void on_text(SDL_TextInputEvent &e);
+
 		void fill_selector(Selector* selector);
+		void read_selection(Selection* selection);
+
 	private:
 		std::vector<Text*> tags;
 		unsigned int current;

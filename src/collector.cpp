@@ -9,6 +9,8 @@
 
 #include "collector.h"
 #include "filestore.h"
+#include "selector.h"
+#include "selection.h"
 #include "config.h"
 #include "display.h"
 
@@ -30,7 +32,6 @@ Display* display = NULL;
 
 //SDL userevent types
 Uint32 SELECTOR;
-Uint32 SELECTION;
 
 
 int main(int argc, char * argv[])
@@ -85,7 +86,11 @@ int main(int argc, char * argv[])
 
 				case SDL_USEREVENT:
 					if(e.user.type == SELECTOR)
-						filestore->select( (Selector*) e.user.data1 );
+					{
+						Selector* selector = (Selector*) e.user.data1;
+						Selection* selection = filestore->select(selector);
+						display->on_select(selection);
+					}
 					break;
 
 				default:
@@ -191,15 +196,12 @@ bool init()
 		Register Custom User Events
 	*/
 
-	Uint32 begin = SDL_RegisterEvents(2);
-	if(begin == ((Uint32) -1 ))
+	SELECTOR = SDL_RegisterEvents(1);
+	if(SELECTOR == ((Uint32) -1 ))
 	{
 		print_message("Failed to register custom events");
 		return false;
 	}
-
-	SELECTOR  = begin;
-	SELECTION = begin + 1;
 
 	/*
 		Create the display

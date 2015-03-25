@@ -17,12 +17,17 @@ Display::Display()
 {
 	cli = new CLI;
 	grid = new Grid;
+
+	selection = NULL;
 }
 
 Display::~Display()
 {
 	delete cli;
 	delete grid;
+
+	if(selection != NULL)
+		delete selection;
 }
 
 void Display::on_resize(file_list::iterator begin, file_list::iterator end)
@@ -63,9 +68,28 @@ void Display::on_wheel(SDL_MouseWheelEvent &e)
 
 void Display::render(file_list::iterator begin, file_list::iterator end)
 {
-	grid->render(begin, end);
+	if(selection == NULL)
+		grid->render(begin, end);
+	else
+		grid->render(begin, end, selection);
+
 	cli->render();
 }
+
+void Display::on_select(Selection* new_selection)
+{
+	if(selection != NULL)
+		delete selection;
+	selection = new_selection;
+
+	//let the components update themselves
+	grid->read_selection(selection);
+	cli->read_selection(selection);
+}
+
+
+
+
 
 void Display::send_quit()
 {

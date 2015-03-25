@@ -1,17 +1,15 @@
 
 #pragma once
 
-#include <string>
-#include <vector>
-
+#include "file.h"
 
 class Selection
 {
 	public:
 		Selection();
 		~Selection();
-		void add_operation(std::string input);
-		const Tag_operations get_operations() { return tags; };
+		void add_file(File* file);
+		const file_set get_files() { return files; }
 	private:
-		Tag_operations tags;
+		file_set files;
 };
