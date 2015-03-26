@@ -22,6 +22,7 @@ CLI::CLI(Selection** s) : DisplayObject(s)
 {
 	new_tag(); //create the initial empty tag field
 	totals = new Text("", config->get_color(CLI_TEXT));
+	on_selection();
 }
 
 

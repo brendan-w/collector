@@ -96,11 +96,13 @@ Selection* FileStore::select(Selector* selector)
 	if(ops.size() > 0)
 	{
 		std::string tag = ops[0]->get_tag();
-		tag = fuzzy_match(tag);
 
-		std::cout << tag << " : " << tags[tag].size() << std::endl;
+		//tag = fuzzy_match(tag);
+		//std::cout << tag << " : " << tags[tag].size() << std::endl;
 
-		for(auto it = tags[tag].begin(); it != tags[tag].end(); ++it)
+		file_set result = set_for_tag(tag);
+
+		for(auto it = result.begin(); it != result.end(); ++it)
 		{
 			selection->add_file(*it);
 		}
@@ -118,11 +120,11 @@ file_set FileStore::set_for_tag(const std::string & tag)
 {
 	tag_map::const_iterator result = tags.find(tag);
 
-	file_set set;
+	file_set output;
 	if(result != tags.end())
-		set = result->second;
+		output = result->second;
 
-	return set;
+	return output;
 }
 
 void FileStore::insert_file(File* file)
