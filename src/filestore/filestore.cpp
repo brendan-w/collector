@@ -81,9 +81,7 @@ tag_set FileStore::auto_complete(const std::string & partial_tag)
 Selection* FileStore::empty_selection()
 {
 	//load a new selector with information about this FileStore
-	return new Selection(files.begin(),
-						 files.end(),
-						 files.size());
+	return new Selection(&files);
 }
 
 

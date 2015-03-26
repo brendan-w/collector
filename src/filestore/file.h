@@ -2,7 +2,7 @@
 #pragma once
 
 #include <string>
-#include <list>
+#include <vector>
 #include <unordered_set>
 
 #include <SDL.h>
@@ -34,9 +34,9 @@ class File
 		Texture* texture;
 };
 
-//file_list
-typedef std::list<File*> file_list;
-typedef file_list::iterator file_list_it;
+//file_vector
+typedef std::vector<File*> file_vector;
+typedef file_vector::iterator file_vector_it;
 
 //file_set
 typedef std::unordered_set<File*> file_set;

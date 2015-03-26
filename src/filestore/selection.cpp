@@ -5,11 +5,9 @@
 #include <filestore/selection.h>
 
 
-Selection::Selection(file_list_it b, file_list_it e, size_t s)
+Selection::Selection(file_vector* all)
 {
-	_all_begin = b;
-	_all_end = e;
-	_all_size = s;
+	all_files = all;
 }
 
 Selection::~Selection()
@@ -26,4 +24,12 @@ void Selection::add_file(File* file)
 bool Selection::has(File* file)
 {
 	return (files.find(file) != files.end());
+}
+
+File* Selection::all_at(size_t i)
+{
+	if(i < all_size())
+		return (*all_files)[i];
+	else
+		return NULL;
 }

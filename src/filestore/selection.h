@@ -7,7 +7,7 @@
 class Selection
 {
 	public:
-		Selection(file_list_it b, file_list_it e, size_t s);
+		Selection(file_vector* all);
 		~Selection();
 
 		void add_file(File* file);
@@ -15,21 +15,18 @@ class Selection
 		bool has(File* file);
 
 		file_set_it begin() { return files.begin(); }
-		file_set_it end() { return files.end(); }
-		size_t size() { return files.size(); }
+		file_set_it end()   { return files.end(); }
+		size_t size()       { return files.size(); }
 
-		file_list_it all_begin() { return _all_begin; }
-		file_list_it all_end() { return _all_end; }
-		size_t all_size() { return _all_size; }
+		file_vector_it all_begin() { return all_files->begin(); }
+		file_vector_it all_end()   { return all_files->end(); }
+		size_t all_size()          { return all_files->size(); }
+		File* all_at(size_t i);
 
 	private:
 		 //set of Files selected by the previous Selector
 		file_set files;
 		
-		//iterators for the whole file list
-		file_list_it _all_begin;
-		file_list_it _all_end;
-
-		//total number of files in the FileStore
-		size_t _all_size = 0;
+		//the whole file list
+		file_vector* all_files;
 };

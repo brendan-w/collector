@@ -32,8 +32,8 @@ void Info::render()
 	setRenderDrawColor(renderer, config->get_color(OVERLAY));
 	SDL_RenderFillRect(renderer, &rect);
 
-	info->render(0,
-				   rect.y + config->CLI_padding);
+	info->render(config->CLI_padding,
+				 rect.y + config->CLI_padding);
 }
 
 

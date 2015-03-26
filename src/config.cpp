@@ -27,8 +27,8 @@ Config::Config()
 
 	//get the pathname for the current working directory
 	// cwd_path = std::string(getcwd(NULL, 0));
-	// cwd_path = "~/Andromeda/";
-	cwd_path = "~/cool/";
+	// cwd_path = "/home/brendan/Andromeda";
+	cwd_path = "/home/brendan/cool";
 
 	//lists all items in the current directory and below
 	//only returns files

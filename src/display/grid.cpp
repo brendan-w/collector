@@ -36,8 +36,8 @@ Grid::~Grid()
 void Grid::render()
 {
 	Selection* selection = current();
-	file_list_it begin = selection->all_begin();
-	file_list_it end   = selection->all_end();
+	file_vector_it begin = selection->all_begin();
+	file_vector_it end   = selection->all_end();
 
 	//not very dry, but saves having to check for a null selection every iteration
 	if(selection->size() > 0)
@@ -107,8 +107,8 @@ void Grid::layout()
 		scroll_height = 0;
 
 		Selection* selection = current();
-		file_list_it begin = selection->all_begin();
-		file_list_it end   = selection->all_end();
+		file_vector_it begin = selection->all_begin();
+		file_vector_it end   = selection->all_end();
 
 		for(auto it = begin; it != end; ++it)
 		{
@@ -172,9 +172,8 @@ bool Grid::on_motion(SDL_MouseMotionEvent &e)
 		if(d < current()->all_size())
 		{
 			//get this file by index
-			file_list_it it = current()->all_begin();
-			std::advance(it, d);
-			submit(FILE_INFO, (void*) *it);
+			File* file = current()->all_at(d);
+			submit(FILE_INFO, (void*) file);
 		}
 	}
 

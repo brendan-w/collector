@@ -26,7 +26,7 @@ class FileStore
 		Selection* select(Selector* selector);
 
 	private:
-		file_list files;
+		file_vector files;
 		tag_map tags;
 
 		file_set set_for_tag(const std::string &tag);
