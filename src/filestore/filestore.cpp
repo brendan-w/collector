@@ -5,12 +5,14 @@
 #include <algorithm>
 #include <stdio.h>
 
-#include "config.h"
-#include "utils.h"
-#include "selector.h"
-#include "selection.h"
-#include "file.h"
-#include "filestore.h"
+#include <SDL.h>
+
+#include <config.h>
+#include <utils.h>
+#include <events/selector.h>
+#include <events/selection.h>
+#include <filestore/file.h>
+#include <filestore/filestore.h>
 
 
 
@@ -78,7 +80,7 @@ tag_set FileStore::auto_complete(const std::string & partial_tag)
 
 
 //turns Selectors into Selections
-Selection* FileStore::select(Selector* selector)
+void FileStore::select(Selector* selector)
 {
 	Selection* selection = new Selection;
 
@@ -100,10 +102,12 @@ Selection* FileStore::select(Selector* selector)
 		}
 	}
 
+	//done selecting
 	delete selector;
-	return selection;
-}
 
+	//send to SDL event queue
+	selection->submit();
+}
 
 
 

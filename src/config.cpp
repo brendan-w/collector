@@ -2,7 +2,8 @@
 #include <string.h>
 
 #include <SDL.h>
-#include "config.h"
+
+#include <config.h>
 
 
 #ifdef _WIN32
@@ -53,8 +54,8 @@ Config::Config()
 		480
 	};
 
-	colors[BACKGROUND]    = { 0,   0,   0,   255 };
-	colors[FILL]          = { 50,  50,  50,  255 };
+	colors[BACKGROUND]    = { 50,  50,  50,  255 };
+	colors[FILL]          = { 75,  75,  75,  255 };
 	colors[HIGHLIGHT]     = { 48,  141, 186, 255 };
 	colors[OVERLAY]       = { 0,   0,   0,   140 };
 	colors[CLI_HIGHLIGHT] = { 48,  141, 186, 110 };

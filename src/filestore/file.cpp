@@ -2,10 +2,10 @@
 
 #include <string>
 
-#include "config.h"
-#include "utils.h"
-#include "texture.h"
-#include "file.h"
+#include <config.h>
+#include <utils.h>
+#include <texture.h>
+#include <filestore/file.h>
 
 
 

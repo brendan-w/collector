@@ -1,11 +1,11 @@
 
 
 
-#include "file.h"
-#include "selection.h"
+#include <filestore/file.h>
+#include <events/selection.h>
 
 
-Selection::Selection()
+Selection::Selection() : Event(SELECTION)
 {
 
 }

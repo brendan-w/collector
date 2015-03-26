@@ -7,7 +7,7 @@
 
 #include <SDL.h>
 
-#include "texture.h"
+#include <texture.h>
 
 
 typedef std::unordered_set<std::string> tag_set;

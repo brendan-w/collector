@@ -3,9 +3,9 @@
 
 #include <SDL.h>
 
-#include "selector.h"
-#include "selection.h"
-#include "file.h"
+#include <events/selector.h>
+#include <events/selection.h>
+#include <filestore/file.h>
 
 class DisplayObject
 {

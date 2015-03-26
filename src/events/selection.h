@@ -1,9 +1,11 @@
 
 #pragma once
 
-#include "file.h"
+#include <filestore/file.h>
+#include <events/event.h>
 
-class Selection
+
+class Selection : public Event
 {
 	public:
 		Selection();

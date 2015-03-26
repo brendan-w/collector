@@ -4,11 +4,11 @@
 
 #include <SDL.h>
 
-#include "collector.h"
-#include "config.h"
-#include "file.h"
-#include "utils.h"
-#include "grid.h"
+#include <collector.h>
+#include <config.h>
+#include <utils.h>
+#include <filestore/file.h>
+#include <display/grid.h>
 
 
 //just to make the code cleaner

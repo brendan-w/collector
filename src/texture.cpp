@@ -5,8 +5,8 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
-#include "collector.h"
-#include "texture.h"
+#include <collector.h>
+#include <texture.h>
 
 
 Texture::Texture()

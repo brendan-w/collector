@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "selector.h"
+#include <events/selector.h>
 
 
 /*
@@ -42,7 +42,7 @@ Tag_operation::~Tag_operation()
 	Selector object
 */
 
-Selector::Selector()
+Selector::Selector() : Event(SELECTOR)
 {
 
 }

@@ -3,8 +3,8 @@
 
 #include "SDL.h"
 
-#include "displayobject.h"
-#include "file.h"
+#include <display/displayobject.h>
+#include <filestore/file.h>
 
 
 class Grid : public virtual DisplayObject
@@ -30,4 +30,3 @@ class Grid : public virtual DisplayObject
 		void render_file(File* file, bool selected);
 		void limit_scroll();
 };
-

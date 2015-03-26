@@ -12,6 +12,7 @@ find_package(SDL2_ttf REQUIRED)
 find_package(SDL2_image REQUIRED)
 
 include_directories(
+	"src/"
 	${SDL2_INCLUDE_DIR}
 	${SDL2_TTF_INCLUDE_DIR}
 	${SDL2_IMAGE_INCLUDE_DIR}
@@ -19,17 +20,18 @@ include_directories(
 
 set(SOURCE_FILES
 	"src/collector.cpp"
+	"src/config.cpp"
 	"src/utils.cpp"
-	"src/display.cpp"
-	"src/cli.cpp"
-	"src/grid.cpp"
-	"src/filestore.cpp"
-	"src/file.cpp"
-	"src/selector.cpp"
-	"src/selection.cpp"
 	"src/texture.cpp"
 	"src/text.cpp"
-	"src/config.cpp"
+	"src/display/display.cpp"
+	"src/display/cli.cpp"
+	"src/display/grid.cpp"
+	"src/filestore/filestore.cpp"
+	"src/filestore/file.cpp"
+	"src/events/event.cpp"
+	"src/events/selector.cpp"
+	"src/events/selection.cpp"
 )
 
 add_executable(Collector ${SOURCE_FILES})

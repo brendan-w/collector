@@ -1,10 +1,12 @@
 
 #pragma once
 
-#include <SDL.h>
 #include <string>
-#include "texture.h"
-#include "text.h"
+
+#include <SDL.h>
+
+#include <texture.h>
+#include <text.h>
 
 
 

@@ -2,9 +2,9 @@
 
 #include <SDL_ttf.h>
 
-#include "collector.h" //needed for font
-#include "texture.h" //needed for Texture::render()
-#include "text.h"
+#include <collector.h> //needed for font
+#include <texture.h> //needed for Texture::render()
+#include <text.h>
 
 
 Text::Text(std::string t, SDL_Color c)

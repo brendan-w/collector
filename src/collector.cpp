@@ -7,12 +7,13 @@
 #include <SDL_ttf.h>
 #include <SDL_image.h>
 
-#include "collector.h"
-#include "filestore.h"
-#include "selector.h"
-#include "selection.h"
-#include "config.h"
-#include "display.h"
+#include <collector.h>
+#include <config.h>
+#include <filestore/filestore.h>
+#include <events/event.h>
+#include <events/selector.h>
+#include <events/selection.h>
+#include <display/display.h>
 
 
 //forward declare
@@ -30,8 +31,6 @@ TTF_Font* font = NULL;
 FileStore* filestore = NULL;
 Display* display = NULL;
 
-//SDL userevent types
-Uint32 SELECTOR;
 
 
 int main(int argc, char * argv[])
@@ -84,16 +83,16 @@ int main(int argc, char * argv[])
 					display->on_wheel(e.wheel);
 					break;
 
-				case SDL_USEREVENT:
-					if(e.user.type == SELECTOR)
-					{
-						Selector* selector = (Selector*) e.user.data1;
-						Selection* selection = filestore->select(selector);
-						display->on_select(selection);
-					}
-					break;
-
 				default:
+					//user events are registered at runtime, so can't be used in the switch
+					if(e.type == SELECTOR)
+					{
+						filestore->select((Selector*) e.user.data1);
+					}
+					else if(e.type == SELECTION)
+					{
+						display->on_selection((Selection*) e.user.data1);
+					}
 					break;
 			}
 		}
@@ -193,11 +192,10 @@ bool init()
 	}
 
 	/*
-		Register Custom User Events
+		Event Registration
 	*/
 
-	SELECTOR = SDL_RegisterEvents(1);
-	if(SELECTOR == ((Uint32) -1 ))
+	if(!init_events())
 	{
 		print_message("Failed to register custom events");
 		return false;

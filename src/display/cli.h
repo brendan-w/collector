@@ -6,9 +6,9 @@
 
 #include "SDL.h"
 
-#include "displayobject.h"
-#include "selector.h"
-#include "text.h"
+#include <display/displayobject.h>
+#include <events/selector.h>
+#include <text.h>
 
 class CLI : public DisplayObject
 {
@@ -35,7 +35,7 @@ class CLI : public DisplayObject
 
 		void new_tag();
 		void destroy_tags();
-		void delete_tag();
-		void backspace();
+		bool delete_tag();
+		bool backspace();
 		Text* current_tag();
 };

@@ -9,12 +9,12 @@
 
 #include <SDL.h>
 
-#include "collector.h"
-#include "utils.h"
-#include "selector.h"
-#include "config.h"
-#include "text.h"
-#include "cli.h"
+#include <collector.h>
+#include <config.h>
+#include <utils.h>
+#include <text.h>
+#include <events/selector.h>
+#include <display/cli.h>
 
 
 CLI::CLI()
@@ -36,11 +36,9 @@ bool CLI::on_key(SDL_KeyboardEvent &e)
 	switch(e.keysym.sym)
 	{
 		case SDLK_BACKSPACE:
-			backspace();
-			return true;
+			return backspace();
 		case SDLK_DELETE:
-			delete_tag();
-			return true;
+			return delete_tag();
 		case SDLK_TAB:
 			//autocomplete
 			break;
@@ -197,7 +195,7 @@ void CLI::new_tag()
 
 //deletes the current tag, ensures that there is
 //always one tag in the vector
-void CLI::delete_tag()
+bool CLI::delete_tag()
 {
 	Text* t = current_tag();
 
@@ -211,20 +209,27 @@ void CLI::delete_tag()
 		{
 			current--;
 		}
+		return true;
 	}
-	else
+	else if(t->get_text().length() > 0)
 	{
 		//if the user deleted the last tag, simply empty it
 		t->set_text("");
+		return true;
 	}
+
+	return false;
 }
 
-void CLI::backspace()
+bool CLI::backspace()
 {
 	std::string s = current_tag()->get_text();
 	if(s.length() > 0)
 	{
 		s.pop_back();
 		current_tag()->set_text(s);
+		return true;
 	}
+
+	return false;
 }

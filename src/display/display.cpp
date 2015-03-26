@@ -4,12 +4,12 @@
 
 #include <SDL.h>
 
-#include "collector.h"
-#include "config.h"
-#include "file.h"
-#include "cli.h"
-#include "grid.h"
-#include "display.h"
+#include <collector.h>
+#include <config.h>
+#include <filestore/file.h>
+#include <display/cli.h>
+#include <display/grid.h>
+#include <display/display.h>
 
 
 
@@ -79,7 +79,7 @@ void Display::render(file_list_it begin, file_list_it end)
 	cli->render();
 }
 
-void Display::on_select(Selection* new_selection)
+void Display::on_selection(Selection* new_selection)
 {
 	//replace the current selection
 	if(selection != NULL)
@@ -111,10 +111,6 @@ void Display::send_selector()
 	//ask the various components for their data
 	cli->fill_selector(selector);
 
-	//wrap in SDL_Event, and push into queue
-	SDL_Event e;
-	e.type = SDL_USEREVENT;
-	e.user.type = SELECTOR;
-	e.user.data1 = (void*) selector;
-	SDL_PushEvent(&e);
+	//send to SDL event queue
+	selector->submit();
 }
