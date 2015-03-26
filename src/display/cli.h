@@ -6,8 +6,9 @@
 
 #include "SDL.h"
 
+#include <filestore/selector.h>
+#include <filestore/selection.h>
 #include <display/displayobject.h>
-#include <events/selector.h>
 #include <text.h>
 
 class CLI : public DisplayObject

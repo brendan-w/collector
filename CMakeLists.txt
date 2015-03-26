@@ -21,6 +21,7 @@ include_directories(
 set(SOURCE_FILES
 	"src/collector.cpp"
 	"src/config.cpp"
+	"src/event.cpp"
 	"src/utils.cpp"
 	"src/texture.cpp"
 	"src/text.cpp"
@@ -29,9 +30,8 @@ set(SOURCE_FILES
 	"src/display/grid.cpp"
 	"src/filestore/filestore.cpp"
 	"src/filestore/file.cpp"
-	"src/events/event.cpp"
-	"src/events/selector.cpp"
-	"src/events/selection.cpp"
+	"src/filestore/selector.cpp"
+	"src/filestore/selection.cpp"
 )
 
 add_executable(Collector ${SOURCE_FILES})

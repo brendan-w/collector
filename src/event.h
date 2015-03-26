@@ -13,13 +13,4 @@ extern Uint32 SELECTION;
 //used by collector.cpp to initialize some SDL events
 bool init_events();
 
-
-class Event
-{
-	public:
-		Event(Uint32 type);
-		virtual ~Event() {}
-		void submit();
-	private:
-		Uint32 user_type = 0;
-};
+void submit(Uint32 type, void* data1=NULL, void* data2=NULL);

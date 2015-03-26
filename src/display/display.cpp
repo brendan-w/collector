@@ -6,23 +6,23 @@
 
 #include <collector.h>
 #include <config.h>
+#include <event.h>
 #include <filestore/file.h>
+#include <filestore/selector.h>
+#include <filestore/selection.h>
 #include <display/cli.h>
 #include <display/grid.h>
 #include <display/display.h>
 
 
 
-Display::Display()
+Display::Display(Selection* init_selection)
 {
 	//create the main components
 	cli = new CLI;
 	grid = new Grid;
 
-	selection = NULL;
-
-	//request the first selection (an empty selection)
-	send_selector();
+	selection = init_selection;
 }
 
 Display::~Display()
@@ -30,18 +30,17 @@ Display::~Display()
 	delete cli;
 	delete grid;
 
-	if(selection != NULL)
-		delete selection;
+	delete selection;
 }
 
-void Display::on_resize(file_list_it begin, file_list_it end)
+void Display::on_resize()
 {
 	SDL_GetWindowSize(window,
 					  &(config->window.w),
 					  &(config->window.h));
 
+	grid->layout(selection);
 	cli->layout();
-	grid->layout(begin, end);
 }
 
 void Display::on_key(SDL_KeyboardEvent &e)
@@ -73,9 +72,9 @@ void Display::on_wheel(SDL_MouseWheelEvent &e)
 		send_selector();
 }
 
-void Display::render(file_list_it begin, file_list_it end)
+void Display::render()
 {
-	grid->render(begin, end, selection);
+	grid->render(selection);
 	cli->render();
 }
 
@@ -112,5 +111,5 @@ void Display::send_selector()
 	cli->fill_selector(selector);
 
 	//send to SDL event queue
-	selector->submit();
+	submit(SELECTOR, (void*) selector);
 }

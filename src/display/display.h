@@ -3,22 +3,23 @@
 
 #include <SDL.h>
 
-#include <display/displayobject.h>
-#include <events/selection.h>
-#include <display/cli.h>
-#include <display/grid.h>
 #include <filestore/file.h>
+#include <filestore/selector.h>
+#include <filestore/selection.h>
+#include <display/displayobject.h>
+#include <display/grid.h>
+#include <display/cli.h>
 
 
 class Display
 {
 	public:
-		Display();
+		Display(Selection* init_selection);
 		~Display();
 
-		void render(file_list_it begin, file_list_it end);
+		void render();
 
-		void on_resize(file_list_it begin, file_list_it end);
+		void on_resize();
 		void on_key(SDL_KeyboardEvent &e);
 		void on_text(SDL_TextInputEvent &e);
 		void on_wheel(SDL_MouseWheelEvent &e);

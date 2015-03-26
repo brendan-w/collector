@@ -9,10 +9,10 @@
 
 #include <collector.h>
 #include <config.h>
+#include <event.h>
 #include <filestore/filestore.h>
-#include <events/event.h>
-#include <events/selector.h>
-#include <events/selection.h>
+#include <filestore/selector.h>
+#include <filestore/selection.h>
 #include <display/display.h>
 
 
@@ -42,8 +42,7 @@ int main(int argc, char * argv[])
 	}
 
 	//trigger the initial screen cleanup
-	display->on_resize(filestore->begin(),
-					   filestore->end());
+	display->on_resize();
 
 	//main event loop
 	SDL_Event e;
@@ -64,8 +63,7 @@ int main(int argc, char * argv[])
 
 				case SDL_WINDOWEVENT:
 					if(e.window.event == SDL_WINDOWEVENT_RESIZED)
-						display->on_resize(filestore->begin(),
-										   filestore->end());
+						display->on_resize();
 					break;
 
 				case SDL_KEYDOWN:
@@ -87,7 +85,9 @@ int main(int argc, char * argv[])
 					//user events are registered at runtime, so can't be used in the switch
 					if(e.type == SELECTOR)
 					{
-						filestore->select((Selector*) e.user.data1);
+						//process the Selector, and broadcast the resulting Selection
+						Selection* s = filestore->select((Selector*) e.user.data1);
+						submit(SELECTION, (void*) s);
 					}
 					else if(e.type == SELECTION)
 					{
@@ -101,8 +101,7 @@ int main(int argc, char * argv[])
 		setRenderDrawColor(renderer, config->get_color(BACKGROUND));
 		SDL_RenderClear(renderer);
 
-		display->render(filestore->begin(),
-						filestore->end());
+		display->render();
 
 		SDL_RenderPresent(renderer);
 		SDL_Delay(33);
@@ -202,16 +201,16 @@ bool init()
 	}
 
 	/*
-		Create the display
-	*/
-
-	display = new Display;
-
-	/*
 		Init the FileStore (performs the `find` scan)
 	*/
 
 	filestore = new FileStore;
+
+	/*
+		Create the display, with initial, empty, selection
+	*/
+
+	display = new Display(filestore->empty_selection());
 
 	return true;
 }

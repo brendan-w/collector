@@ -5,7 +5,6 @@
 #include <vector>
 
 #include <filestore/file.h>
-#include <events/event.h>
 
 
 enum Set_operation
@@ -34,7 +33,7 @@ class Tag_operation
 typedef std::vector<Tag_operation*> Tag_operations;
 
 
-class Selector : public Event
+class Selector
 {
 	public:
 		Selector();

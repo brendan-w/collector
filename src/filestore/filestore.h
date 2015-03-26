@@ -7,8 +7,8 @@
 #include <unordered_map>
 
 #include <filestore/file.h>
-#include <events/selector.h>
-#include <events/selection.h>
+#include <filestore/selector.h>
+#include <filestore/selection.h>
 
 
 typedef std::unordered_map<std::string, file_set> tag_map;
@@ -22,11 +22,8 @@ class FileStore
 
 		//primary accessors
 		tag_set auto_complete(const std::string &partial_tag);
-		void select(Selector* selector);
-
-		//getters/setters
-		file_list_it begin() { return files.begin(); };
-		file_list_it end()   { return files.end(); };
+		Selection* empty_selection();
+		Selection* select(Selector* selector);
 
 	private:
 		file_list files;

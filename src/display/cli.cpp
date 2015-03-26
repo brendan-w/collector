@@ -13,7 +13,8 @@
 #include <config.h>
 #include <utils.h>
 #include <text.h>
-#include <events/selector.h>
+#include <filestore/selector.h>
+#include <filestore/selection.h>
 #include <display/cli.h>
 
 
@@ -152,9 +153,9 @@ void CLI::read_selection(Selection* selection)
 {
 	//update the internal state
 	std::string s = "";
-	s += int_to_str(selection->get_size());
+	s += int_to_str(selection->size());
 	s += " / ";
-	s += int_to_str(selection->total);
+	s += int_to_str(selection->all_size());
 
 	totals->set_text(s);
 }

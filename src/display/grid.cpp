@@ -8,6 +8,8 @@
 #include <config.h>
 #include <utils.h>
 #include <filestore/file.h>
+#include <filestore/selector.h>
+#include <filestore/selection.h>
 #include <display/grid.h>
 
 
@@ -30,33 +32,29 @@ Grid::~Grid()
 
 }
 
-void Grid::render(file_list_it begin, file_list_it end, Selection* selection)
+void Grid::render(Selection* selection)
 {
-	//not very dry, but saves having to check for a null selection every iteration
-	if((selection != NULL) && (selection->get_size() > 0))
-	{
-		file_set selected_files = selection->get_files();
+	file_list_it begin = selection->all_begin();
+	file_list_it end   = selection->all_end();
 
+	//not very dry, but saves having to check for a null selection every iteration
+	if(selection->size() > 0)
+	{
 		for(auto it = begin; it != end; ++it)
 		{
 			File* file = *it;
-			bool selected = selected_files.find(file) != selected_files.end();
-			render_file(file, selected);
+			render_file(file, selection->has(file));
 		}
 	}
 	else
 	{
-		render(begin, end);		
+		for(auto it = begin; it != end; ++it)
+		{
+			render_file(*it, false);
+		}
 	}
 }
 
-void Grid::render(file_list_it begin, file_list_it end)
-{
-	for(auto it = begin; it != end; ++it)
-	{
-		render_file(*it, false);
-	}
-}
 
 void Grid::render_file(File* file, bool selected)
 {
@@ -80,8 +78,10 @@ void Grid::render_file(File* file, bool selected)
 
 //generates a stack of hilbert curves for this fileset
 //updates every File->point
-void Grid::layout(file_list_it begin, file_list_it end)
+void Grid::layout(Selection* selection)
 {
+
+
 	rect = config->get_window_rect();
 
 	//find nearest power of 2 for the size of the H curve (flooring it)
@@ -105,6 +105,9 @@ void Grid::layout(file_list_it begin, file_list_it end)
 		int d = 0; //distance along the current hilbert curve
 
 		scroll_height = 0;
+
+		file_list_it begin = selection->all_begin();
+		file_list_it end   = selection->all_end();
 
 		for(auto it = begin; it != end; ++it)
 		{

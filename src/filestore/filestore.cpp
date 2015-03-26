@@ -5,12 +5,10 @@
 #include <algorithm>
 #include <stdio.h>
 
-#include <SDL.h>
-
 #include <config.h>
 #include <utils.h>
-#include <events/selector.h>
-#include <events/selection.h>
+#include <filestore/selector.h>
+#include <filestore/selection.h>
 #include <filestore/file.h>
 #include <filestore/filestore.h>
 
@@ -79,12 +77,20 @@ tag_set FileStore::auto_complete(const std::string & partial_tag)
 }
 
 
-//turns Selectors into Selections
-void FileStore::select(Selector* selector)
+//factory for selection objects
+Selection* FileStore::empty_selection()
 {
-	Selection* selection = new Selection;
+	//load a new selector with information about this FileStore
+	return new Selection(files.begin(),
+						 files.end(),
+						 files.size());
+}
 
-	selection->total = files.size();
+
+//turns Selectors into Selections
+Selection* FileStore::select(Selector* selector)
+{
+	Selection* selection = empty_selection();
 
 	//dumb test selector
 	Tag_operations ops = selector->get_operations();
@@ -104,9 +110,7 @@ void FileStore::select(Selector* selector)
 
 	//done selecting
 	delete selector;
-
-	//send to SDL event queue
-	selection->submit();
+	return selection;
 }
 
 
