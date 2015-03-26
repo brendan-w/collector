@@ -7,8 +7,9 @@
 #include <filestore/selector.h>
 #include <filestore/selection.h>
 #include <display/displayobject.h>
-#include <display/grid.h>
 #include <display/cli.h>
+#include <display/info.h>
+#include <display/grid.h>
 
 
 class Display
@@ -23,14 +24,19 @@ class Display
 		void on_key(SDL_KeyboardEvent &e);
 		void on_text(SDL_TextInputEvent &e);
 		void on_wheel(SDL_MouseWheelEvent &e);
+		void on_motion(SDL_MouseMotionEvent &e);
 
 		void on_selection(Selection* new_selection);
+		void on_file_info(File* f);
 
 	private:
-		DisplayObject* cli;
-		DisplayObject* grid;
+		//the latest Selection from the FileStore
+		//all children are given a pointer to this pointer
+		Selection* selection;
 
-		Selection* selection; //the latest Selection from the FileStore
+		DisplayObject* cli;
+		DisplayObject* info;
+		DisplayObject* grid;
 
 		void send_quit();
 		void send_selector();

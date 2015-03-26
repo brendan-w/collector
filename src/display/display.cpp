@@ -11,6 +11,7 @@
 #include <filestore/selector.h>
 #include <filestore/selection.h>
 #include <display/cli.h>
+#include <display/info.h>
 #include <display/grid.h>
 #include <display/display.h>
 
@@ -18,19 +19,28 @@
 
 Display::Display(Selection* init_selection)
 {
-	//create the main components
-	cli = new CLI;
-	grid = new Grid;
-
 	selection = init_selection;
+
+	//create the main components, with references to the displays state
+	cli = new CLI(&selection);
+	info = new Info(&selection);
+	grid = new Grid(&selection);
 }
 
 Display::~Display()
 {
 	delete cli;
+	delete info;
 	delete grid;
 
 	delete selection;
+}
+
+void Display::render()
+{
+	grid->render();
+	info->render();
+	cli->render();
 }
 
 void Display::on_resize()
@@ -39,7 +49,8 @@ void Display::on_resize()
 					  &(config->window.w),
 					  &(config->window.h));
 
-	grid->layout(selection);
+	grid->layout();
+	info->layout();
 	cli->layout();
 }
 
@@ -72,10 +83,10 @@ void Display::on_wheel(SDL_MouseWheelEvent &e)
 		send_selector();
 }
 
-void Display::render()
+void Display::on_motion(SDL_MouseMotionEvent &e)
 {
-	grid->render(selection);
-	cli->render();
+	if(grid->on_motion(e))
+		send_selector();
 }
 
 void Display::on_selection(Selection* new_selection)
@@ -86,10 +97,14 @@ void Display::on_selection(Selection* new_selection)
 	selection = new_selection;
 
 	//let the components update themselves
-	grid->read_selection(selection);
-	cli->read_selection(selection);
+	grid->on_selection();
+	cli->on_selection();
 }
 
+void Display::on_file_info(File* f)
+{
+	info->on_file_info(f);
+}
 
 
 

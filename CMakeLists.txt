@@ -27,6 +27,7 @@ set(SOURCE_FILES
 	"src/text.cpp"
 	"src/display/display.cpp"
 	"src/display/cli.cpp"
+	"src/display/info.cpp"
 	"src/display/grid.cpp"
 	"src/filestore/filestore.cpp"
 	"src/filestore/file.cpp"

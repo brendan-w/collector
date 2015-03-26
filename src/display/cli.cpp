@@ -18,7 +18,7 @@
 #include <display/cli.h>
 
 
-CLI::CLI()
+CLI::CLI(Selection** s) : DisplayObject(s)
 {
 	new_tag(); //create the initial empty tag field
 	totals = new Text("", config->get_color(CLI_TEXT));
@@ -48,12 +48,12 @@ bool CLI::on_key(SDL_KeyboardEvent &e)
 		case SDLK_DOWN:
 			break;
 		case SDLK_LEFT:
-			if(current > 0)
-				current--;
+			if(current_index > 0)
+				current_index--;
 			break;
 		case SDLK_RIGHT:
-			if(current < (tags.size() - 1))
-				current++;
+			if(current_index < (tags.size() - 1))
+				current_index++;
 			break;
 		default:
 			break;
@@ -71,7 +71,7 @@ bool CLI::on_text(SDL_TextInputEvent &e)
 		//if the last tag is empty, skip to it (rather than adding another)
 		if(tags[tags.size() - 1]->get_text().length() == 0)
 		{
-			current = tags.size() - 1;
+			current_index = tags.size() - 1;
 		}
 		else
 		{
@@ -116,7 +116,7 @@ void CLI::render_tags()
 	{
 		Text* t = tags[i];
 		
-		if(i == current)
+		if(i == current_index)
 		{
 			tag_rect.x = x - config->CLI_padding;
 			tag_rect.w = t->width() + (config->CLI_padding * 2);
@@ -149,8 +149,10 @@ void CLI::fill_selector(Selector* selector)
 }
 
 
-void CLI::read_selection(Selection* selection)
+void CLI::on_selection()
 {
+	Selection* selection = current();
+
 	//update the internal state
 	std::string s = "";
 	s += int_to_str(selection->size());
@@ -179,7 +181,7 @@ void CLI::destroy_tags()
 
 Text* CLI::current_tag()
 {
-	return tags[current];
+	return tags[current_index];
 }
 
 
@@ -190,7 +192,7 @@ void CLI::new_tag()
 	Text* t = new Text("", config->get_color(CLI_TEXT));
 	tags.push_back(t);
 
-	current = tags.size() - 1;
+	current_index = tags.size() - 1;
 }
 
 
@@ -204,11 +206,11 @@ bool CLI::delete_tag()
 	if(tags.size() > 1)
 	{
 		delete t;
-		tags.erase(tags.begin() + current);
+		tags.erase(tags.begin() + current_index);
 
-		if(current > (tags.size() - 1))
+		if(current_index > (tags.size() - 1))
 		{
-			current--;
+			current_index--;
 		}
 		return true;
 	}

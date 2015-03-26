@@ -2,12 +2,13 @@
 #pragma once
 
 
-#define NUM_USER_EVENTS 2
+#define NUM_USER_EVENTS 3
 
 
 //SDL userevent types
 extern Uint32 SELECTOR;
 extern Uint32 SELECTION;
+extern Uint32 FILE_INFO;
 
 
 //used by collector.cpp to initialize some SDL events

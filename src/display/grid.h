@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "SDL.h"
+#include <SDL.h>
 
 #include <texture.h>
 #include <display/displayobject.h>
@@ -13,22 +13,30 @@
 class Grid : public virtual DisplayObject
 {
 	public:
-		Grid();
+		Grid(Selection** s);
 		~Grid();
-		void render(Selection* selection);
-		void layout(Selection* selection);
+		void render();
+		void layout();
 
 		bool on_wheel(SDL_MouseWheelEvent &e);
+		bool on_motion(SDL_MouseMotionEvent &e);
 
-		void read_selection(Selection* selection);
+		void on_selection();
 
 	private:
 		SDL_Surface* surface;
 
-		int current_grid_size = 0;
-		int x_offset = 0; //used for centering the column of files
-		int y_offset = 0; //used for vertical scrolling
-		int scroll_height = 0; //the height of the entire scrollable region
+		//metrics on the hilbert curves currently on screen
+		int grid_size = 0;
+		int grid_pixel_size = 0;
+		int d_per_hilbert = 0;
+		
+		// offset.x --> used for centering the column of files
+		// offset.y --> used for vertical scrolling
+		SDL_Point offset;
+
+		//the height of the entire scrollable region
+		int scroll_height = 0;
 
 		void render_file(File* file, bool selected);
 		void limit_scroll();

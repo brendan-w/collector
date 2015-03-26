@@ -10,6 +10,7 @@
 #include <collector.h>
 #include <config.h>
 #include <event.h>
+#include <filestore/file.h>
 #include <filestore/filestore.h>
 #include <filestore/selector.h>
 #include <filestore/selection.h>
@@ -74,7 +75,8 @@ int main(int argc, char * argv[])
 					display->on_text(e.text);
 					break;
 
-				case SDL_MOUSEBUTTONDOWN:
+				case SDL_MOUSEMOTION:
+					display->on_motion(e.motion);
 					break;
 
 				case SDL_MOUSEWHEEL:
@@ -92,6 +94,10 @@ int main(int argc, char * argv[])
 					else if(e.type == SELECTION)
 					{
 						display->on_selection((Selection*) e.user.data1);
+					}
+					else if(e.type == FILE_INFO)
+					{
+						display->on_file_info((File*) e.user.data1);
 					}
 					break;
 			}

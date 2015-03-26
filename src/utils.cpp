@@ -5,6 +5,8 @@
 #include <vector>
 #include <algorithm>
 
+#include <SDL.h>
+
 #include <utils.h>
 
 
@@ -120,23 +122,47 @@ static void d2xy(int n, int d, int *x, int *y)
 	Applies transformation for sensical vertical tiling.
 
 		Flips over y = x;
+
+        d (distance along curve) may be greater than a single curve,
+        in which case, it will overflow to subsequent, stacked, curves
 */
 
-static void swap(int* x, int* y)
+SDL_Point hilbert_d_to_point(int n, int d)
 {
-	int tx = *x;
-	*x = *y;
-	*y = tx;	
+    SDL_Point p;
+
+    //number of cells in one H curve
+    int d_per_hilbert = SQUARE(n);
+
+    //offset due to multiple H curves
+    int extra_y = n * (d / d_per_hilbert);
+
+    //adjust distance along curve to be in single curve
+    d = d % d_per_hilbert;
+
+	d2xy(n, d, &(p.y), &(p.x)); //NOTE: swap of X and Y is intentional
+
+    //account for any curves above
+    p.y += extra_y;
+
+    return p;
 }
 
-void hilbert_d_to_point(int n, int d, int *x, int *y)
+size_t hilbert_point_to_d(int n, SDL_Point p)
 {
-	d2xy(n, d, x, y);
-	swap(x, y);
-}
+    //number of cells in one H curve
+    int d_per_hilbert = SQUARE(n);
 
-int hilbert_point_to_d(int n, int x, int y)
-{
-	swap(&x, &y);
-	return xy2d(n, x, y);
+    //find out how many H curves down this point is
+    int n_preceeding_curves = p.y / n;
+
+    //adjust depth accordingly
+    p.y = p.y % n;
+
+    size_t d = xy2d(n, p.y, p.x); //NOTE: swap of X and Y is intentional
+	
+    //account for any curves above
+    d += n_preceeding_curves * d_per_hilbert;
+
+    return d;
 }

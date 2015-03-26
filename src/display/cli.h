@@ -14,7 +14,7 @@
 class CLI : public DisplayObject
 {
 	public:
-		CLI();
+		CLI(Selection** s);
 		~CLI();
 
 		void render();
@@ -23,12 +23,12 @@ class CLI : public DisplayObject
 		bool on_key(SDL_KeyboardEvent &e);
 		bool on_text(SDL_TextInputEvent &e);
 
+		void on_selection();
 		void fill_selector(Selector* selector);
-		void read_selection(Selection* selection);
 
 	private:
 		std::vector<Text*> tags;
-		unsigned int current;
+		unsigned int current_index;
 
 		Text* totals;
 

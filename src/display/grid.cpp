@@ -1,11 +1,13 @@
 
 
+#include <iostream>
 #include <cmath> //log2(), exp2(), floor()
 
 #include <SDL.h>
 
 #include <collector.h>
 #include <config.h>
+#include <event.h>
 #include <utils.h>
 #include <filestore/file.h>
 #include <filestore/selector.h>
@@ -19,10 +21,9 @@
 #define FILE_OFFSET (FILE_SIZE + FILE_PAD)
 #define WINDOW_W (config->window.w)
 #define WINDOW_H (config->window.h)
-#define SQUARE(x) (x*x)
 
 
-Grid::Grid()
+Grid::Grid(Selection** s) : DisplayObject(s)
 {
 
 }
@@ -32,8 +33,9 @@ Grid::~Grid()
 
 }
 
-void Grid::render(Selection* selection)
+void Grid::render()
 {
+	Selection* selection = current();
 	file_list_it begin = selection->all_begin();
 	file_list_it end   = selection->all_end();
 
@@ -59,8 +61,8 @@ void Grid::render(Selection* selection)
 void Grid::render_file(File* file, bool selected)
 {
 	SDL_Rect rect = {
-		file->point.x + x_offset, //adjust position for centering
-		file->point.y - y_offset, //adjust position for scroll
+		file->point.x + offset.x, //adjust position for centering
+		file->point.y - offset.y, //adjust position for scroll
 		FILE_SIZE,
 		FILE_SIZE
 	};
@@ -76,36 +78,35 @@ void Grid::render_file(File* file, bool selected)
 	}
 }
 
+
 //generates a stack of hilbert curves for this fileset
 //updates every File->point
-void Grid::layout(Selection* selection)
+void Grid::layout()
 {
-
-
 	rect = config->get_window_rect();
 
 	//find nearest power of 2 for the size of the H curve (flooring it)
-	const int grid_size = exp2(floor(log2( (double)(WINDOW_W / FILE_OFFSET) )));
+	const int new_grid_size = exp2(floor(log2( (double)(WINDOW_W / FILE_OFFSET) )));
 
 	//calculate the offset necessary to horizontally center the column
-	x_offset = (WINDOW_W - (FILE_OFFSET * grid_size)) / 2;
+	offset.x = (WINDOW_W - (FILE_OFFSET * new_grid_size)) / 2;
 
 	//prevent excessive recomputation of the layout
-	if(current_grid_size != grid_size)
+	if(grid_size != new_grid_size)
 	{
-		current_grid_size = grid_size;
+		grid_size = new_grid_size;
 
 		//size of the grid in pixels (used for stacking multiple curves)
-		const int grid_pixel_size = grid_size * FILE_OFFSET;
+		grid_pixel_size = grid_size * FILE_OFFSET;
 
 		//number of files in one hilbert curve
-		const int d_per_hilbert = SQUARE(grid_size);
+		d_per_hilbert = SQUARE(grid_size);
 
-		int i = 0; //which hilbert curve 
 		int d = 0; //distance along the current hilbert curve
 
 		scroll_height = 0;
 
+		Selection* selection = current();
 		file_list_it begin = selection->all_begin();
 		file_list_it end   = selection->all_end();
 
@@ -114,21 +115,18 @@ void Grid::layout(Selection* selection)
 			File* file = *it;
 
 			//compute the Hilbert position
-			int x = 0, y = 0;
-			hilbert_d_to_point(grid_size, d, &x, &y);
+			SDL_Point h = hilbert_d_to_point(grid_size, d);
 
 			file->point = {
-				(x * FILE_OFFSET) + FILE_PAD,
-				(y * FILE_OFFSET) + FILE_PAD + (i * grid_pixel_size)
+				(h.x * FILE_OFFSET) + FILE_PAD,
+				(h.y * FILE_OFFSET) + FILE_PAD
 			};
 
 			//update the maximum scroll limit
 			if(scroll_height < file->point.y)
 				scroll_height = file->point.y;
 
-			//handle looping over multiple hilbert curves
-			d = (d + 1) % d_per_hilbert;
-			if(d == 0) i++;
+			d++;
 		}
 
 		scroll_height += FILE_OFFSET; //don't forget the last line of files have thickness
@@ -139,14 +137,51 @@ void Grid::layout(Selection* selection)
 	limit_scroll();
 }
 
+
+
 bool Grid::on_wheel(SDL_MouseWheelEvent &e)
 {
-	y_offset -= (e.y * config->scroll_speed);
+	offset.y -= (e.y * config->scroll_speed);
 	limit_scroll();
 	return false;
 }
 
-void Grid::read_selection(Selection* selection)
+bool Grid::on_motion(SDL_MouseMotionEvent &e)
+{
+	//lookup the file under the cursor
+
+	//adjust for view offsets (scrolling & centering)
+	SDL_Point m = {
+		e.x - offset.x,
+		e.y + offset.y,
+	};
+
+	//translate into H curve coordinate space
+	m = {
+		(m.x - FILE_PAD) / FILE_OFFSET,
+		(m.y - FILE_PAD) / FILE_OFFSET,		
+	};
+
+	//check that the point is within the grid
+	if((m.x >= 0) && (m.x < grid_size) && (m.y >= 0))
+	{
+		size_t d = hilbert_point_to_d(grid_size, m);
+		
+		//check that the point isn't in a void
+		//beyond the end the file list
+		if(d < current()->all_size())
+		{
+			//get this file by index
+			file_list_it it = current()->all_begin();
+			std::advance(it, d);
+			submit(FILE_INFO, (void*) *it);
+		}
+	}
+
+	return false;
+}
+
+void Grid::on_selection()
 {
 
 }
@@ -157,6 +192,6 @@ void Grid::limit_scroll()
 
 	if(max_scroll < 0) max_scroll = 0;
 
-	if(y_offset < 0) y_offset = 0;
-	else if(y_offset > max_scroll) y_offset = max_scroll;
+	if(offset.y < 0) offset.y = 0;
+	else if(offset.y > max_scroll) offset.y = max_scroll;
 }
