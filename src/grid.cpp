@@ -1,7 +1,6 @@
 
 
-#include <iostream>
-#include <cmath> //log2(), exp2()
+#include <cmath> //log2(), exp2(), floor()
 
 #include <SDL.h>
 
@@ -16,8 +15,8 @@
 #define FILE_SIZE config->file_size
 #define FILE_PAD config->file_padding
 #define FILE_OFFSET (FILE_SIZE + FILE_PAD)
-#define WINDOW_W (config->window_w)
-#define WINDOW_H (config->window_h)
+#define WINDOW_W (config->window.w)
+#define WINDOW_H (config->window.h)
 #define SQUARE(x) (x*x)
 
 
@@ -83,6 +82,8 @@ void Grid::render_file(File* file, bool selected)
 //updates every File->point
 void Grid::layout(file_list_it begin, file_list_it end)
 {
+	rect = config->get_window_rect();
+
 	//find nearest power of 2 for the size of the H curve (flooring it)
 	const int grid_size = exp2(floor(log2( (double)(WINDOW_W / FILE_OFFSET) )));
 
@@ -135,10 +136,11 @@ void Grid::layout(file_list_it begin, file_list_it end)
 	limit_scroll();
 }
 
-void Grid::on_wheel(SDL_MouseWheelEvent &e)
+bool Grid::on_wheel(SDL_MouseWheelEvent &e)
 {
 	y_offset -= (e.y * config->scroll_speed);
 	limit_scroll();
+	return false;
 }
 
 void Grid::read_selection(Selection* selection)

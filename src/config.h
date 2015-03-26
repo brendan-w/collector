@@ -31,10 +31,7 @@ class Config
 
 		bool fullscreen;
 		bool resizable;
-		int window_x;
-		int window_y;
-		int window_w;
-		int window_h;
+		SDL_Rect window;
 
 		SDL_Color colors[NUM_COLORS];
 
@@ -50,6 +47,7 @@ class Config
 		Uint32 get_window_flags();
 		Uint32 get_render_flags();
 		SDL_Color get_color(Color c);
+		SDL_Rect get_window_rect();
 };
 
 //declared and instantiated in collector.cpp

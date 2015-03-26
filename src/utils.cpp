@@ -1,6 +1,7 @@
 
 
 #include <string>
+#include <sstream>
 #include <vector>
 #include <algorithm>
 
@@ -38,6 +39,12 @@ void to_lower(std::string & s)
 	std::transform(s.begin(), s.end(), s.begin(), ::tolower);
 }
 
+std::string int_to_str(int i)
+{
+    std::stringstream out;
+    out << i;
+    return out.str();
+}
 
 
 /*

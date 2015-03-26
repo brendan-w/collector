@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include "SDL.h"
+
 #include "displayobject.h"
 #include "file.h"
 
@@ -12,10 +14,11 @@ class Grid : public virtual DisplayObject
 		~Grid();
 		void render(file_list_it begin, file_list_it end);
 		void render(file_list_it begin, file_list_it end, Selection* selection);
-		
+
 		void layout(file_list_it begin, file_list_it end);
 
-		void on_wheel(SDL_MouseWheelEvent &e);
+		bool on_wheel(SDL_MouseWheelEvent &e);
+
 		void read_selection(Selection* selection);
 
 	private:

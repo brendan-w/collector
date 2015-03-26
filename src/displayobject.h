@@ -22,9 +22,15 @@ class DisplayObject
 		virtual void layout(file_list_it begin, file_list_it end) {}
 		virtual void layout(file_list_it begin, file_list_it end, Selection* selection) {}
 
-		virtual void on_key(SDL_KeyboardEvent &e) {}
-		virtual void on_text(SDL_TextInputEvent &e) {}
-		virtual void on_wheel(SDL_MouseWheelEvent &e) {}
+		//events, return bool for whether a state change merits broadcasting a new Selector
+		virtual bool on_key(SDL_KeyboardEvent &e) { return false; }
+		virtual bool on_text(SDL_TextInputEvent &e) { return false; }
+		virtual bool on_wheel(SDL_MouseWheelEvent &e) { return false; }
+
+		//IO with the outside world
 		virtual void fill_selector(Selector* selector) {}
 		virtual void read_selection(Selection* selection) {}
+
+	protected:
+		SDL_Rect rect;
 };

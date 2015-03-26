@@ -134,10 +134,10 @@ bool init()
 	}
 
 	window = SDL_CreateWindow("Collector",
-                              config->window_x,
-                              config->window_y,
-                              config->window_w,
-                              config->window_h,
+                              config->window.x,
+                              config->window.y,
+                              config->window.w,
+                              config->window.h,
                               config->get_window_flags());
 	if(window == NULL)
 	{
@@ -278,12 +278,7 @@ void setRenderDrawColor(SDL_Renderer* r, SDL_Color color)
 
 bool rectInWindow(SDL_Rect &rect)
 {
-	SDL_Rect screen = {
-		0,
-		0,
-		config->window_w,
-		config->window_h
-	};
+	SDL_Rect screen = config->get_window_rect();
 	return SDL_HasIntersection(&screen, &rect);
 }
 

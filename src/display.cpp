@@ -15,10 +15,14 @@
 
 Display::Display()
 {
+	//create the main components
 	cli = new CLI;
 	grid = new Grid;
 
 	selection = NULL;
+
+	//request the first selection (an empty selection)
+	send_selector();
 }
 
 Display::~Display()
@@ -30,12 +34,13 @@ Display::~Display()
 		delete selection;
 }
 
-void Display::on_resize(file_list::iterator begin, file_list::iterator end)
+void Display::on_resize(file_list_it begin, file_list_it end)
 {
 	SDL_GetWindowSize(window,
-					  &(config->window_w),
-					  &(config->window_h));
+					  &(config->window.w),
+					  &(config->window.h));
 
+	cli->layout();
 	grid->layout(begin, end);
 }
 
@@ -49,24 +54,26 @@ void Display::on_key(SDL_KeyboardEvent &e)
 		case SDLK_RETURN:
 			break;
 		default:
-			cli->on_key(e);
+			if(cli->on_key(e))
+				send_selector();
+			break;
 	}
 
-	//send_selector();
 }
 
 void Display::on_text(SDL_TextInputEvent &e)
 {
-	cli->on_text(e);
-	send_selector();
+	if(cli->on_text(e))
+		send_selector();
 }
 
 void Display::on_wheel(SDL_MouseWheelEvent &e)
 {
-	grid->on_wheel(e);
+	if(grid->on_wheel(e))
+		send_selector();
 }
 
-void Display::render(file_list::iterator begin, file_list::iterator end)
+void Display::render(file_list_it begin, file_list_it end)
 {
 	grid->render(begin, end, selection);
 	cli->render();
@@ -74,6 +81,7 @@ void Display::render(file_list::iterator begin, file_list::iterator end)
 
 void Display::on_select(Selection* new_selection)
 {
+	//replace the current selection
 	if(selection != NULL)
 		delete selection;
 	selection = new_selection;

@@ -10,6 +10,7 @@
 #include <SDL.h>
 
 #include "collector.h"
+#include "utils.h"
 #include "selector.h"
 #include "config.h"
 #include "text.h"
@@ -19,25 +20,27 @@
 CLI::CLI()
 {
 	new_tag(); //create the initial empty tag field
+	totals = new Text("", config->get_color(CLI_TEXT));
 }
 
 
 CLI::~CLI()
 {
 	destroy_tags();
+	delete totals;
 }
 
 
-void CLI::on_key(SDL_KeyboardEvent &e)
+bool CLI::on_key(SDL_KeyboardEvent &e)
 {
 	switch(e.keysym.sym)
 	{
 		case SDLK_BACKSPACE:
 			backspace();
-			break;
+			return true;
 		case SDLK_DELETE:
 			delete_tag();
-			break;
+			return true;
 		case SDLK_TAB:
 			//autocomplete
 			break;
@@ -56,10 +59,12 @@ void CLI::on_key(SDL_KeyboardEvent &e)
 		default:
 			break;
 	}
+
+	return false;
 }
 
 
-void CLI::on_text(SDL_TextInputEvent &e)
+bool CLI::on_text(SDL_TextInputEvent &e)
 {
 	//space bar starts a new tag
 	if(e.text[0] == ' ')
@@ -73,12 +78,16 @@ void CLI::on_text(SDL_TextInputEvent &e)
 		{
 			new_tag();
 		}
+
+		return false;
 	}
 	else
 	{
 		Text* t = current_tag();
 		t->set_text(t->get_text() += e.text);
+		return true;
 	}
+
 }
 
 
@@ -86,16 +95,19 @@ void CLI::render()
 {
 	//draw the background
 	setRenderDrawColor(renderer, config->get_color(OVERLAY));
+	SDL_RenderFillRect(renderer, &rect);
 
-	SDL_Rect current_rect = {
-		0,
-		config->window_h - config->CLI_height,
-		config->window_w,
-		config->CLI_height
-	};
+	totals->render(rect.w - totals->width(),
+				   rect.y + config->CLI_padding);
 
-	SDL_RenderFillRect(renderer, &current_rect);
+	render_tags();
+}
 
+
+
+void CLI::render_tags()
+{
+	SDL_Rect tag_rect = rect;
 
 	//draw each tags text
 	setRenderDrawColor(renderer, config->get_color(CLI_HIGHLIGHT));
@@ -107,19 +119,30 @@ void CLI::render()
 		
 		if(i == current)
 		{
-			current_rect.x = x - config->CLI_padding;
-			current_rect.w = t->width() + (config->CLI_padding * 2);
-			SDL_RenderFillRect(renderer, &current_rect);
+			tag_rect.x = x - config->CLI_padding;
+			tag_rect.w = t->width() + (config->CLI_padding * 2);
+			SDL_RenderFillRect(renderer, &tag_rect);
 		}
 
-		t->render(x, config->window_h - 16);
+		t->render(x, rect.y + config->CLI_padding);
 		x += t->width() + (config->CLI_padding * 2);
 	}
+}
+
+void CLI::layout()
+{
+	rect = {
+		0,
+		config->window.h - config->CLI_height,
+		config->window.w,
+		config->CLI_height
+	};
 }
 
 
 void CLI::fill_selector(Selector* selector)
 {
+	//dump our tags into the selector
 	for(Text* t: tags)
 	{
 		selector->add_operation(t->get_text());
@@ -129,7 +152,13 @@ void CLI::fill_selector(Selector* selector)
 
 void CLI::read_selection(Selection* selection)
 {
+	//update the internal state
+	std::string s = "";
+	s += int_to_str(selection->get_size());
+	s += " / ";
+	s += int_to_str(selection->total);
 
+	totals->set_text(s);
 }
 
 

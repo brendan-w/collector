@@ -46,15 +46,17 @@ Config::Config()
 	
 	fullscreen = false;
 	resizable = true;
-	window_x = SDL_WINDOWPOS_UNDEFINED;
-	window_y = SDL_WINDOWPOS_UNDEFINED;
-	window_w = 640;
-	window_h = 480;
+	window = {
+		SDL_WINDOWPOS_UNDEFINED,
+		SDL_WINDOWPOS_UNDEFINED,
+		640,
+		480
+	};
 
 	colors[BACKGROUND]    = { 0,   0,   0,   255 };
 	colors[FILL]          = { 50,  50,  50,  255 };
 	colors[HIGHLIGHT]     = { 48,  141, 186, 255 };
-	colors[OVERLAY]       = { 0,   0,   0,   175 };
+	colors[OVERLAY]       = { 0,   0,   0,   140 };
 	colors[CLI_HIGHLIGHT] = { 48,  141, 186, 110 };
 	colors[CLI_TEXT]      = { 255, 255, 255, 255 };
 	
@@ -91,3 +93,13 @@ Uint32 Config::get_render_flags()
 }
 
 SDL_Color Config::get_color(Color c) { return colors[c]; }
+
+SDL_Rect Config::get_window_rect()
+{
+	return {
+		0, //disregard location on screen
+		0,
+		window.w,
+		window.h
+	};
+}

@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "SDL.h"
+
 #include "displayobject.h"
 #include "selector.h"
 #include "text.h"
@@ -13,9 +15,12 @@ class CLI : public DisplayObject
 	public:
 		CLI();
 		~CLI();
+
 		void render();
-		void on_key(SDL_KeyboardEvent &e);
-		void on_text(SDL_TextInputEvent &e);
+		void layout();
+
+		bool on_key(SDL_KeyboardEvent &e);
+		bool on_text(SDL_TextInputEvent &e);
 
 		void fill_selector(Selector* selector);
 		void read_selection(Selection* selection);
@@ -23,6 +28,10 @@ class CLI : public DisplayObject
 	private:
 		std::vector<Text*> tags;
 		unsigned int current;
+
+		Text* totals;
+
+		void render_tags();
 
 		void new_tag();
 		void destroy_tags();

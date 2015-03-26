@@ -82,14 +82,7 @@ Selection* FileStore::select(Selector* selector)
 {
 	Selection* selection = new Selection;
 
-	/*
-	Tag_operations ops = selector->get_operations();
-	for(Tag_operation* op: ops)
-	{
-		std::cout << op->get_tag() << " ";
-	}
-	std::cout << std::endl;
-	*/
+	selection->total = files.size();
 
 	//dumb test selector
 	Tag_operations ops = selector->get_operations();
