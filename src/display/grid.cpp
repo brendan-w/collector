@@ -28,7 +28,7 @@ Grid::~Grid()
 
 void Grid::render()
 {
-	Selection* selection = current();
+	Selection* selection = get_selection();
 	file_vector_it begin = selection->all_begin();
 	file_vector_it end   = selection->all_end();
 
@@ -99,7 +99,7 @@ void Grid::layout()
 
 		scroll_height = 0;
 
-		Selection* selection = current();
+		Selection* selection = get_selection();
 		file_vector_it begin = selection->all_begin();
 		file_vector_it end   = selection->all_end();
 
@@ -141,12 +141,23 @@ bool Grid::on_wheel(SDL_MouseWheelEvent &e)
 
 bool Grid::on_motion(SDL_MouseMotionEvent &e)
 {
-	//lookup the file under the cursor
+	File* file = mouse_to_file(e.x, e.y);
+	submit(FILE_INFO, (void*) file);
+	return false;
+}
 
+void Grid::on_selection()
+{
+
+}
+
+//lookup the file under the cursor
+File* Grid::mouse_to_file(int x, int y)
+{
 	//adjust for view offsets (scrolling & centering)
 	SDL_Point m = {
-		e.x - offset.x,
-		e.y + offset.y,
+		x - offset.x,
+		y + offset.y,
 	};
 
 	//translate into H curve coordinate space
@@ -162,20 +173,14 @@ bool Grid::on_motion(SDL_MouseMotionEvent &e)
 		
 		//check that the point isn't in a void
 		//beyond the end the file list
-		if(d < current()->all_size())
+		if(d < get_selection()->all_size())
 		{
 			//get this file by index
-			File* file = current()->all_at(d);
-			submit(FILE_INFO, (void*) file);
+			return get_selection()->all_at(d);
 		}
 	}
 
-	return false;
-}
-
-void Grid::on_selection()
-{
-
+	return NULL;
 }
 
 void Grid::limit_scroll()

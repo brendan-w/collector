@@ -18,8 +18,8 @@
 
 
 //forward declare
-bool init();
-void close();
+static bool init();
+static void close();
 
 
 //global contexts and resources
@@ -41,9 +41,6 @@ int main(int argc, char * argv[])
 		close();
 		return EXIT_FAILURE;
 	}
-
-	//trigger the initial screen cleanup
-	display->on_resize();
 
 	//main event loop
 	SDL_Event e;
@@ -119,7 +116,7 @@ int main(int argc, char * argv[])
 }
 
 
-bool init()
+static bool init()
 {
 	/*
 		Config
@@ -221,7 +218,7 @@ bool init()
 	return true;
 }
 
-void close()
+static void close()
 {
 	/*
 		FileStore

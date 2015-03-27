@@ -22,23 +22,36 @@ Display::Display(Selection* init_selection)
 	selection = init_selection;
 
 	//create the main components, with references to the displays state
-	grid = new Grid(&selection);
 	info = new Info(&selection);
 	cli = new CLI(&selection);
+
+	//add all the different types of main displays
+	views.push_back(new Grid(&selection));
+
+	//set the default display
+	current_view = 0;
+
+	//trigger the initial layout
+	on_resize();
 }
 
 Display::~Display()
 {
 	delete cli;
 	delete info;
-	delete grid;
 
-	delete selection;
+	for(DisplayObject* v: views)
+		delete v;
+
+	views.clear();
+
+	if(selection != NULL)
+		delete selection;
 }
 
 void Display::render()
 {
-	grid->render();
+	view->render();
 	info->render();
 	cli->render();
 }
@@ -49,7 +62,7 @@ void Display::on_resize()
 					  &(config->window.w),
 					  &(config->window.h));
 
-	grid->layout();
+	view->layout();
 	info->layout();
 	cli->layout();
 }
@@ -62,6 +75,10 @@ void Display::on_key(SDL_KeyboardEvent &e)
 			send_quit();
 			break;
 		case SDLK_RETURN:
+			break;
+		case SDLK_TAB:
+			cycle_view();
+			view->layout(); //in case the filestore has changed
 			break;
 		default:
 			if(cli->on_key(e))
@@ -79,13 +96,13 @@ void Display::on_text(SDL_TextInputEvent &e)
 
 void Display::on_wheel(SDL_MouseWheelEvent &e)
 {
-	if(grid->on_wheel(e))
+	if(view->on_wheel(e))
 		send_selector();
 }
 
 void Display::on_motion(SDL_MouseMotionEvent &e)
 {
-	if(grid->on_motion(e))
+	if(view->on_motion(e))
 		send_selector();
 }
 
@@ -97,7 +114,7 @@ void Display::on_selection(Selection* new_selection)
 	selection = new_selection;
 
 	//let the components update themselves
-	grid->on_selection();
+	view->on_selection();
 	cli->on_selection();
 }
 
@@ -106,8 +123,11 @@ void Display::on_file_info(File* f)
 	info->on_file_info(f);
 }
 
-
-
+void Display::cycle_view()
+{
+	current_view++;
+	current_view = current_view % views.size();
+}
 
 void Display::send_quit()
 {

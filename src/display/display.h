@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include <vector>
+
 #include <SDL.h>
 
 #include <filestore/file.h>
@@ -12,6 +14,9 @@
 #include <display/grid.h>
 
 
+#define view views[current_view]
+
+
 class Display
 {
 	public:
@@ -19,8 +24,8 @@ class Display
 		~Display();
 
 		void render();
-
 		void on_resize();
+
 		void on_key(SDL_KeyboardEvent &e);
 		void on_text(SDL_TextInputEvent &e);
 		void on_wheel(SDL_MouseWheelEvent &e);
@@ -34,10 +39,17 @@ class Display
 		//all children are given a pointer to this pointer
 		Selection* selection;
 
+		//fixed objects, always present
 		DisplayObject* cli;
 		DisplayObject* info;
-		DisplayObject* grid;
 
+		//the current view
+		size_t current_view;
+
+		//array of all possible main displays
+		std::vector<DisplayObject*> views;
+
+		void cycle_view();
 		void send_quit();
 		void send_selector();
 };

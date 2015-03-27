@@ -42,7 +42,7 @@ Config::Config()
 	#endif
 
 	//the delimeters by which paths will be split
-	tag_delim = " ._-+&%()[]{}";
+	tag_delim = " ._-+&%%()[]{}";
 	tag_delim += PATH_SEP;
 	font_path = bin_path + "../assets/MonoLiberation.ttf";
 	
@@ -64,7 +64,7 @@ Config::Config()
 	
 	font_size = 12;
 	max_suggest = 4;
-	scroll_speed = 50;
+	scroll_speed = 60;
 	file_size = 15;
 	file_padding = 1;
 	CLI_height = 20;

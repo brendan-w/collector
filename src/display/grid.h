@@ -33,11 +33,12 @@ class Grid : public virtual DisplayObject
 		
 		// offset.x --> used for centering the column of files
 		// offset.y --> used for vertical scrolling
-		SDL_Point offset;
+		SDL_Point offset = { 0, 0 };;
 
 		//the height of the entire scrollable region
 		int scroll_height = 0;
 
 		void render_file(File* file, bool selected);
+		File* mouse_to_file(int x, int y);
 		void limit_scroll();
 };

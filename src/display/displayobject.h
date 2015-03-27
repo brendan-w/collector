@@ -7,6 +7,7 @@
 #include <filestore/selector.h>
 #include <filestore/selection.h>
 
+
 class DisplayObject
 {
 	public:
@@ -30,7 +31,7 @@ class DisplayObject
 		virtual void fill_selector(Selector* selector) {}
 
 	protected:
-		Selection* current() { return *selection; }
+		Selection* get_selection() { return *selection; }
 
 		SDL_Rect rect;
 

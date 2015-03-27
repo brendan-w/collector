@@ -151,7 +151,7 @@ void CLI::fill_selector(Selector* selector)
 
 void CLI::on_selection()
 {
-	Selection* selection = current();
+	Selection* selection = get_selection();
 
 	//update the internal state
 	std::string s = "";
