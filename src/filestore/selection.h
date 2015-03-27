@@ -8,9 +8,8 @@ class Selection
 {
 	public:
 		Selection(file_vector* all);
+		Selection(file_vector* all, file_set fs);
 		~Selection();
-
-		void add_file(File* file);
 
 		bool has(File* file);
 

@@ -22,7 +22,6 @@ class FileStore
 
 		//primary accessors
 		tag_set auto_complete(const std::string &partial_tag);
-		Selection* empty_selection();
 		Selection* select(Selector* selector);
 
 	private:

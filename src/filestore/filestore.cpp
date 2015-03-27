@@ -1,8 +1,6 @@
 
-
-#include <string>
 #include <iostream>
-#include <algorithm>
+#include <string>
 #include <stdio.h>
 
 #include <config.h>
@@ -44,16 +42,6 @@ FileStore::FileStore()
 	}
 
 	pclose(pipe);
-	
-	/*
-	for(auto it: tags)
-	{
-		std::cout << it.first << std::endl;
-	}
-	*/
-
-	std::cout << "Total: " << files.size() << std::endl;
-	std::cout << "Total Tags: " << tags.size() << std::endl;
 }
 
 
@@ -77,40 +65,38 @@ tag_set FileStore::auto_complete(const std::string & partial_tag)
 }
 
 
-//factory for selection objects
-Selection* FileStore::empty_selection()
-{
-	//load a new selector with information about this FileStore
-	return new Selection(&files);
-}
-
-
 //turns Selectors into Selections
 Selection* FileStore::select(Selector* selector)
 {
-	Selection* selection = empty_selection();
+	file_set result;
 
-	//dumb test selector
-	Tag_operations ops = selector->get_operations();
-
-	if(ops.size() > 0)
+	if(selector != NULL)
 	{
-		std::string tag = ops[0]->get_tag();
+		Tag_operations ops = selector->get_operations();
 
-		//tag = fuzzy_match(tag);
-		//std::cout << tag << " : " << tags[tag].size() << std::endl;
+		bool first = true;
 
-		file_set result = set_for_tag(tag);
-
-		for(auto it = result.begin(); it != result.end(); ++it)
+		for(Tag_operation* op: ops)
 		{
-			selection->add_file(*it);
+			if(first)
+			{
+				//the first tag to be processed is a subset of the universe
+				result = set_for_tag(op->get_tag());
+				first = false;
+			}
+			else
+			{
+				file_set copy = result;
+				file_set current = set_for_tag(op->get_tag());
+
+				intersect(result, copy, current);
+			}
 		}
 	}
 
 	//done selecting
 	delete selector;
-	return selection;
+	return new Selection(&files, result);
 }
 
 

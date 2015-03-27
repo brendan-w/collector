@@ -10,15 +10,15 @@ Selection::Selection(file_vector* all)
 	all_files = all;
 }
 
+Selection::Selection(file_vector* all, file_set fs)
+{
+	all_files = all;
+	files = fs;
+}
+
 Selection::~Selection()
 {
 
-}
-
-void Selection::add_file(File* file)
-{
-	if(files.find(file) == files.end())
-		files.insert(file);
 }
 
 bool Selection::has(File* file)

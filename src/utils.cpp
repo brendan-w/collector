@@ -7,6 +7,7 @@
 
 #include <SDL.h>
 
+#include <filestore/file.h>
 #include <utils.h>
 
 
@@ -165,4 +166,29 @@ size_t hilbert_point_to_d(int n, SDL_Point p)
     d += n_preceeding_curves * d_per_hilbert;
 
     return d;
+}
+
+
+/*
+    Set Operations
+*/
+
+void intersect(file_set & out, const file_set & in_A, const file_set & in_B)
+{
+    if(in_B.size() < in_A.size())
+    {
+        //swap the arguments so that we only iterate throught the smaller set
+        intersect(out, in_B, in_A);
+        return;
+    }
+
+    out.clear();
+
+    for(file_set::const_iterator it = in_A.begin(); it != in_A.end(); it++)
+    {
+        if(in_B.find(*it) != in_B.end())
+        {
+            out.insert(*it);
+        }
+    }
 }

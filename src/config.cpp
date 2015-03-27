@@ -64,7 +64,7 @@ Config::Config()
 	font_size = 12;
 	max_suggest = 4;
 	scroll_speed = 50;
-	file_size = 7;
+	file_size = 15;
 	file_padding = 1;
 	CLI_height = 20;
 	CLI_padding = 4;

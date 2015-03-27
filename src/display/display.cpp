@@ -22,9 +22,9 @@ Display::Display(Selection* init_selection)
 	selection = init_selection;
 
 	//create the main components, with references to the displays state
-	cli = new CLI(&selection);
-	info = new Info(&selection);
 	grid = new Grid(&selection);
+	info = new Info(&selection);
+	cli = new CLI(&selection);
 }
 
 Display::~Display()

@@ -216,7 +216,7 @@ bool init()
 		Create the display, with initial, empty, selection
 	*/
 
-	display = new Display(filestore->empty_selection());
+	display = new Display(filestore->select(NULL));
 
 	return true;
 }
