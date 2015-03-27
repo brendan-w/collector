@@ -1,13 +1,16 @@
 
 
 #include <string>
-#include <sstream>
+#include <sstream> //std::stringstream
+#include <iomanip> //std::fixed, std::setprecision
 #include <vector>
-#include <algorithm>
+#include <algorithm> //std::min()
+#include <cmath>
 
 #include <SDL.h>
 
 #include <filestore/file.h>
+#include <config.h>
 #include <utils.h>
 
 
@@ -42,11 +45,46 @@ void to_lower(std::string & s)
 	std::transform(s.begin(), s.end(), s.begin(), ::tolower);
 }
 
-std::string int_to_str(int i)
+std::string double_to_str(double d, int p)
 {
     std::stringstream out;
-    out << i;
+    out << std::fixed << std::setprecision(p) << d;
     return out.str();
+}
+
+std::string pretty_print_file_size(size_t bytes)
+{
+    //find out what power number we're dealing with
+    int p = (int) floor(log10(bytes));
+
+    //cap at 12, since terra is the biggest this supports
+    p = std::min(p, 12);
+
+    double size = bytes / pow(10, (double) p);
+
+    std::string result = double_to_str(size, 2);
+
+    if(p < 3)                     result += " b";
+    else if((p >= 3) && (p < 6))  result += " Kb";
+    else if((p >= 6) && (p < 9))  result += " Mb";
+    else if((p >= 9) && (p < 12)) result += " Gb";
+    else if(p >= 12)              result += " Tb";
+
+    return result;
+}
+
+//NOTE: a_str is NOT passed byref, since it may get modified
+std::string path_join(std::string a_str, std::string &b_str)
+{
+    bool a = (a_str.back() == PATH_SEP);
+    bool b = (b_str.back() == PATH_SEP);
+
+    if(a && b)
+        a_str.pop_back();
+    else if(!a && !b)
+        a_str.push_back(PATH_SEP);
+
+    return a_str + b_str;
 }
 
 
@@ -173,12 +211,12 @@ size_t hilbert_point_to_d(int n, SDL_Point p)
     Set Operations
 */
 
-void intersect(file_set & out, const file_set & in_A, const file_set & in_B)
+void set_intersect(file_set & out, const file_set & in_A, const file_set & in_B)
 {
     if(in_B.size() < in_A.size())
     {
         //swap the arguments so that we only iterate throught the smaller set
-        intersect(out, in_B, in_A);
+        set_intersect(out, in_B, in_A);
         return;
     }
 
@@ -191,4 +229,11 @@ void intersect(file_set & out, const file_set & in_A, const file_set & in_B)
             out.insert(*it);
         }
     }
+}
+
+void set_union(file_set & out, const file_set & in_A, const file_set & in_B)
+{
+    out.clear();
+    out.insert(in_A.begin(), in_A.end());
+    out.insert(in_B.begin(), in_B.end());
 }

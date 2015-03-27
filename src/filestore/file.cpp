@@ -1,6 +1,8 @@
 
 
 #include <string>
+#include <fstream>
+
 
 #include <config.h>
 #include <utils.h>
@@ -63,4 +65,11 @@ tag_set File::get_tags()
     }
 
 	return tags;
+}
+
+size_t File::get_size()
+{
+	std::string whole_path = path_join(config->cwd_path, path);
+	std::ifstream fin(whole_path.c_str(), std::ifstream::ate | std::ifstream::binary);
+	return fin.tellg();
 }

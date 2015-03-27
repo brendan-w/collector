@@ -22,5 +22,6 @@ class Info : public DisplayObject
 
 	private:
 		File* file;
-		Text* info;
+		Text* filepath;
+		Text* filesize;
 };

@@ -10,6 +10,7 @@
 
 #include <collector.h>
 #include <config.h>
+#include <utils.h>
 #include <text.h>
 #include <filestore/file.h>
 #include <display/info.h>
@@ -17,13 +18,15 @@
 
 Info::Info(Selection** s) : DisplayObject(s)
 {
-	info = new Text("", config->get_color(CLI_TEXT));
+	filepath = new Text("", config->get_color(CLI_TEXT));
+	filesize = new Text("", config->get_color(CLI_TEXT));
 }
 
 
 Info::~Info()
 {
-	delete info;
+	delete filepath;
+	delete filesize;
 }
 
 void Info::render()
@@ -32,8 +35,11 @@ void Info::render()
 	setRenderDrawColor(renderer, config->get_color(OVERLAY));
 	SDL_RenderFillRect(renderer, &rect);
 
-	info->render(config->CLI_padding,
-				 rect.y + config->CLI_padding);
+	filepath->render(CLI_PAD,
+	                 rect.y + CLI_PAD);
+
+	filesize->render(rect.w - filesize->width() - CLI_PAD,
+	                 rect.y + CLI_PAD);
 }
 
 
@@ -42,8 +48,8 @@ void Info::layout()
 	rect = {
 		0,
 		0,
-		config->window.w,
-		config->CLI_height
+		WINDOW_W,
+		CLI_H
 	};
 }
 
@@ -53,10 +59,12 @@ void Info::on_file_info(File* f)
 
 	if(file == NULL)
 	{
-		info->set_text("");
+		filepath->set_text("");
+		filesize->set_text("");
 	}
 	else
 	{
-		info->set_text(file->get_path());
+		filepath->set_text(file->get_path());
+		filesize->set_text(pretty_print_file_size(file->get_size()));
 	}
 }

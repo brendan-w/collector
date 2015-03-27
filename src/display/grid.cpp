@@ -15,13 +15,6 @@
 #include <display/grid.h>
 
 
-//just to make the code cleaner
-#define FILE_SIZE config->file_size
-#define FILE_PAD config->file_padding
-#define FILE_OFFSET (FILE_SIZE + FILE_PAD)
-#define WINDOW_W (config->window.w)
-#define WINDOW_H (config->window.h)
-
 
 Grid::Grid(Selection** s) : DisplayObject(s)
 {

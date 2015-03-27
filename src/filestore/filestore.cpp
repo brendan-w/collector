@@ -89,7 +89,7 @@ Selection* FileStore::select(Selector* selector)
 				file_set copy = result;
 				file_set current = set_for_tag(op->get_tag());
 
-				intersect(result, copy, current);
+				set_intersect(result, copy, current);
 			}
 		}
 	}

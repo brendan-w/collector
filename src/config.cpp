@@ -41,7 +41,8 @@ Config::Config()
 		find_cmd = "find " + cwd_path + " -type f -path \"*\" ! -path \"*/.*\" ! -perm -o=x";
 	#endif
 
-	tag_delim = "._-+&() ";
+	//the delimeters by which paths will be split
+	tag_delim = " ._-+&%()[]{}";
 	tag_delim += PATH_SEP;
 	font_path = bin_path + "../assets/MonoLiberation.ttf";
 	

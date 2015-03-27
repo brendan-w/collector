@@ -23,6 +23,7 @@ class File
 		void unload();
 
 		tag_set get_tags();
+		size_t get_size();
 
 		std::string get_path() { return path; }
 		void set_path(std::string new_path) { path = new_path; }

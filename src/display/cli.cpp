@@ -11,7 +11,6 @@
 
 #include <collector.h>
 #include <config.h>
-#include <utils.h>
 #include <text.h>
 #include <filestore/selector.h>
 #include <filestore/selection.h>
@@ -97,8 +96,8 @@ void CLI::render()
 	setRenderDrawColor(renderer, config->get_color(OVERLAY));
 	SDL_RenderFillRect(renderer, &rect);
 
-	totals->render(rect.w - totals->width(),
-				   rect.y + config->CLI_padding);
+	totals->render(rect.w - totals->width() - CLI_PAD,
+				   rect.y + CLI_PAD);
 
 	render_tags();
 }
@@ -112,20 +111,20 @@ void CLI::render_tags()
 	//draw each tags text
 	setRenderDrawColor(renderer, config->get_color(CLI_HIGHLIGHT));
 
-	int x = config->CLI_padding;
+	int x = CLI_PAD;
 	for(unsigned int i = 0; i < tags.size(); i++)
 	{
 		Text* t = tags[i];
 		
 		if(i == current_index)
 		{
-			tag_rect.x = x - config->CLI_padding;
-			tag_rect.w = t->width() + (config->CLI_padding * 2);
+			tag_rect.x = x - CLI_PAD;
+			tag_rect.w = t->width() + (CLI_PAD * 2);
 			SDL_RenderFillRect(renderer, &tag_rect);
 		}
 
-		t->render(x, rect.y + config->CLI_padding);
-		x += t->width() + (config->CLI_padding * 2);
+		t->render(x, rect.y + CLI_PAD);
+		x += t->width() + (CLI_PAD * 2);
 	}
 }
 
@@ -133,9 +132,9 @@ void CLI::layout()
 {
 	rect = {
 		0,
-		config->window.h - config->CLI_height,
-		config->window.w,
-		config->CLI_height
+		WINDOW_H - CLI_H,
+		WINDOW_W,
+		CLI_H
 	};
 }
 
@@ -156,9 +155,9 @@ void CLI::on_selection()
 
 	//update the internal state
 	std::string s = "";
-	s += int_to_str(selection->size());
+	s += std::to_string(selection->size());
 	s += " / ";
-	s += int_to_str(selection->all_size());
+	s += std::to_string(selection->all_size());
 
 	totals->set_text(s);
 }
