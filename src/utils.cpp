@@ -73,8 +73,7 @@ std::string pretty_print_file_size(size_t bytes)
     return result;
 }
 
-//NOTE: a_str is NOT passed byref, since it may get modified
-std::string path_join(std::string a_str, std::string &b_str)
+std::string path_join(std::string a_str, std::string b_str)
 {
     bool a = (a_str.back() == PATH_SEP);
     bool b = (b_str.back() == PATH_SEP);

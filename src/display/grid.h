@@ -21,8 +21,6 @@ class Grid : public virtual DisplayObject
 		bool on_wheel(SDL_MouseWheelEvent &e);
 		bool on_motion(SDL_MouseMotionEvent &e);
 
-		void on_selection();
-
 	private:
 		SDL_Surface* surface;
 

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(Collector)
+project(collector)
 
 # use FindSDL2.cmake
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
@@ -35,9 +35,9 @@ set(SOURCE_FILES
 	"src/filestore/selection.cpp"
 )
 
-add_executable(Collector ${SOURCE_FILES})
+add_executable(collector ${SOURCE_FILES})
 
-target_link_libraries(Collector
+target_link_libraries(collector
 	${SDL2_LIBRARY}
 	${SDL2_TTF_LIBRARY}
 	${SDL2_IMAGE_LIBRARY}

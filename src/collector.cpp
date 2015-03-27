@@ -134,7 +134,8 @@ static bool init()
 		return false;
 	}
 
-	window = SDL_CreateWindow("Collector",
+	std::string title = "Collector - " + config->cwd_path;
+	window = SDL_CreateWindow(title.c_str(),
                               config->window.x,
                               config->window.y,
                               config->window.w,

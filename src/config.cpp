@@ -3,16 +3,15 @@
 
 #include <SDL.h>
 
+#include <utils.h>
 #include <config.h>
 
 
 #ifdef _WIN32
 	#include <direct.h>
 	#define getcwd _getcwd
-	const char PATH_SEP = '\\';
 #else
 	#include <unistd.h> //getcwd()
-	const char PATH_SEP = '/';
 #endif
 
 
@@ -44,7 +43,7 @@ Config::Config()
 	//the delimeters by which paths will be split
 	tag_delim = " ._-+&%%()[]{}";
 	tag_delim += PATH_SEP;
-	font_path = bin_path + "../assets/MonoLiberation.ttf";
+	font_path = path_join(bin_path, "../assets/MonoLiberation.ttf");
 	
 	fullscreen = false;
 	resizable = true;

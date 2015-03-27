@@ -19,7 +19,7 @@ size_t levenshtein_distance(const std::string &s1, const std::string &s2);
 void to_lower(std::string & s);
 std::string double_to_str(double d, int p);
 std::string pretty_print_file_size(size_t size);
-std::string path_join(std::string a_str, std::string &b_str);
+std::string path_join(std::string a_str, std::string b_str);
 
 SDL_Point hilbert_d_to_point(int n, int d);
 size_t hilbert_point_to_d(int n, SDL_Point p);

@@ -9,9 +9,6 @@
 #include <filestore/selector.h>
 #include <filestore/selection.h>
 #include <display/displayobject.h>
-#include <display/cli.h>
-#include <display/info.h>
-#include <display/grid.h>
 
 
 #define view views[current_view]

@@ -55,7 +55,7 @@ void Grid::render_file(File* file, bool selected)
 {
 	SDL_Rect rect = {
 		file->point.x + offset.x, //adjust position for centering
-		file->point.y - offset.y, //adjust position for scroll
+		file->point.y - offset.y + CLI_H, //adjust position for scroll
 		FILE_SIZE,
 		FILE_SIZE
 	};
@@ -111,8 +111,8 @@ void Grid::layout()
 			SDL_Point h = hilbert_d_to_point(grid_size, d);
 
 			file->point = {
-				(h.x * FILE_OFFSET) + FILE_PAD,
-				(h.y * FILE_OFFSET) + FILE_PAD
+				h.x * FILE_OFFSET,
+				h.y * FILE_OFFSET
 			};
 
 			//update the maximum scroll limit
@@ -123,7 +123,7 @@ void Grid::layout()
 		}
 
 		scroll_height += FILE_OFFSET; //don't forget the last line of files have thickness
-		scroll_height += config->CLI_height;
+		scroll_height += 2 * CLI_H; //account for the two UI bars at the top and bottom
 	}
 
 	//since the window was resized, check the scroll position
@@ -146,24 +146,24 @@ bool Grid::on_motion(SDL_MouseMotionEvent &e)
 	return false;
 }
 
-void Grid::on_selection()
-{
-
-}
-
 //lookup the file under the cursor
 File* Grid::mouse_to_file(int x, int y)
 {
 	//adjust for view offsets (scrolling & centering)
 	SDL_Point m = {
 		x - offset.x,
-		y + offset.y,
+		y + offset.y - CLI_H,
 	};
+
+	//prevents negative numbers from reaching the division
+	//save us from having to do a floor()
+	if(m.x < 0)
+		return NULL;
 
 	//translate into H curve coordinate space
 	m = {
-		(m.x - FILE_PAD) / FILE_OFFSET,
-		(m.y - FILE_PAD) / FILE_OFFSET,		
+		m.x / FILE_OFFSET,
+		m.y / FILE_OFFSET
 	};
 
 	//check that the point is within the grid
