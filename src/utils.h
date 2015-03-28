@@ -17,6 +17,7 @@
 
 size_t levenshtein_distance(const std::string &s1, const std::string &s2);
 void to_lower(std::string & s);
+bool file_exists(const char* filename);
 std::string double_to_str(double d, int p);
 std::string pretty_print_file_size(size_t size);
 std::string path_join(std::string a_str, std::string b_str);

@@ -7,6 +7,7 @@
 #include <config.h>
 #include <utils.h>
 #include <texture.h>
+#include <image.h>
 #include <filestore/file.h>
 
 
@@ -19,21 +20,31 @@ File::File(std::string file_path)
 
 File::~File()
 {
-	if(texture != NULL)
-	{
-		delete texture;
-	}
+	unload();
 }
 
 void File::load()
 {
-
+	unload();
+	texture = new Image(get_full_path(), {0,0});
 }
 
 void File::unload()
 {
-
+	if(texture != NULL)
+		delete texture;
 }
+
+std::string File::get_path()
+{
+	return path;
+}
+
+std::string File::get_full_path()
+{
+	return path_join(config->cwd_path, path);
+}
+
 
 //extracts tags from the file's path and name
 //splits a string on multiple delimeters

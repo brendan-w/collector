@@ -3,7 +3,6 @@
 #include <string>
 
 #include <SDL.h>
-#include <SDL_image.h>
 
 #include <collector.h>
 #include <texture.h>
@@ -53,28 +52,16 @@ bool Texture::load_surface(SDL_Surface* surface)
 	return true;
 }
 
-/*
-bool Texture::load_image(std::string filename)
+void Texture::render(int _x, int _y)
 {
-	SDL_Surface* surface = IMG_Load(filename.c_str());
-
-	if(surface == NULL)
-	{
-		print_IMG_error("Failed to create surface from image file");
-		return false;
-	}
-
-	bool success = load_surface(surface);
-	SDL_FreeSurface(surface);
-	return success;
+	render(_x, _y, w, h);
 }
-*/
 
-void Texture::render(int x, int y)
+void Texture::render(int _x, int _y, int _w, int _h)
 {
 	if((texture != NULL) && (w > 0) && (h > 0))
 	{
-		SDL_Rect dest = { x, y, w, h };
+		SDL_Rect dest = { _x, _y, _w, _h };
 		if(rectInWindow(dest))
 			SDL_RenderCopy(renderer, texture, NULL, &dest);
 	}

@@ -2,6 +2,7 @@
 
 #include <string>
 #include <sstream> //std::stringstream
+#include <fstream>
 #include <iomanip> //std::fixed, std::setprecision
 #include <vector>
 #include <algorithm> //std::min()
@@ -43,6 +44,12 @@ size_t levenshtein_distance(const std::string & s1, const std::string & s2) {
 void to_lower(std::string & s)
 {
 	std::transform(s.begin(), s.end(), s.begin(), ::tolower);
+}
+
+bool file_exists(const char* filename)
+{
+  std::ifstream fin(filename);
+  return fin;
 }
 
 std::string double_to_str(double d, int p)
@@ -214,7 +221,7 @@ void set_intersect(file_set & out, const file_set & in_A, const file_set & in_B)
 {
     if(in_B.size() < in_A.size())
     {
-        //swap the arguments so that we only iterate throught the smaller set
+        //swap the arguments so that we only iterate through the smaller set
         set_intersect(out, in_B, in_A);
         return;
     }

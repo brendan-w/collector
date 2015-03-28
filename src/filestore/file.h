@@ -25,14 +25,15 @@ class File
 		tag_set get_tags();
 		size_t get_size();
 
-		std::string get_path() { return path; }
+		std::string get_path();
+		std::string get_full_path();
 		void set_path(std::string new_path) { path = new_path; }
 
 		SDL_Point point;
+		Texture* texture;
 
 	private:
 		std::string path;
-		Texture* texture;
 };
 
 //file_vector

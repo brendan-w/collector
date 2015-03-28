@@ -25,6 +25,7 @@ set(SOURCE_FILES
 	"src/utils.cpp"
 	"src/texture.cpp"
 	"src/text.cpp"
+	"src/image.cpp"
 	"src/display/display.cpp"
 	"src/display/cli.cpp"
 	"src/display/info.cpp"

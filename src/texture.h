@@ -12,7 +12,8 @@ class Texture
 		virtual ~Texture();
 		void free();
 		bool load_surface(SDL_Surface* surface);
-		void render(int x, int y);
+		void render(int _x, int _y);
+		void render(int _x, int _y, int _w, int _h);
 		int width();
 		int height();
 	private:

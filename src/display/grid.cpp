@@ -167,7 +167,7 @@ File* Grid::mouse_to_file(int x, int y)
 	};
 
 	//check that the point is within the grid
-	if((m.x >= 0) && (m.x < grid_size) && (m.y >= 0))
+	if((m.x < grid_size) && (m.y >= 0))
 	{
 		size_t d = hilbert_point_to_d(grid_size, m);
 		
