@@ -6,8 +6,7 @@
 
 #include <config.h>
 #include <utils.h>
-#include <texture.h>
-#include <image.h>
+#include <thumbnail.h>
 #include <filestore/file.h>
 
 
@@ -15,7 +14,7 @@
 File::File(std::string file_path)
 {
 	path = file_path;
-	texture = NULL;
+	thumb = NULL;
 }
 
 File::~File()
@@ -25,14 +24,27 @@ File::~File()
 
 void File::load()
 {
-	if(texture == NULL)
-		texture = new Image(get_full_path());
+	if(thumb == NULL)
+		thumb = new Thumbnail(get_full_path());
 }
 
 void File::unload()
 {
-	if(texture != NULL)
-		delete texture;
+	if(thumb != NULL)
+	{
+		delete thumb;
+		thumb = NULL;
+	}
+}
+
+bool File::loaded()
+{
+	return (thumb != NULL);
+}
+
+Thumbnail* File::get_thumb()
+{
+	return thumb;
 }
 
 std::string File::get_path()

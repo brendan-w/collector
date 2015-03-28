@@ -14,6 +14,7 @@ class Texture
 		bool load_surface(SDL_Surface* surface);
 		void render(int _x, int _y);
 		void render(int _x, int _y, int _w, int _h);
+		void render(SDL_Rect *r);
 		int width();
 		int height();
 	private:

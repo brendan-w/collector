@@ -6,6 +6,7 @@
 
 #include <collector.h>
 #include <config.h>
+#include <thumbnail.h>
 #include <event.h>
 #include <utils.h>
 #include <filestore/file.h>
@@ -47,7 +48,17 @@ void Thumbs::render_file(File* file)
 
 	if(rectInWindow(rect))
 	{
-		SDL_RenderFillRect(renderer, &rect);
+		file->load();
+
+		if(file->loaded())
+		{
+			Thumbnail* t = file->get_thumb();
+			t->render(&rect);
+		}
+		else
+		{
+			SDL_RenderFillRect(renderer, &rect);
+		}
 	}
 }
 
@@ -85,6 +96,18 @@ void Thumbs::layout(bool force)
 			i++;
 		}
 	}
+}
+
+bool Thumbs::on_wheel(SDL_MouseWheelEvent &e)
+{
+	DisplayObject::on_wheel(e);
+
+	// for(File* file : *get_selection())
+	// {
+
+	// }
+
+	return false;
 }
 
 void Thumbs::on_selection()

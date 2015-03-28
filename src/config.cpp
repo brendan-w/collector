@@ -26,8 +26,8 @@ Config::Config()
 
 	//get the pathname for the current working directory
 	// cwd_path = std::string(getcwd(NULL, 0));
-	// cwd_path = "/home/brendan/Andromeda";
-	cwd_path = "/home/brendan/cool";
+	cwd_path = "/home/brendan/Andromeda";
+	// cwd_path = "/home/brendan/cool";
 
 	//lists all items in the current directory and below
 	//only returns files
@@ -65,7 +65,7 @@ Config::Config()
 	max_suggest = 4;
 	scroll_speed = 60;
 	file_size = 15;
-	file_thumb_size = 49;
+	file_thumb_size = 99;
 	file_padding = 1;
 	CLI_height = 20;
 	CLI_padding = 4;

@@ -57,6 +57,11 @@ void Texture::render(int _x, int _y)
 	render(_x, _y, w, h);
 }
 
+void Texture::render(SDL_Rect *r)
+{
+	render(r->x, r->y, r->w, r->h);
+}
+
 void Texture::render(int _x, int _y, int _w, int _h)
 {
 	if((texture != NULL) && (w > 0) && (h > 0))

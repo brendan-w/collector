@@ -7,7 +7,7 @@
 
 #include <SDL.h>
 
-#include <texture.h>
+#include <thumbnail.h>
 
 
 typedef std::unordered_set<std::string> tag_set;
@@ -21,6 +21,8 @@ class File
 
 		void load();
 		void unload();
+		bool loaded();
+		Thumbnail* get_thumb();
 
 		tag_set get_tags();
 		size_t get_size();
@@ -30,10 +32,10 @@ class File
 		void set_path(std::string new_path) { path = new_path; }
 
 		SDL_Point point;
-		Texture* texture;
 
 	private:
 		std::string path;
+		Thumbnail* thumb;
 };
 
 //file_vector
