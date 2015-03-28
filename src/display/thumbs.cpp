@@ -125,5 +125,31 @@ bool Thumbs::on_motion(SDL_MouseMotionEvent &e)
 //lookup the file under the cursor
 File* Thumbs::mouse_to_file(int x, int y)
 {
+	//adjust for view offsets (scrolling & centering)
+	SDL_Point m = {
+		x - x_offset(),
+		y - y_offset(),
+	};
+
+	//prevents negative numbers from reaching the division
+	//save us from having to do a floor()
+	if(m.x < 0)
+		return NULL;
+
+	//translate into H curve coordinate space
+	m = {
+		m.x / FILE_THUMB_OFFSET,
+		m.y / FILE_THUMB_OFFSET
+	};
+
+	if((m.x < width) && (m.y >= 0))
+	{
+		size_t d = m.x + (m.y * width);
+		if(d < get_selection()->size())
+		{
+			return get_selection()->at(d);
+		}
+	}
+
 	return NULL;
 }

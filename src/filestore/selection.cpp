@@ -1,5 +1,6 @@
 
 
+#include <iterator>
 
 #include <filestore/file.h>
 #include <filestore/selection.h>
@@ -26,6 +27,13 @@ Selection::~Selection()
 bool Selection::has(File* file)
 {
 	return (files.find(file) != files.end());
+}
+
+File* Selection::at(size_t i)
+{
+	file_set_it it = begin();
+	std::advance(it, i);
+	return *it;
 }
 
 File* Selection::all_at(size_t i)
