@@ -7,7 +7,7 @@
 #include <image.h>
 
 
-Image::Image(std::string path, SDL_Point size)
+Image::Image(std::string path)
 {
 	if(!file_exists(path.c_str()))
 	{

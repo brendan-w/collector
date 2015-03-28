@@ -80,6 +80,12 @@ void Display::on_key(SDL_KeyboardEvent &e)
 			cycle_view();
 			view->layout(); //in case the filestore has changed
 			break;
+		case SDLK_PAGEUP:
+			view->pageup();
+			break;
+		case SDLK_PAGEDOWN:
+			view->pagedown();
+			break;
 		default:
 			if(cli->on_key(e))
 				send_selector();

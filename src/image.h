@@ -13,6 +13,6 @@
 class Image: public Texture
 {
 	public:
-		Image(std::string path, SDL_Point size);
+		Image(std::string path);
 		~Image();
 };

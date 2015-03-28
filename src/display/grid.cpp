@@ -54,8 +54,8 @@ void Grid::render()
 void Grid::render_file(File* file, bool selected)
 {
 	SDL_Rect rect = {
-		file->point.x + offset.x, //adjust position for centering
-		file->point.y - offset.y + CLI_H, //adjust position for scroll
+		file->point.x + x_offset(), //adjust position for centering
+		file->point.y - y_offset(), //adjust position for scroll
 		FILE_SIZE,
 		FILE_SIZE
 	};
@@ -82,7 +82,9 @@ void Grid::layout()
 	const int new_grid_size = exp2(floor(log2( (double)(WINDOW_W / FILE_OFFSET) )));
 
 	//calculate the offset necessary to horizontally center the column
-	offset.x = (WINDOW_W - (FILE_OFFSET * new_grid_size)) / 2;
+	set_centered_width(FILE_OFFSET * new_grid_size);
+
+	int scroll = 0;
 
 	//prevent excessive recomputation of the layout
 	if(grid_size != new_grid_size)
@@ -96,8 +98,6 @@ void Grid::layout()
 		d_per_hilbert = SQUARE(grid_size);
 
 		int d = 0; //distance along the current hilbert curve
-
-		scroll_height = 0;
 
 		Selection* selection = get_selection();
 		file_vector_it begin = selection->all_begin();
@@ -116,28 +116,19 @@ void Grid::layout()
 			};
 
 			//update the maximum scroll limit
-			if(scroll_height < file->point.y)
-				scroll_height = file->point.y;
+			if(scroll < file->point.y)
+				scroll = file->point.y;
 
 			d++;
 		}
 
-		scroll_height += FILE_OFFSET; //don't forget the last line of files have thickness
-		scroll_height += 2 * CLI_H; //account for the two UI bars at the top and bottom
+		scroll += FILE_OFFSET; //don't forget the last line of files have thickness
 	}
 
 	//since the window was resized, check the scroll position
-	limit_scroll();
+	set_scroll_height(scroll);
 }
 
-
-
-bool Grid::on_wheel(SDL_MouseWheelEvent &e)
-{
-	offset.y -= (e.y * config->scroll_speed);
-	limit_scroll();
-	return false;
-}
 
 bool Grid::on_motion(SDL_MouseMotionEvent &e)
 {
@@ -151,8 +142,8 @@ File* Grid::mouse_to_file(int x, int y)
 {
 	//adjust for view offsets (scrolling & centering)
 	SDL_Point m = {
-		x - offset.x,
-		y + offset.y - CLI_H,
+		x - x_offset(),
+		y + y_offset(),
 	};
 
 	//prevents negative numbers from reaching the division
@@ -181,14 +172,4 @@ File* Grid::mouse_to_file(int x, int y)
 	}
 
 	return NULL;
-}
-
-void Grid::limit_scroll()
-{
-	int max_scroll = scroll_height - WINDOW_H;
-
-	if(max_scroll < 0) max_scroll = 0;
-
-	if(offset.y < 0) offset.y = 0;
-	else if(offset.y > max_scroll) offset.y = max_scroll;
 }
