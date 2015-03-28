@@ -21,7 +21,8 @@ class DisplayObject
 		virtual ~DisplayObject() {}
 
 		virtual void render() {}
-		virtual void layout() {}
+		virtual void layout(bool force=false) {}
+
 
 		//events, return bool for whether a state change merits broadcasting a new Selector
 		virtual bool on_key(SDL_KeyboardEvent &e);
@@ -29,8 +30,10 @@ class DisplayObject
 		virtual bool on_wheel(SDL_MouseWheelEvent &e);
 		virtual bool on_motion(SDL_MouseMotionEvent &e);
 
+		//scroll utilities
 		void pageup();
 		void pagedown();
+		void limit_scroll();
 
 		//IO with the outside world
 		virtual void on_selection() {}
@@ -49,8 +52,6 @@ class DisplayObject
 		SDL_Rect rect;
 
 	private:
-		void limit_scroll();
-
 		//pointer to the current selection pointer
 		Selection** selection;
 

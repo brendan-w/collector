@@ -25,8 +25,8 @@ File::~File()
 
 void File::load()
 {
-	unload();
-	texture = new Image(get_full_path());
+	if(texture == NULL)
+		texture = new Image(get_full_path());
 }
 
 void File::unload()

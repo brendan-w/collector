@@ -60,7 +60,7 @@ int DisplayObject::x_offset()
 
 int DisplayObject::y_offset()
 {
-	return offset.y - CLI_H; //account for the top UI bar
+	return -(offset.y - CLI_H); //account for the top UI bar
 }
 
 void DisplayObject::set_centered_width(int w)

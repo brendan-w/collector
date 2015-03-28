@@ -55,7 +55,7 @@ void Grid::render_file(File* file, bool selected)
 {
 	SDL_Rect rect = {
 		file->point.x + x_offset(), //adjust position for centering
-		file->point.y - y_offset(), //adjust position for scroll
+		file->point.y + y_offset(), //adjust position for scroll
 		FILE_SIZE,
 		FILE_SIZE
 	};
@@ -74,7 +74,7 @@ void Grid::render_file(File* file, bool selected)
 
 //generates a stack of hilbert curves for this fileset
 //updates every File->point
-void Grid::layout()
+void Grid::layout(bool force)
 {
 	rect = config->get_window_rect();
 
@@ -84,10 +84,8 @@ void Grid::layout()
 	//calculate the offset necessary to horizontally center the column
 	set_centered_width(FILE_OFFSET * new_grid_size);
 
-	int scroll = 0;
-
 	//prevent excessive recomputation of the layout
-	if(grid_size != new_grid_size)
+	if(force || (grid_size != new_grid_size))
 	{
 		grid_size = new_grid_size;
 
@@ -98,6 +96,7 @@ void Grid::layout()
 		d_per_hilbert = SQUARE(grid_size);
 
 		int d = 0; //distance along the current hilbert curve
+		int scroll = 0;
 
 		Selection* selection = get_selection();
 		file_vector_it begin = selection->all_begin();
@@ -123,10 +122,10 @@ void Grid::layout()
 		}
 
 		scroll += FILE_OFFSET; //don't forget the last line of files have thickness
+		
+		//since the window was resized, check the scroll position
+		set_scroll_height(scroll);
 	}
-
-	//since the window was resized, check the scroll position
-	set_scroll_height(scroll);
 }
 
 
@@ -143,7 +142,7 @@ File* Grid::mouse_to_file(int x, int y)
 	//adjust for view offsets (scrolling & centering)
 	SDL_Point m = {
 		x - x_offset(),
-		y + y_offset(),
+		y - y_offset(),
 	};
 
 	//prevents negative numbers from reaching the division

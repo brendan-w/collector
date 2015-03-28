@@ -13,6 +13,7 @@
 #include <display/cli.h>
 #include <display/info.h>
 #include <display/grid.h>
+#include <display/thumbs.h>
 #include <display/display.h>
 
 
@@ -27,6 +28,7 @@ Display::Display(Selection* init_selection)
 
 	//add all the different types of main displays
 	views.push_back(new Grid(&selection));
+	views.push_back(new Thumbs(&selection));
 
 	//set the default display
 	current_view = 0;
@@ -62,9 +64,12 @@ void Display::on_resize()
 					  &(config->window.w),
 					  &(config->window.h));
 
-	view->layout();
-	info->layout();
-	cli->layout();
+	view->layout(false);
+	info->layout(false);
+	cli->layout(false);
+
+	//in case layout() never adjusts/handles the scroll
+	view->limit_scroll();
 }
 
 void Display::on_key(SDL_KeyboardEvent &e)
@@ -78,7 +83,12 @@ void Display::on_key(SDL_KeyboardEvent &e)
 			break;
 		case SDLK_TAB:
 			cycle_view();
-			view->layout(); //in case the filestore has changed
+			/*
+				Force the layout to be recomputed, since either the window
+				may have changed around it, or the files are in positions
+				for a different view
+			*/
+			view->layout(true);
 			break;
 		case SDLK_PAGEUP:
 			view->pageup();
@@ -91,7 +101,6 @@ void Display::on_key(SDL_KeyboardEvent &e)
 				send_selector();
 			break;
 	}
-
 }
 
 void Display::on_text(SDL_TextInputEvent &e)
@@ -122,6 +131,7 @@ void Display::on_selection(Selection* new_selection)
 	//let the components update themselves
 	view->on_selection();
 	cli->on_selection();
+	info->on_selection();
 }
 
 void Display::on_file_info(File* f)

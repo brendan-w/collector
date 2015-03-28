@@ -16,7 +16,7 @@ class Info : public DisplayObject
 		~Info();
 
 		void render();
-		void layout();
+		void layout(bool force);
 
 		void on_file_info(File* f);
 

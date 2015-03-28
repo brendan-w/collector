@@ -43,7 +43,7 @@ void Info::render()
 }
 
 
-void Info::layout()
+void Info::layout(bool force)
 {
 	rect = {
 		0,

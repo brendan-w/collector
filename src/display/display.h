@@ -11,7 +11,7 @@
 #include <display/displayobject.h>
 
 
-#define view views[current_view]
+#define view (views[current_view])
 
 
 class Display

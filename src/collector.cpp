@@ -221,16 +221,16 @@ static bool init()
 static void close()
 {
 	/*
-		FileStore
-	*/
-
-	delete filestore;
-
-	/*
 		Display
 	*/
 
 	delete display;
+
+	/*
+		FileStore
+	*/
+
+	delete filestore;
 
 	/*
 		SDL2_image

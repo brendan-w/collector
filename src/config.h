@@ -39,6 +39,7 @@ class Config
 		size_t max_suggest;
 		size_t scroll_speed;
 		int file_size;
+		int file_thumb_size;
 		int file_padding;
 		int CLI_height;
 		int CLI_padding;
@@ -59,5 +60,7 @@ extern Config* config;
 #define CLI_H (config->CLI_height)
 #define CLI_PAD (config->CLI_padding)
 #define FILE_SIZE (config->file_size)
+#define FILE_THUMB_SIZE (config->file_thumb_size)
 #define FILE_PAD (config->file_padding)
 #define FILE_OFFSET (FILE_SIZE + FILE_PAD)
+#define FILE_THUMB_OFFSET (FILE_THUMB_SIZE + FILE_PAD)

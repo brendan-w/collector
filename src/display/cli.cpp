@@ -128,7 +128,7 @@ void CLI::render_tags()
 	}
 }
 
-void CLI::layout()
+void CLI::layout(bool force)
 {
 	rect = {
 		0,

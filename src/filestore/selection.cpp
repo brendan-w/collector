@@ -18,7 +18,9 @@ Selection::Selection(file_vector* all, file_set fs)
 
 Selection::~Selection()
 {
-
+	//if it was loaded, make sure to release it
+	for(File* file: files)
+		file->unload();
 }
 
 bool Selection::has(File* file)
