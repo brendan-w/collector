@@ -1,5 +1,8 @@
 
-#include <algorithm>
+#include <pthread.h>
+#include <iostream>
+#include <string>
+// #include <algorithm>
 
 #include <SDL_image.h>
 
@@ -10,24 +13,22 @@
 #include <thumbnail.h>
 
 
-Thumbnail::Thumbnail(std::string path)
+
+
+//threaded image loader
+static void* load(void* data)
 {
-	success = false;
+	std::string* path = (std::string*) data;
+	std::cout << "Thread started: " << *path << std::endl;
 
-	if(!file_exists(path.c_str()))
-	{
-		// print_message("File doesn't exist: " + path);
-		// print_message(path);
-		return;
-	}
+	SDL_Surface* surface = IMG_Load(path->c_str());
 
-	SDL_Surface* surface = IMG_Load(path.c_str());
+	delete path;
 
 	if(surface == NULL)
 	{
-		// print_IMG_error("Failed to create surface from image file");
-		// print_message(path);
-		return;
+		print_IMG_error("Failed to create surface from image file");
+		return NULL;
 	}
 
 	/*
@@ -57,31 +58,81 @@ Thumbnail::Thumbnail(std::string path)
 
 	if(thumb == NULL)
 	{
-		// print_SDL_error("Failed to create surface");
+		print_SDL_error("Failed to create surface");
 		SDL_FreeSurface(surface);
-		return;
+		return NULL;
 	}
 
 	if(SDL_BlitScaled(surface, &src, thumb, &dest) != 0)
 	{
-		// print_SDL_error("Failed to SDL_BlitScaled()");
+		print_SDL_error("Failed to SDL_BlitScaled()");
 		SDL_FreeSurface(surface);
-		return;
+		return NULL;
 	}
 
-	load_surface(thumb);
+	/*
+		load the surface into a texture
+	*/
+
+	Texture* t = new Texture();
+	bool worked = t->load_surface(thumb);
+
 	SDL_FreeSurface(surface);
 	SDL_FreeSurface(thumb);
 
-	success = true;
+	if(worked)
+	{
+		std::cout << "Thread finished" << std::endl;
+		return t;
+	}
+
+	delete t;
+	return NULL;
+}
+
+
+
+
+
+Thumbnail::Thumbnail(std::string p)
+{
+	std::string* path = new std::string(p);
+	thread_running = true;
+	texture = NULL;
+
+	if(pthread_create(&thread, NULL, load, (void*) path))
+	{
+		thread_running = false;
+		print_message("Failed to create thumbnail loading thread");
+	}
 }
 
 Thumbnail::~Thumbnail()
 {
+	if(thread_running)
+		pthread_join(thread, (void**) &texture);
 
+	if(texture != NULL)
+		delete texture;
 }
 
-bool Thumbnail::loaded()
+
+void Thumbnail::render(SDL_Rect* rect)
 {
-	return success;
+	if(thread_running)
+	{
+		if(!pthread_tryjoin_np(thread, (void**) &texture))
+			thread_running = false;
+	}
+
+	if(!thread_running)
+	{
+		if(texture != NULL)
+		{
+			texture->render(rect);
+			return;
+		}
+	}
+
+	SDL_RenderFillRect(renderer, rect);
 }

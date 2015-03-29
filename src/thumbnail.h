@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <pthread.h>
 #include <string>
 
 #include <SDL.h>
@@ -9,13 +10,14 @@
 #include <text.h>
 
 
-
-class Thumbnail: public Texture
+class Thumbnail
 {
 	public:
 		Thumbnail(std::string path);
 		~Thumbnail();
-		bool loaded();
+		void render(SDL_Rect* rect);
 	private:
-		bool success = false;
+		bool thread_running;
+		pthread_t thread;
+		Texture* texture;
 };

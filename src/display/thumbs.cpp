@@ -49,16 +49,7 @@ void Thumbs::render_file(File* file)
 	if(rectInWindow(rect))
 	{
 		file->load();
-
-		if(file->loaded())
-		{
-			Thumbnail* t = file->get_thumb();
-			t->render(&rect);
-		}
-		else
-		{
-			SDL_RenderFillRect(renderer, &rect);
-		}
+		file->get_thumb()->render(&rect);
 	}
 }
 

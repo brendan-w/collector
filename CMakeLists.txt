@@ -5,7 +5,7 @@ project(collector)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 # enable C++11
-set(CMAKE_CXX_FLAGS "-Wall -std=c++0x ${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "-Wall -std=c++0x -ggdb ${CMAKE_CXX_FLAGS}")
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_ttf REQUIRED)
