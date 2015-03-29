@@ -19,7 +19,6 @@
 static void* load(void* data)
 {
 	std::string* path = (std::string*) data;
-	std::cout << "Thread started: " << *path << std::endl;
 
 	SDL_Surface* surface = IMG_Load(path->c_str());
 
@@ -71,8 +70,6 @@ static void* load(void* data)
 	}
 
 	SDL_FreeSurface(surface);
-
-	std::cout << "Thread finished" << std::endl;
 
 	return (void*) thumb;
 }
