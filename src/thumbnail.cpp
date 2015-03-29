@@ -70,24 +70,11 @@ static void* load(void* data)
 		return NULL;
 	}
 
-	/*
-		load the surface into a texture
-	*/
-
-	Texture* t = new Texture();
-	bool worked = t->load_surface(thumb);
-
 	SDL_FreeSurface(surface);
-	SDL_FreeSurface(thumb);
 
-	if(worked)
-	{
-		std::cout << "Thread finished" << std::endl;
-		return t;
-	}
+	std::cout << "Thread finished" << std::endl;
 
-	delete t;
-	return NULL;
+	return (void*) thumb;
 }
 
 
@@ -107,32 +94,57 @@ Thumbnail::Thumbnail(std::string p)
 	}
 }
 
+
 Thumbnail::~Thumbnail()
 {
-	if(thread_running)
-		pthread_join(thread, (void**) &texture);
+	join(true);
 
 	if(texture != NULL)
 		delete texture;
 }
 
 
-void Thumbnail::render(SDL_Rect* rect)
+void Thumbnail::join(bool force)
 {
 	if(thread_running)
 	{
-		if(!pthread_tryjoin_np(thread, (void**) &texture))
-			thread_running = false;
-	}
+		SDL_Surface* thumb = NULL;
 
-	if(!thread_running)
-	{
-		if(texture != NULL)
+		if(force)
 		{
-			texture->render(rect);
-			return;
+			pthread_join(thread, (void**) &thumb);
+		}
+		else
+		{
+			if(pthread_tryjoin_np(thread, (void**) &thumb) != 0)
+				return;
+		}
+
+		//load the surface into a texture
+		thread_running = false;
+
+		//if the load succeeded
+		if(thumb != NULL)
+		{
+			texture = new Texture();
+			if(!texture->load_surface(thumb))
+			{
+				delete texture;
+				texture = NULL;
+			}
+
+			SDL_FreeSurface(thumb);
 		}
 	}
+}
 
-	SDL_RenderFillRect(renderer, rect);
+
+void Thumbnail::render(SDL_Rect* rect)
+{
+	join(false);
+
+	if(texture == NULL)
+		SDL_RenderFillRect(renderer, rect);
+	else
+		texture->render(rect);
 }

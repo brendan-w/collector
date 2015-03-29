@@ -17,6 +17,8 @@ class Thumbnail
 		~Thumbnail();
 		void render(SDL_Rect* rect);
 	private:
+		void join(bool force);
+
 		bool thread_running;
 		pthread_t thread;
 		Texture* texture;
