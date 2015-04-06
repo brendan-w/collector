@@ -6,6 +6,7 @@
 
 
 //SDL userevent types
+extern Uint32 RENDER; //a dummy event to kick SDL_WaitEvent() for a new render cycle
 extern Uint32 SELECTOR;
 extern Uint32 SELECTION;
 extern Uint32 FILE_INFO;

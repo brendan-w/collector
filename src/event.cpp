@@ -7,6 +7,7 @@
 
 
 //each of the custom events
+Uint32 RENDER = 0;
 Uint32 SELECTOR = 0;
 Uint32 SELECTION = 0;
 Uint32 FILE_INFO = 0;
@@ -21,9 +22,10 @@ bool init_events()
 		return false;
 	}
 
-	SELECTOR  = begin;
-	SELECTION = begin + 1;
-	FILE_INFO = begin + 2;
+	RENDER    = begin;
+	SELECTOR  = begin + 1;
+	SELECTION = begin + 2;
+	FILE_INFO = begin + 3;
 
 	return true;
 }
