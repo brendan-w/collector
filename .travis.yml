@@ -1,0 +1,19 @@
+
+language: cpp
+compiler:
+    # - clang
+    - g++
+before_install:
+    # - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+    - sudo apt-get update -qq
+    - wget http://www.cmake.org/files/v3.1/cmake-3.1.2-Linux-x86_64.sh
+    - chmod +x cmake-3.1.2-Linux-x86_64.sh
+install:
+    - sudo apt-get install -y -qq libcunit1 libcunit1-dev libglfw-dev libglew-dev libfreeimage-dev xorg-dev gcc-4.9 g++-4.9
+# libglfw3 isn't up to date in apt with precise
+    - sh cmake-3.1.2-Linux-x86_64.sh --skip-license --prefix=cmake --exclude-subdir
+    - mkdir build;
+    - cd build
+script:
+    - cmake ../
+    - cmake --build ./
