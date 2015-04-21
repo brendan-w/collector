@@ -3,6 +3,7 @@
 #include <string>
 
 #include <filestore/selector.h>
+#include <utils.h>
 
 
 /*
@@ -13,6 +14,8 @@ Tag_operation::Tag_operation(std::string input)
 {
 	if(input.length() > 0)
 	{
+		to_lower(input);
+
 		//the first character may hold an operation indicator
 		char c = input[0];
 
