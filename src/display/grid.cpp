@@ -62,10 +62,19 @@ void Grid::render_file(File* file, bool selected)
 
 	if(rectInWindow(rect))
 	{
-		if(selected)
-			setRenderDrawColor(renderer, config->get_color(HIGHLIGHT));
-		else
-			setRenderDrawColor(renderer, config->get_color(FILL));
+		bool under_mouse = (file == file_under_mouse);
+
+		if(!selected && !under_mouse)
+			setRenderDrawColor(config->get_color(FILE_NEUTRAL));
+
+		else if(selected && !under_mouse)
+			setRenderDrawColor(config->get_color(FILE_SELECTED));
+
+		else if(!selected && under_mouse)
+			setRenderDrawColor(config->get_color(FILE_NEUTRAL_HOVER));
+
+		else if(selected && under_mouse)
+			setRenderDrawColor(config->get_color(FILE_SELECTED_HOVER));
 
 		SDL_RenderFillRect(renderer, &rect);
 	}
@@ -131,8 +140,8 @@ void Grid::layout(bool force)
 
 bool Grid::on_motion(SDL_MouseMotionEvent &e)
 {
-	File* file = mouse_to_file(e.x, e.y);
-	submit(FILE_INFO, (void*) file);
+	file_under_mouse = mouse_to_file(e.x, e.y);
+	submit(FILE_INFO, (void*) file_under_mouse);
 	return false;
 }
 

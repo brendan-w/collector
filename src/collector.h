@@ -12,7 +12,7 @@ extern SDL_Renderer* renderer;
 extern TTF_Font* font;
 
 //SDL utils
-void setRenderDrawColor(SDL_Renderer* r, SDL_Color color);
+void setRenderDrawColor(SDL_Color color);
 bool rectInWindow(SDL_Rect &rect);
 void print_message(std::string message);
 void print_SDL_error(std::string message);

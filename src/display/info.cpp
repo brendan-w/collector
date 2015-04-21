@@ -32,7 +32,7 @@ Info::~Info()
 void Info::render()
 {
 	//draw the background
-	setRenderDrawColor(renderer, config->get_color(OVERLAY));
+	setRenderDrawColor(config->get_color(OVERLAY));
 	SDL_RenderFillRect(renderer, &rect);
 
 	filepath->render(CLI_PAD,

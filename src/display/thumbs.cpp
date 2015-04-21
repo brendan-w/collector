@@ -28,7 +28,7 @@ Thumbs::~Thumbs()
 
 void Thumbs::render()
 {
-	setRenderDrawColor(renderer, config->get_color(FILL));
+	setRenderDrawColor(config->get_color(FILE_NEUTRAL));
 
 	for(File* file : *get_selection())
 	{

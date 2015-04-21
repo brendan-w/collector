@@ -101,7 +101,7 @@ int main(int argc, char * argv[])
 		}
 
 		//render changes
-		setRenderDrawColor(renderer, config->get_color(BACKGROUND));
+		setRenderDrawColor(config->get_color(BACKGROUND));
 		SDL_RenderClear(renderer);
 
 		display->render();
@@ -267,9 +267,9 @@ static void close()
 */
 
 
-void setRenderDrawColor(SDL_Renderer* r, SDL_Color color)
+void setRenderDrawColor(SDL_Color color)
 {
-    SDL_SetRenderDrawColor(r,
+    SDL_SetRenderDrawColor(renderer,
                            color.r,
                            color.g,
                            color.b,
