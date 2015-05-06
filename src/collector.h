@@ -5,7 +5,7 @@
 #include <SDL_context.h>
 
 //the only two main globals
-extern SDL_context* context;
+extern SDL_context* sdl;
 extern Config* config;
 
 //each of the custom events

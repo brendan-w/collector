@@ -58,23 +58,23 @@ void Grid::render_file(File* file, bool selected)
 		FILE_SIZE
 	};
 
-	if(context->rect_in_window(rect))
+	if(sdl->rect_in_window(rect))
 	{
 		bool under_mouse = (file == file_under_mouse);
 
 		if(!selected && !under_mouse)
-			context->set_color(FILE_NEUTRAL);
+			sdl->set_color(FILE_NEUTRAL);
 
 		else if(selected && !under_mouse)
-			context->set_color(FILE_SELECTED);
+			sdl->set_color(FILE_SELECTED);
 
 		else if(!selected && under_mouse)
-			context->set_color(FILE_NEUTRAL_HOVER);
+			sdl->set_color(FILE_NEUTRAL_HOVER);
 
 		else if(selected && under_mouse)
-			context->set_color(FILE_SELECTED_HOVER);
+			sdl->set_color(FILE_SELECTED_HOVER);
 
-		context->fill_rect(rect);
+		sdl->fill_rect(rect);
 	}
 }
 
@@ -139,7 +139,7 @@ void Grid::layout(bool force)
 bool Grid::on_motion(SDL_MouseMotionEvent &e)
 {
 	file_under_mouse = mouse_to_file(e.x, e.y);
-	context->submit(FILE_INFO, (void*) file_under_mouse);
+	sdl->submit(FILE_INFO, (void*) file_under_mouse);
 	return false;
 }
 

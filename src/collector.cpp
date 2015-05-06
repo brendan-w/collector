@@ -19,7 +19,7 @@ static void close();
 
 //global contexts and resources
 Config* config = NULL;
-SDL_context* context = NULL;
+SDL_context* sdl = NULL;
 
 //the two main components
 FileStore* filestore = NULL;
@@ -79,7 +79,7 @@ int main(int argc, char * argv[])
 					{
 						//process the Selector, and broadcast the resulting Selection
 						Selection* s = filestore->select((Selector*) e.user.data1);
-						context->submit(SELECTION, (void*) s);
+						sdl->submit(SELECTION, (void*) s);
 					}
 					else if(e.type == SELECTION)
 					{
@@ -94,12 +94,12 @@ int main(int argc, char * argv[])
 		}
 
 		//render changes
-		context->set_color(BACKGROUND);
-		context->clear();
+		sdl->set_color(BACKGROUND);
+		sdl->clear();
 
 		display->render();
 
-		context->present();
+		sdl->present();
 		SDL_Delay(33);
 	}
 
@@ -111,17 +111,17 @@ int main(int argc, char * argv[])
 static bool init()
 {
 	config = new Config;
-	context = new SDL_context;
+	sdl = new SDL_context;
 	filestore = new FileStore;
 	display = new Display(filestore->select(NULL)); //initial, empty, selection
 
-	return context->succeeded();
+	return sdl->succeeded();
 }
 
 static void close()
 {
 	delete display;
 	delete filestore;
-	delete context;
+	delete sdl;
 	delete config;
 }

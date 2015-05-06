@@ -70,7 +70,7 @@ static void* load(void* data)
 	SDL_FreeSurface(surface);
 
 	//thumbnail load finished, call for a render
-	context->submit(RENDER);
+	sdl->submit(RENDER);
 
 	return (void*) thumb;
 }
@@ -142,7 +142,7 @@ void Thumbnail::render(SDL_Rect* rect)
 	join(false);
 
 	if(texture == NULL)
-		SDL_RenderFillRect(context->get_renderer(), rect);
+		SDL_RenderFillRect(sdl->get_renderer(), rect);
 	else
 		texture->render(rect);
 }

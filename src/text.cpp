@@ -52,7 +52,7 @@ void Text::load_text()
 {
 	if(text.length() > 0)
 	{
-		SDL_Surface* surface = TTF_RenderText_Solid(context->get_font(), text.c_str(), color);
+		SDL_Surface* surface = TTF_RenderText_Solid(sdl->get_font(), text.c_str(), color);
 
 		if(surface == NULL)
 		{

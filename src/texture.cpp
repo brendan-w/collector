@@ -39,7 +39,7 @@ bool Texture::load_surface(SDL_Surface* surface)
 {
 	free();
 
-	texture = SDL_CreateTextureFromSurface(context->get_renderer(), surface);
+	texture = SDL_CreateTextureFromSurface(sdl->get_renderer(), surface);
 
 	if(texture == NULL)
 	{
@@ -68,8 +68,8 @@ void Texture::render(int _x, int _y, int _w, int _h)
 	if((texture != NULL) && (w > 0) && (h > 0))
 	{
 		SDL_Rect dest = { _x, _y, _w, _h };
-		if(context->rect_in_window(dest))
-			SDL_RenderCopy(context->get_renderer(), texture, NULL, &dest);
+		if(sdl->rect_in_window(dest))
+			SDL_RenderCopy(sdl->get_renderer(), texture, NULL, &dest);
 	}
 }
 

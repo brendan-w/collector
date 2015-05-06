@@ -59,7 +59,7 @@ void Display::render()
 
 void Display::on_resize()
 {
-	SDL_GetWindowSize(context->get_window(),
+	SDL_GetWindowSize(sdl->get_window(),
 					  &(config->window.w),
 					  &(config->window.h));
 
@@ -161,5 +161,5 @@ void Display::send_selector()
 	cli->fill_selector(selector);
 
 	//send to SDL event queue
-	context->submit(SELECTOR, (void*) selector);
+	sdl->submit(SELECTOR, (void*) selector);
 }

@@ -27,7 +27,7 @@ Thumbs::~Thumbs()
 
 void Thumbs::render()
 {
-	context->set_color(FILE_NEUTRAL);
+	sdl->set_color(FILE_NEUTRAL);
 
 	for(File* file : *get_selection())
 	{
@@ -45,7 +45,7 @@ void Thumbs::render_file(File* file)
 		FILE_THUMB_SIZE
 	};
 
-	if(context->rect_in_window(rect))
+	if(sdl->rect_in_window(rect))
 	{
 		file->load();
 		file->get_thumb()->render(&rect);
@@ -108,7 +108,7 @@ void Thumbs::on_selection()
 bool Thumbs::on_motion(SDL_MouseMotionEvent &e)
 {
 	File* file = mouse_to_file(e.x, e.y);
-	context->submit(FILE_INFO, (void*) file);
+	sdl->submit(FILE_INFO, (void*) file);
 	return false;
 }
 
