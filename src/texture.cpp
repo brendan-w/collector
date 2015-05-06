@@ -4,8 +4,9 @@
 
 #include <SDL.h>
 
-#include <collector.h>
 #include <texture.h>
+#include <collector.h>
+#include <SDL_utils.h>
 
 
 Texture::Texture()
@@ -38,7 +39,7 @@ bool Texture::load_surface(SDL_Surface* surface)
 {
 	free();
 
-	texture = SDL_CreateTextureFromSurface(renderer, surface);
+	texture = SDL_CreateTextureFromSurface(context->get_renderer(), surface);
 
 	if(texture == NULL)
 	{
@@ -67,8 +68,8 @@ void Texture::render(int _x, int _y, int _w, int _h)
 	if((texture != NULL) && (w > 0) && (h > 0))
 	{
 		SDL_Rect dest = { _x, _y, _w, _h };
-		if(rectInWindow(dest))
-			SDL_RenderCopy(renderer, texture, NULL, &dest);
+		if(context->rectInWindow(dest))
+			SDL_RenderCopy(context->get_renderer(), texture, NULL, &dest);
 	}
 }
 

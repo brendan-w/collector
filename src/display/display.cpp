@@ -60,7 +60,7 @@ void Display::render()
 
 void Display::on_resize()
 {
-	SDL_GetWindowSize(window,
+	SDL_GetWindowSize(context->get_window(),
 					  &(config->window.w),
 					  &(config->window.h));
 

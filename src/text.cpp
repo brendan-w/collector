@@ -2,8 +2,9 @@
 
 #include <SDL_ttf.h>
 
-#include <collector.h> //needed for font
+#include <collector.h>
 #include <text.h>
+#include <SDL_utils.h>
 
 
 Text::Text(std::string t, SDL_Color c)
@@ -51,7 +52,7 @@ void Text::load_text()
 {
 	if(text.length() > 0)
 	{
-		SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), color);
+		SDL_Surface* surface = TTF_RenderText_Solid(context->get_font(), text.c_str(), color);
 
 		if(surface == NULL)
 		{

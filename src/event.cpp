@@ -4,7 +4,7 @@
 #include <collector.h> //print_SDL_error()
 
 #include <event.h>
-
+#include <SDL_utils.h>
 
 //each of the custom events
 Uint32 RENDER = 0;

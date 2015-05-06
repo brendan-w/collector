@@ -28,7 +28,7 @@ Thumbs::~Thumbs()
 
 void Thumbs::render()
 {
-	setRenderDrawColor(config->get_color(FILE_NEUTRAL));
+	context->setColor(config->get_color(FILE_NEUTRAL));
 
 	for(File* file : *get_selection())
 	{
@@ -46,7 +46,7 @@ void Thumbs::render_file(File* file)
 		FILE_THUMB_SIZE
 	};
 
-	if(rectInWindow(rect))
+	if(context->rectInWindow(rect))
 	{
 		file->load();
 		file->get_thumb()->render(&rect);

@@ -1,13 +1,9 @@
 
 
-#include <string>
-#include <iostream>
-
 #include <SDL.h>
-#include <SDL_ttf.h>
-#include <SDL_image.h>
 
 #include <collector.h>
+#include <SDL_context.h>
 #include <config.h>
 #include <event.h>
 #include <filestore/file.h>
@@ -24,9 +20,7 @@ static void close();
 
 //global contexts and resources
 Config* config = NULL;
-SDL_Window* window = NULL;
-SDL_Renderer* renderer = NULL;
-TTF_Font* font = NULL;
+SDL_context* context = NULL;
 
 //the two main components
 FileStore* filestore = NULL;
@@ -101,12 +95,12 @@ int main(int argc, char * argv[])
 		}
 
 		//render changes
-		setRenderDrawColor(config->get_color(BACKGROUND));
-		SDL_RenderClear(renderer);
+		context->setColor(config->get_color(BACKGROUND));
+		context->clear();
 
 		display->render();
 
-		SDL_RenderPresent(renderer);
+		context->present();
 		SDL_Delay(33);
 	}
 
@@ -117,187 +111,18 @@ int main(int argc, char * argv[])
 
 static bool init()
 {
-	/*
-		Config
-	*/
-
 	config = new Config;
-
-	/*
-		SDL2
-	*/
-
-	if(SDL_Init(SDL_INIT_VIDEO) != 0)
-	{
-		print_SDL_error("SDL_Init Error");
-		return false;
-	}
-
-	std::string title = "Collector - " + config->cwd_path;
-	window = SDL_CreateWindow(title.c_str(),
-                              config->window.x,
-                              config->window.y,
-                              config->window.w,
-                              config->window.h,
-                              config->get_window_flags());
-	if(window == NULL)
-	{
-		print_SDL_error("SDL_CreateWindow Error");
-		return false;
-	}
-
-	renderer = SDL_CreateRenderer(window,
-                                  -1,
-                                  config->get_render_flags());
-	if(renderer == NULL)
-	{
-		print_SDL_error("SDL_CreateRenderer Error");
-		return false;
-	}
-
-	SDL_StartTextInput();
-
-	if(SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND) != 0)
-	{
-		print_SDL_error("SDL_SetRenderDrawBlendMode Error");
-		return false;
-	}
-
-	/*
-		SDL2_ttf
-	*/
-
-	if(TTF_Init() != 0)
-	{
-		print_TTF_error("SDL_ttf could not initialize");
-		return false;
-	}
-
-	font = TTF_OpenFont(config->font_path.c_str(),
-						config->font_size);
-	if(font == NULL)
-	{
-		print_TTF_error("Failed to load font: " + config->font_path);
-		return false;
-	}
-
-	/*
-		SDL2_image
-	*/
-
-	int flags = IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF;
-
-	if((IMG_Init(flags) & flags) != flags)
-	{
-		print_IMG_error("SDL_image could not initialize");
-		return false;
-	}
-
-	/*
-		Event Registration
-	*/
-
-	if(!init_events())
-	{
-		print_message("Failed to register custom events");
-		return false;
-	}
-
-	/*
-		Init the FileStore (performs the `find` scan)
-	*/
-
+	context = new SDL_context;
 	filestore = new FileStore;
+	display = new Display(filestore->select(NULL)); //initial, empty, selection
 
-	/*
-		Create the display, with initial, empty, selection
-	*/
-
-	display = new Display(filestore->select(NULL));
-
-	return true;
+	return context->succeeded();
 }
 
 static void close()
 {
-	/*
-		Display
-	*/
-
 	delete display;
-
-	/*
-		FileStore
-	*/
-
 	delete filestore;
-
-	/*
-		SDL2_image
-	*/
-
-	IMG_Quit();
-
-	/*
-		SDL2_ttf
-	*/
-
-	TTF_CloseFont(font);
-	TTF_Quit();
-
-	/*
-		SDL2
-	*/
-
-	SDL_StopTextInput();
-	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(window);
-	SDL_Quit();
-
-	/*
-		Config
-	*/
-
+	delete context;
 	delete config;
-}
-
-
-/*
-	General SDL utils
-*/
-
-
-void setRenderDrawColor(SDL_Color color)
-{
-    SDL_SetRenderDrawColor(renderer,
-                           color.r,
-                           color.g,
-                           color.b,
-                           color.a);
-}
-
-bool rectInWindow(SDL_Rect &rect)
-{
-	SDL_Rect screen = config->get_window_rect();
-	return SDL_HasIntersection(&screen, &rect);
-}
-
-void print_message(std::string message)
-{
-	std::cout << message << std::endl;
-}
-
-void print_SDL_error(std::string message)
-{
-	std::cout << message << std::endl << SDL_GetError() << std::endl;
-}
-
-void print_TTF_error(std::string message)
-{
-	std::cout << message << std::endl << TTF_GetError() << std::endl;
-}
-
-void print_IMG_error(std::string message)
-{
-	std::cout << message << std::endl << IMG_GetError() << std::endl;
 }

@@ -60,23 +60,23 @@ void Grid::render_file(File* file, bool selected)
 		FILE_SIZE
 	};
 
-	if(rectInWindow(rect))
+	if(context->rectInWindow(rect))
 	{
 		bool under_mouse = (file == file_under_mouse);
 
 		if(!selected && !under_mouse)
-			setRenderDrawColor(config->get_color(FILE_NEUTRAL));
+			context->setColor(config->get_color(FILE_NEUTRAL));
 
 		else if(selected && !under_mouse)
-			setRenderDrawColor(config->get_color(FILE_SELECTED));
+			context->setColor(config->get_color(FILE_SELECTED));
 
 		else if(!selected && under_mouse)
-			setRenderDrawColor(config->get_color(FILE_NEUTRAL_HOVER));
+			context->setColor(config->get_color(FILE_NEUTRAL_HOVER));
 
 		else if(selected && under_mouse)
-			setRenderDrawColor(config->get_color(FILE_SELECTED_HOVER));
+			context->setColor(config->get_color(FILE_SELECTED_HOVER));
 
-		SDL_RenderFillRect(renderer, &rect);
+		context->fillRect(rect);
 	}
 }
 

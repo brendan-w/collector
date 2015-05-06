@@ -32,8 +32,8 @@ Info::~Info()
 void Info::render()
 {
 	//draw the background
-	setRenderDrawColor(config->get_color(OVERLAY));
-	SDL_RenderFillRect(renderer, &rect);
+	context->setColor(config->get_color(OVERLAY));
+	context->fillRect(rect);
 
 	filepath->render(CLI_PAD,
 	                 rect.y + CLI_PAD);
