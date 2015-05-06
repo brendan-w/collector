@@ -161,5 +161,5 @@ void Display::send_selector()
 	cli->fill_selector(selector);
 
 	//send to SDL event queue
-	submit(SELECTOR, (void*) selector);
+	context->submit(SELECTOR, (void*) selector);
 }

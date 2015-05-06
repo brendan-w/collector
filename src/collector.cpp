@@ -5,7 +5,6 @@
 #include <collector.h>
 #include <SDL_context.h>
 #include <config.h>
-#include <event.h>
 #include <filestore/file.h>
 #include <filestore/filestore.h>
 #include <filestore/selector.h>
@@ -80,7 +79,7 @@ int main(int argc, char * argv[])
 					{
 						//process the Selector, and broadcast the resulting Selection
 						Selection* s = filestore->select((Selector*) e.user.data1);
-						submit(SELECTION, (void*) s);
+						context->submit(SELECTION, (void*) s);
 					}
 					else if(e.type == SELECTION)
 					{

@@ -108,7 +108,7 @@ void Thumbs::on_selection()
 bool Thumbs::on_motion(SDL_MouseMotionEvent &e)
 {
 	File* file = mouse_to_file(e.x, e.y);
-	submit(FILE_INFO, (void*) file);
+	context->submit(FILE_INFO, (void*) file);
 	return false;
 }
 

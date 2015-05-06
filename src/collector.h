@@ -4,9 +4,15 @@
 #include <config.h>
 #include <SDL_context.h>
 
-//the only two globals
+//the only two main globals
 extern SDL_context* context;
 extern Config* config;
+
+//each of the custom events
+extern Uint32 RENDER;
+extern Uint32 SELECTOR;
+extern Uint32 SELECTION;
+extern Uint32 FILE_INFO;
 
 //just to make the code cleaner
 #define WINDOW_W (config->window.w)

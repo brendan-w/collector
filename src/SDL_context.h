@@ -18,6 +18,8 @@ class SDL_context
 		SDL_Renderer* get_renderer() { return renderer; }
 		TTF_Font* get_font() { return font; }
 
+		void submit(Uint32 type, void* data1=NULL, void* data2=NULL);
+
 		void clear();
 		void present();
 

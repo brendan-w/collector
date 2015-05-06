@@ -22,7 +22,6 @@ set(SOURCE_FILES
 	"src/collector.cpp"
 	"src/SDL_context.cpp"
 	"src/config.cpp"
-	"src/event.cpp"
 	"src/utils.cpp"
 	"src/texture.cpp"
 	"src/text.cpp"

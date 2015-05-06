@@ -6,7 +6,6 @@
 #include <SDL.h>
 
 #include <collector.h>
-#include <event.h>
 #include <utils.h>
 #include <filestore/file.h>
 #include <filestore/selector.h>
@@ -140,7 +139,7 @@ void Grid::layout(bool force)
 bool Grid::on_motion(SDL_MouseMotionEvent &e)
 {
 	file_under_mouse = mouse_to_file(e.x, e.y);
-	submit(FILE_INFO, (void*) file_under_mouse);
+	context->submit(FILE_INFO, (void*) file_under_mouse);
 	return false;
 }
 

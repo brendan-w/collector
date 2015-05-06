@@ -7,7 +7,14 @@
 #include <collector.h>
 #include <SDL_context.h>
 #include <SDL_utils.h>
-#include <event.h>
+
+
+#define NUM_USER_EVENTS 4
+
+Uint32 RENDER = 0;
+Uint32 SELECTOR = 0;
+Uint32 SELECTION = 0;
+Uint32 FILE_INFO = 0;
 
 
 SDL_context::SDL_context()
@@ -93,13 +100,20 @@ SDL_context::SDL_context()
 		Event Registration
 	*/
 
-	if(!init_events())
+	Uint32 begin = SDL_RegisterEvents(NUM_USER_EVENTS);
+	if(begin == ((Uint32) -1 ))
 	{
 		print_message("Failed to register custom events");
 		success = false;
 		return;
 	}
+
+	RENDER    = begin;
+	SELECTOR  = begin + 1;
+	SELECTION = begin + 2;
+	FILE_INFO = begin + 3;
 }
+
 
 SDL_context::~SDL_context()
 {
@@ -124,6 +138,25 @@ SDL_context::~SDL_context()
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
+}
+
+
+void SDL_context::submit(Uint32 type, void* data1 /*=NULL*/, void* data2 /*=NULL*/)
+{
+	SDL_Event e;
+	SDL_zero(e);
+
+	e.type = type;
+	e.user.data1 = data1;
+	e.user.data2 = data2;
+
+	//try to push onto SDL event queue
+	int r = SDL_PushEvent(&e);
+
+	if(r < 0)
+		print_SDL_error("SDL_PushEvent() failed");
+	else if(r == 0)
+		print_message("SDL_PushEvent() was filtered");
 }
 
 

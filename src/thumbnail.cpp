@@ -7,8 +7,6 @@
 
 #include <collector.h> //print_IMG_error()
 #include <SDL_utils.h>
-#include <config.h>
-#include <event.h> //submit()
 #include <utils.h> //file_exists()
 #include <thumbnail.h>
 
@@ -72,7 +70,7 @@ static void* load(void* data)
 	SDL_FreeSurface(surface);
 
 	//thumbnail load finished, call for a render
-	submit(RENDER);
+	context->submit(RENDER);
 
 	return (void*) thumb;
 }
