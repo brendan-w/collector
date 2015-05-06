@@ -95,7 +95,7 @@ int main(int argc, char * argv[])
 		}
 
 		//render changes
-		context->setColor(config->get_color(BACKGROUND));
+		context->set_color(BACKGROUND);
 		context->clear();
 
 		display->render();

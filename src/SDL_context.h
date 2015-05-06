@@ -5,6 +5,8 @@
 #include <SDL_ttf.h>
 #include <SDL_image.h>
 
+#include <config.h>
+
 
 class SDL_context
 {
@@ -19,9 +21,10 @@ class SDL_context
 		void clear();
 		void present();
 
-		void setColor(SDL_Color color);
-		void fillRect(SDL_Rect &rect);
-		bool rectInWindow(SDL_Rect &rect);
+		void set_color(Color c);
+		void set_color(SDL_Color color);
+		void fill_rect(SDL_Rect &rect);
+		bool rect_in_window(SDL_Rect &rect);
 
 		bool succeeded() { return success; }
 

@@ -32,8 +32,8 @@ Info::~Info()
 void Info::render()
 {
 	//draw the background
-	context->setColor(config->get_color(OVERLAY));
-	context->fillRect(rect);
+	context->set_color(OVERLAY);
+	context->fill_rect(rect);
 
 	filepath->render(CLI_PAD,
 	                 rect.y + CLI_PAD);

@@ -60,23 +60,23 @@ void Grid::render_file(File* file, bool selected)
 		FILE_SIZE
 	};
 
-	if(context->rectInWindow(rect))
+	if(context->rect_in_window(rect))
 	{
 		bool under_mouse = (file == file_under_mouse);
 
 		if(!selected && !under_mouse)
-			context->setColor(config->get_color(FILE_NEUTRAL));
+			context->set_color(FILE_NEUTRAL);
 
 		else if(selected && !under_mouse)
-			context->setColor(config->get_color(FILE_SELECTED));
+			context->set_color(FILE_SELECTED);
 
 		else if(!selected && under_mouse)
-			context->setColor(config->get_color(FILE_NEUTRAL_HOVER));
+			context->set_color(FILE_NEUTRAL_HOVER);
 
 		else if(selected && under_mouse)
-			context->setColor(config->get_color(FILE_SELECTED_HOVER));
+			context->set_color(FILE_SELECTED_HOVER);
 
-		context->fillRect(rect);
+		context->fill_rect(rect);
 	}
 }
 

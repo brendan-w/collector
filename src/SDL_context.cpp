@@ -137,7 +137,12 @@ void SDL_context::present()
 	SDL_RenderPresent(renderer);
 }
 
-void SDL_context::setColor(SDL_Color color)
+void SDL_context::set_color(Color c)
+{
+	set_color(config->get_color(c));
+}
+
+void SDL_context::set_color(SDL_Color color)
 {
     SDL_SetRenderDrawColor(renderer,
                            color.r,
@@ -146,12 +151,12 @@ void SDL_context::setColor(SDL_Color color)
                            color.a);
 }
 
-void SDL_context::fillRect(SDL_Rect &rect)
+void SDL_context::fill_rect(SDL_Rect &rect)
 {
 	SDL_RenderFillRect(renderer, &rect);
 }
 
-bool SDL_context::rectInWindow(SDL_Rect &rect)
+bool SDL_context::rect_in_window(SDL_Rect &rect)
 {
 	SDL_Rect screen = config->get_window_rect();
 	return SDL_HasIntersection(&screen, &rect);

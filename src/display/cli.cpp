@@ -93,8 +93,8 @@ bool CLI::on_text(SDL_TextInputEvent &e)
 void CLI::render()
 {
 	//draw the background
-	context->setColor(config->get_color(OVERLAY));
-	context->fillRect(rect);
+	context->set_color(OVERLAY);
+	context->fill_rect(rect);
 
 	totals->render(rect.w - totals->width() - CLI_PAD,
 				   rect.y + CLI_PAD);
@@ -109,7 +109,7 @@ void CLI::render_tags()
 	SDL_Rect tag_rect = rect;
 
 	//draw each tags text
-	context->setColor(config->get_color(CLI_HIGHLIGHT));
+	context->set_color(CLI_HIGHLIGHT);
 
 	int x = CLI_PAD;
 	for(unsigned int i = 0; i < tags.size(); i++)
@@ -120,7 +120,7 @@ void CLI::render_tags()
 		{
 			tag_rect.x = x - CLI_PAD;
 			tag_rect.w = t->width() + (CLI_PAD * 2);
-			context->fillRect(tag_rect);
+			context->fill_rect(tag_rect);
 		}
 
 		t->render(x, rect.y + CLI_PAD);

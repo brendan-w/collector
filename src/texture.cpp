@@ -68,7 +68,7 @@ void Texture::render(int _x, int _y, int _w, int _h)
 	if((texture != NULL) && (w > 0) && (h > 0))
 	{
 		SDL_Rect dest = { _x, _y, _w, _h };
-		if(context->rectInWindow(dest))
+		if(context->rect_in_window(dest))
 			SDL_RenderCopy(context->get_renderer(), texture, NULL, &dest);
 	}
 }
