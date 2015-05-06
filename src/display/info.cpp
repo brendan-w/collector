@@ -9,7 +9,6 @@
 #include <SDL.h>
 
 #include <collector.h>
-#include <config.h>
 #include <utils.h>
 #include <text.h>
 #include <filestore/file.h>

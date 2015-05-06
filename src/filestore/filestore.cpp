@@ -3,7 +3,7 @@
 #include <string>
 #include <stdio.h>
 
-#include <config.h>
+#include <collector.h>
 #include <utils.h>
 #include <filestore/selector.h>
 #include <filestore/selection.h>

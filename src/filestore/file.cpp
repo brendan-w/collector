@@ -4,7 +4,7 @@
 #include <fstream>
 
 
-#include <config.h>
+#include <collector.h>
 #include <utils.h>
 #include <thumbnail.h>
 #include <filestore/file.h>

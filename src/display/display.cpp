@@ -5,7 +5,6 @@
 #include <SDL.h>
 
 #include <collector.h>
-#include <config.h>
 #include <event.h>
 #include <filestore/file.h>
 #include <filestore/selector.h>

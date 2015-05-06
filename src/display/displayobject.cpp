@@ -2,7 +2,7 @@
 
 #include <SDL.h>
 
-#include <config.h>
+#include <collector.h>
 #include <filestore/selection.h>
 #include <display/displayobject.h>
 

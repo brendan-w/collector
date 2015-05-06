@@ -5,7 +5,6 @@
 #include <SDL.h>
 
 #include <collector.h>
-#include <config.h>
 #include <thumbnail.h>
 #include <event.h>
 #include <utils.h>

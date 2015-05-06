@@ -10,7 +10,6 @@
 #include <SDL.h>
 
 #include <collector.h>
-#include <config.h>
 #include <text.h>
 #include <filestore/selector.h>
 #include <filestore/selection.h>

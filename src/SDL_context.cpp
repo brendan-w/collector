@@ -4,10 +4,10 @@
 #include <SDL_ttf.h>
 #include <SDL_image.h>
 
+#include <collector.h>
 #include <SDL_context.h>
 #include <SDL_utils.h>
 #include <event.h>
-#include <config.h>
 
 
 SDL_context::SDL_context()
