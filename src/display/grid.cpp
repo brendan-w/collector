@@ -91,12 +91,11 @@ void Grid::render_file(File* file, bool selected)
 void Grid::resize()
 {
 	SDL_Rect viewport = sdl->get_viewport();
-	size_t height_files = (viewport.h > 0) ? (viewport.h / FILE_OFFSET) : 1;
+	size_t height_files = (viewport.h > 0) ? ((viewport.h - CLI_H * 2) / FILE_OFFSET) : 1;
 
 	//don't recalc the tile positions unless we have to
 	if(current_height_files != height_files)
 	{
-		current_height_files = height_files;
 
 		Selection* s = selection();
 		file_vector_it begin = s->all_begin();
@@ -111,7 +110,11 @@ void Grid::resize()
 			file->grid_pos.y = count % height_files;
 			count++;
 		}
+
+		current_height_files = height_files;
 	}
+
+	mark_dirty();
 }
 
 

@@ -26,7 +26,6 @@ FileStore* filestore = NULL;
 Display* display = NULL;
 
 
-
 int main(int argc, char * argv[])
 {
 	if(!init())
@@ -94,11 +93,7 @@ int main(int argc, char * argv[])
 		}
 
 		//render changes
-		sdl->set_color(BACKGROUND);
-		sdl->clear();
-
 		display->render();
-
 		sdl->present();
 		SDL_Delay(33);
 	}

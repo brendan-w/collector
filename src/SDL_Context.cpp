@@ -54,6 +54,10 @@ SDL_Context::SDL_Context()
 		return;
 	}
 
+	//clear the screen with the background color
+	set_color(BACKGROUND);
+	SDL_RenderClear(renderer);
+
 	SDL_StartTextInput();
 
 	if(SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND) != 0)
@@ -164,11 +168,6 @@ void SDL_Context::quit()
 	SDL_Event e;
 	e.type = SDL_QUIT;
 	SDL_PushEvent(&e);
-}
-
-void SDL_Context::clear()
-{
-	SDL_RenderClear(renderer);
 }
 
 void SDL_Context::present()

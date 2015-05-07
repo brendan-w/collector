@@ -16,8 +16,8 @@ class Info : public DisplayObject
 		~Info();
 
 		void render();
-
 		void on_file_info(File* f);
+		void resize();
 
 	private:
 		File* file;

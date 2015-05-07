@@ -55,8 +55,11 @@ void Display::render()
 
 void Display::render_child(Child& child)
 {
-	sdl->set_viewport(child.rect);
-	child.display->render();
+	if(child.display->is_dirty())
+	{
+		sdl->set_viewport(child.rect);
+		child.display->render();
+	}
 }
 
 void Display::resize()

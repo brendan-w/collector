@@ -23,7 +23,6 @@ class DisplayObject
 		virtual void render() {}
 		virtual void resize() {}
 
-
 		//events, return bool for whether a state change merits broadcasting a new Selector
 		virtual bool on_key(SDL_KeyboardEvent &e);
 		virtual bool on_text(SDL_TextInputEvent &e);
@@ -40,25 +39,27 @@ class DisplayObject
 		virtual void on_file_info(File* f) {}
 		virtual void fill_selector(Selector* selector) {}
 
+		bool is_dirty();
+
 	protected:
+		void mark_dirty() { dirty = true; }
+		void set_scroll_range(size_t s);
+		void set_centered_width(int w);
+		int x_offset() { return offset.x; }
+		int y_offset() { return offset.y; }
 		Selection* selection() { return *s; }
 
-		void set_centered_width(int w);
-		void set_scroll_height(int s);
-		int x_offset();
-		int y_offset();
-
-		//area consumed, usually, the whole window
 
 	private:
 
 		//pointer to the current selection pointer
 		Selection** s;
 
-		// offset.x --> used for centering the column of files
-		// offset.y --> used for vertical scrolling
-		SDL_Point offset = { 0, 0 };
+		//does this widget need rendering
+		bool dirty = true;
 
-		//the height of the entire scrollable region
-		int scroll_height = 0;
+		// offset.x --> used for horizontal scrolling
+		// offset.y --> used for vertically centering the row of files
+		SDL_Point offset = {0, 0};
+		size_t scroll_range = 0;
 };

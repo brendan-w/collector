@@ -57,3 +57,8 @@ void Info::on_file_info(File* f)
 		filesize->set_text(pretty_print_file_size(file->get_size()));
 	}
 }
+
+void Info::resize()
+{
+	mark_dirty();
+}

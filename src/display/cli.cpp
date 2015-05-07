@@ -133,6 +133,10 @@ void CLI::render_tags()
 	}
 }
 
+void CLI::resize()
+{
+	mark_dirty();
+}
 
 void CLI::fill_selector(Selector* selector)
 {

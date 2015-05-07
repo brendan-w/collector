@@ -53,14 +53,11 @@ void DisplayObject::pagedown()
 	limit_scroll();
 }
 
-int DisplayObject::x_offset()
+bool DisplayObject::is_dirty()
 {
-	return offset.x;
-}
-
-int DisplayObject::y_offset()
-{
-	return -(offset.y - CLI_H); //account for the top UI bar
+	bool state = dirty;
+	dirty = false;
+	return state;
 }
 
 void DisplayObject::set_centered_width(int w)
@@ -68,16 +65,16 @@ void DisplayObject::set_centered_width(int w)
 	offset.x = (WINDOW_W - w) / 2;
 }
 
-void DisplayObject::set_scroll_height(int s)
+void DisplayObject::set_scroll_range(size_t s)
 {
 	//account for the two UI bars at the top and bottom
-	scroll_height = s + (2 * CLI_H);
+	scroll_range = s + (2 * CLI_H);
 	limit_scroll();
 }
 
 void DisplayObject::limit_scroll()
 {
-	int max_scroll = scroll_height - WINDOW_H;
+	int max_scroll = scroll_range - WINDOW_H;
 
 	if(max_scroll < 0) max_scroll = 0;
 
