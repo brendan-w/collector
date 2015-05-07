@@ -9,7 +9,7 @@
 #include <SDL.h>
 
 #include <collector.h>
-#include <utils.h>
+#include <utils.h> //pretty_print_file_size()
 #include <text.h>
 #include <filestore/file.h>
 #include <display/info.h>
@@ -21,7 +21,6 @@ Info::Info(Selection** s) : DisplayObject(s)
 	filesize = new Text("", config->get_color(CLI_TEXT));
 }
 
-
 Info::~Info()
 {
 	delete filepath;
@@ -30,6 +29,8 @@ Info::~Info()
 
 void Info::render()
 {
+	SDL_Rect rect = sdl->get_viewport();
+
 	//draw the background
 	sdl->set_color(OVERLAY);
 	sdl->fill_rect(rect);
@@ -39,17 +40,6 @@ void Info::render()
 
 	filesize->render(rect.w - filesize->width() - CLI_PAD,
 	                 rect.y + CLI_PAD);
-}
-
-
-void Info::layout(bool force)
-{
-	rect = {
-		0,
-		0,
-		WINDOW_W,
-		CLI_H
-	};
 }
 
 void Info::on_file_info(File* f)

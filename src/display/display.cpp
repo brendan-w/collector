@@ -24,7 +24,7 @@ Display::Display(Selection* init_selection)
 
 	//create the main components, with references to the displays state
 	cli.display    = new CLI(&selection);
-	// info.display   = new Info(&selection);
+	info.display   = new Info(&selection);
 	// grid.display   = new Grid(&selection);
 	// thumbs.display = new Thumbs(&selection);
 
@@ -35,7 +35,7 @@ Display::Display(Selection* init_selection)
 Display::~Display()
 {
 	delete cli.display;
-	// delete info.display;
+	delete info.display;
 	// delete grid.display;
 	// delete thumbs.display;
 
@@ -47,7 +47,7 @@ void Display::render()
 {
 	// render_child(grid);
 	// render_child(thumbs);
-	// render_child(info);
+	render_child(info);
 	render_child(cli);
 
 	sdl->reset_viewport();
@@ -75,12 +75,16 @@ void Display::resize()
 		CLI_H
 	};
 
-
-
+	info.rect = {
+		0,
+		0,
+		window.x,
+		CLI_H
+	};
 
 	// resize_child(grid, false);
 	// resize_child(thumbs, false);
-	// resize_child(info, false);
+	resize_child(info, false);
 	resize_child(cli, false);
 
 	//in case layout() never adjusts/handles the scroll
@@ -141,14 +145,13 @@ void Display::on_selection(Selection* new_selection)
 	selection = new_selection;
 
 	//let the components update themselves
-	// view->on_selection();
 	cli.display->on_selection();
-	// info->on_selection();
+	info.display->on_selection();
 }
 
 void Display::on_file_info(File* f)
 {
-	// info->on_file_info(f);
+	info.display->on_file_info(f);
 }
 
 void Display::send_selector()
