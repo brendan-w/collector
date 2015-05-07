@@ -32,14 +32,16 @@ CLI::~CLI()
 }
 
 
-bool CLI::on_key(SDL_KeyboardEvent &e)
+void CLI::on_key(SDL_KeyboardEvent &e)
 {
 	switch(e.keysym.sym)
 	{
 		case SDLK_BACKSPACE:
-			return backspace();
+			if(backspace())
+				mark_dirty();
 		case SDLK_DELETE:
-			return delete_tag();
+			if(delete_tag())
+				mark_dirty();
 		case SDLK_TAB:
 			//autocomplete
 			break;
@@ -58,12 +60,10 @@ bool CLI::on_key(SDL_KeyboardEvent &e)
 		default:
 			break;
 	}
-
-	return false;
 }
 
 
-bool CLI::on_text(SDL_TextInputEvent &e)
+void CLI::on_text(SDL_TextInputEvent &e)
 {
 	//space bar starts a new tag
 	if(e.text[0] == ' ')
@@ -76,17 +76,15 @@ bool CLI::on_text(SDL_TextInputEvent &e)
 		else
 		{
 			new_tag();
+			mark_dirty();
 		}
-
-		return false;
 	}
 	else
 	{
 		Text* t = current_tag();
 		t->set_text(t->get_text() += e.text);
-		return true;
+		mark_dirty();
 	}
-
 }
 
 
@@ -131,11 +129,6 @@ void CLI::render_tags()
 		t->render(x, rect.y + CLI_PAD);
 		x += t->width() + (CLI_PAD * 2);
 	}
-}
-
-void CLI::resize()
-{
-	mark_dirty();
 }
 
 void CLI::fill_selector(Selector* selector)
@@ -190,7 +183,6 @@ void CLI::new_tag()
 {
 	Text* t = new Text("", config->get_color(CLI_TEXT));
 	tags.push_back(t);
-
 	current_index = tags.size() - 1;
 }
 

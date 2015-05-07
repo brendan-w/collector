@@ -16,7 +16,7 @@ class Grid : public virtual DisplayObject
 		void render();
 		void resize();
 
-		bool on_motion(SDL_MouseMotionEvent &e);
+		void on_motion(SDL_MouseMotionEvent &e);
 
 	private:
 		File* file_under_mouse = NULL;

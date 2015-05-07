@@ -18,10 +18,9 @@ class CLI : public DisplayObject
 		~CLI();
 
 		void render();
-		void resize();
 
-		bool on_key(SDL_KeyboardEvent &e);
-		bool on_text(SDL_TextInputEvent &e);
+		void on_key(SDL_KeyboardEvent &e);
+		void on_text(SDL_TextInputEvent &e);
 
 		void on_selection();
 		void fill_selector(Selector* selector);

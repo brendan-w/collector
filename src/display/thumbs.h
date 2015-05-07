@@ -16,8 +16,8 @@ class Thumbs : public virtual DisplayObject
 		void render();
 		void layout(bool force);
 
-		bool on_wheel(SDL_MouseWheelEvent &e);
-		bool on_motion(SDL_MouseMotionEvent &e);
+		void on_wheel(SDL_MouseWheelEvent &e);
+		void on_motion(SDL_MouseMotionEvent &e);
 
 		void on_selection();
 

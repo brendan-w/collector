@@ -14,26 +14,10 @@ DisplayObject::DisplayObject(Selection** _s)
 }
 
 
-bool DisplayObject::on_key(SDL_KeyboardEvent &e)
+void DisplayObject::on_wheel(SDL_MouseWheelEvent &e)
 {
-	return false;
-}
-
-bool DisplayObject::on_text(SDL_TextInputEvent &e)
-{
-	return false;
-}
-
-bool DisplayObject::on_wheel(SDL_MouseWheelEvent &e)
-{
-	offset.y -= (e.y * config->scroll_speed);
+	offset.x -= (e.y * config->scroll_speed);
 	limit_scroll();
-	return false;
-}
-
-bool DisplayObject::on_motion(SDL_MouseMotionEvent &e)
-{
-	return false;
 }
 
 
@@ -43,13 +27,13 @@ bool DisplayObject::on_motion(SDL_MouseMotionEvent &e)
 
 void DisplayObject::pageup()
 {
-	offset.y -= WINDOW_H;
+	offset.x -= (sdl->window_size().x);
 	limit_scroll();
 }
 
 void DisplayObject::pagedown()
 {
-	offset.y += WINDOW_H;
+	offset.x += (sdl->window_size().x);
 	limit_scroll();
 }
 
@@ -60,9 +44,9 @@ bool DisplayObject::is_dirty()
 	return state;
 }
 
-void DisplayObject::set_centered_width(int w)
+void DisplayObject::set_centered_height(size_t h)
 {
-	offset.x = (WINDOW_W - w) / 2;
+	offset.y = ((sdl->window_size().y) - h) / 2;
 }
 
 void DisplayObject::set_scroll_range(size_t s)
@@ -74,10 +58,10 @@ void DisplayObject::set_scroll_range(size_t s)
 
 void DisplayObject::limit_scroll()
 {
-	int max_scroll = scroll_range - WINDOW_H;
+	int max_scroll = scroll_range - (sdl->window_size().x);
 
 	if(max_scroll < 0) max_scroll = 0;
 
-	if(offset.y < 0) offset.y = 0;
-	else if(offset.y > max_scroll) offset.y = max_scroll;
+	if(offset.x < 0) offset.x = 0;
+	else if(offset.x > max_scroll) offset.x = max_scroll;
 }

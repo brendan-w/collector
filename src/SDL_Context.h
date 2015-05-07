@@ -21,7 +21,6 @@ class SDL_Context
 		void submit(Uint32 type, void* data1=NULL, void* data2=NULL);
 		void quit();
 
-		void clear();
 		void present();
 
 		void set_color(Color c);

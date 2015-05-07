@@ -60,8 +60,8 @@ void Grid::render()
 void Grid::render_file(File* file, bool selected)
 {
 	SDL_Rect rect = {
-		file->grid_pos.x * FILE_OFFSET,
-		file->grid_pos.y * FILE_OFFSET,
+		(file->grid_pos.x * FILE_OFFSET) + x_offset(),
+		(file->grid_pos.y * FILE_OFFSET) + y_offset(),
 		FILE_SIZE,
 		FILE_SIZE
 	};
@@ -91,7 +91,10 @@ void Grid::render_file(File* file, bool selected)
 void Grid::resize()
 {
 	SDL_Rect viewport = sdl->get_viewport();
-	size_t height_files = (viewport.h > 0) ? ((viewport.h - CLI_H * 2) / FILE_OFFSET) : 1;
+	const size_t height_px = ((viewport.h - CLI_H * 2) / FILE_OFFSET);
+	const size_t height_files = (viewport.h > 0) ? height_px : 1;
+
+	set_centered_height(height_px);
 
 	//don't recalc the tile positions unless we have to
 	if(current_height_files != height_files)
@@ -118,11 +121,10 @@ void Grid::resize()
 }
 
 
-bool Grid::on_motion(SDL_MouseMotionEvent &e)
+void Grid::on_motion(SDL_MouseMotionEvent &e)
 {
 	// file_under_mouse = mouse_to_file(e.x, e.y);
 	// sdl->submit(FILE_INFO, (void*) file_under_mouse);
-	return false;
 }
 
 //lookup the file under the cursor

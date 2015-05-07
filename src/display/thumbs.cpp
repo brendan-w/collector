@@ -88,7 +88,7 @@ void Thumbs::layout(bool force)
 	}
 }
 
-bool Thumbs::on_wheel(SDL_MouseWheelEvent &e)
+void Thumbs::on_wheel(SDL_MouseWheelEvent &e)
 {
 	DisplayObject::on_wheel(e);
 
@@ -96,8 +96,6 @@ bool Thumbs::on_wheel(SDL_MouseWheelEvent &e)
 	// {
 
 	// }
-
-	return false;
 }
 
 void Thumbs::on_selection()
@@ -105,11 +103,10 @@ void Thumbs::on_selection()
 	layout(true);
 }
 
-bool Thumbs::on_motion(SDL_MouseMotionEvent &e)
+void Thumbs::on_motion(SDL_MouseMotionEvent &e)
 {
 	File* file = mouse_to_file(e.x, e.y);
 	sdl->submit(FILE_INFO, (void*) file);
-	return false;
 }
 
 //lookup the file under the cursor

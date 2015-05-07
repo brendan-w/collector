@@ -127,28 +127,26 @@ void Display::on_key(SDL_KeyboardEvent &e)
 		case SDLK_PAGEDOWN:
 			break;
 		default:
-			if(cli.display->on_key(e))
-				send_selector();
+			cli.display->on_key(e);
+			// send_selector();
 			break;
 	}
 }
 
 void Display::on_text(SDL_TextInputEvent &e)
 {
-	if(cli.display->on_text(e))
-		send_selector();
+	cli.display->on_text(e);
+	// send_selector();
 }
 
 void Display::on_wheel(SDL_MouseWheelEvent &e)
 {
-	// if(view->on_wheel(e))
-	// 	send_selector();
+
 }
 
 void Display::on_motion(SDL_MouseMotionEvent &e)
 {
-	// if(view->on_motion(e))
-	// 	send_selector();
+
 }
 
 void Display::on_selection(Selection* new_selection)

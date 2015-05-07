@@ -21,13 +21,13 @@ class DisplayObject
 		virtual ~DisplayObject() {}
 
 		virtual void render() {}
-		virtual void resize() {}
+		virtual void resize() { mark_dirty(); }
 
-		//events, return bool for whether a state change merits broadcasting a new Selector
-		virtual bool on_key(SDL_KeyboardEvent &e);
-		virtual bool on_text(SDL_TextInputEvent &e);
-		virtual bool on_wheel(SDL_MouseWheelEvent &e);
-		virtual bool on_motion(SDL_MouseMotionEvent &e);
+		//events
+		virtual void on_key(SDL_KeyboardEvent &e) {}
+		virtual void on_text(SDL_TextInputEvent &e) {}
+		virtual void on_wheel(SDL_MouseWheelEvent &e);
+		virtual void on_motion(SDL_MouseMotionEvent &e) {}
 
 		//scroll utilities
 		void pageup();
@@ -44,11 +44,10 @@ class DisplayObject
 	protected:
 		void mark_dirty() { dirty = true; }
 		void set_scroll_range(size_t s);
-		void set_centered_width(int w);
+		void set_centered_height(size_t h);
 		int x_offset() { return offset.x; }
 		int y_offset() { return offset.y; }
 		Selection* selection() { return *s; }
-
 
 	private:
 
