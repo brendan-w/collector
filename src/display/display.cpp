@@ -67,7 +67,7 @@ void Display::resize()
 
 	/*
 		Layout information
-		Some day, this will be user configurable
+		Some day, this should be user configurable
 	*/
 
 	cli.rect = {
