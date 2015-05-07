@@ -2,10 +2,10 @@
 #pragma once
 
 #include <config.h>
-#include <SDL_context.h>
+#include <SDL_Context.h>
 
 //the only two main globals
-extern SDL_context* sdl;
+extern SDL_Context* sdl;
 extern Config* config;
 
 //each of the custom events

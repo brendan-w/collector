@@ -5,7 +5,7 @@
 #include <SDL_image.h>
 
 #include <collector.h>
-#include <SDL_context.h>
+#include <SDL_Context.h>
 #include <SDL_utils.h>
 
 
@@ -17,7 +17,7 @@ Uint32 SELECTION = 0;
 Uint32 FILE_INFO = 0;
 
 
-SDL_context::SDL_context()
+SDL_Context::SDL_Context()
 {
 	/*
 		SDL2
@@ -115,7 +115,7 @@ SDL_context::SDL_context()
 }
 
 
-SDL_context::~SDL_context()
+SDL_Context::~SDL_Context()
 {
 	/*
 		SDL2_image
@@ -141,7 +141,7 @@ SDL_context::~SDL_context()
 }
 
 
-void SDL_context::submit(Uint32 type, void* data1 /*=NULL*/, void* data2 /*=NULL*/)
+void SDL_Context::submit(Uint32 type, void* data1 /*=NULL*/, void* data2 /*=NULL*/)
 {
 	SDL_Event e;
 	SDL_zero(e);
@@ -159,29 +159,29 @@ void SDL_context::submit(Uint32 type, void* data1 /*=NULL*/, void* data2 /*=NULL
 		print_message("SDL_PushEvent() was filtered");
 }
 
-void SDL_context::quit()
+void SDL_Context::quit()
 {
 	SDL_Event e;
 	e.type = SDL_QUIT;
 	SDL_PushEvent(&e);
 }
 
-void SDL_context::clear()
+void SDL_Context::clear()
 {
 	SDL_RenderClear(renderer);
 }
 
-void SDL_context::present()
+void SDL_Context::present()
 {
 	SDL_RenderPresent(renderer);
 }
 
-void SDL_context::set_color(Color c)
+void SDL_Context::set_color(Color c)
 {
 	set_color(config->get_color(c));
 }
 
-void SDL_context::set_color(SDL_Color color)
+void SDL_Context::set_color(SDL_Color color)
 {
     SDL_SetRenderDrawColor(renderer,
                            color.r,
@@ -190,17 +190,31 @@ void SDL_context::set_color(SDL_Color color)
                            color.a);
 }
 
-void SDL_context::fill_rect(SDL_Rect &rect)
+SDL_Point SDL_Context::window_size()
+{
+	SDL_Point p;
+	SDL_GetWindowSize(window, &p.x, &p.y);
+	return p;
+}
+
+void SDL_Context::fill_rect(SDL_Rect &rect)
 {
 	SDL_RenderFillRect(renderer, &rect);
 }
 
-void SDL_context::set_viewport(SDL_Rect &rect)
+void SDL_Context::set_viewport(SDL_Rect &rect)
 {
 	SDL_RenderSetViewport(renderer, &rect);
 }
 
-SDL_Rect SDL_context::get_viewport()
+void SDL_Context::reset_viewport()
+{
+	SDL_Point w = window_size();
+	SDL_Rect r = { 0, 0, w.x, w.y };
+	set_viewport(r);
+}
+
+SDL_Rect SDL_Context::get_viewport()
 {
 	SDL_Rect rect;
 	SDL_RenderGetViewport(renderer, &rect);
@@ -209,7 +223,7 @@ SDL_Rect SDL_context::get_viewport()
 	return rect;
 }
 
-bool SDL_context::rect_in_window(SDL_Rect &rect)
+bool SDL_Context::rect_in_window(SDL_Rect &rect)
 {
 	SDL_Rect screen = config->get_window_rect();
 	return SDL_HasIntersection(&screen, &rect);

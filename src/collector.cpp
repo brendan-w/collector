@@ -3,7 +3,7 @@
 #include <SDL.h>
 
 #include <collector.h>
-#include <SDL_context.h>
+#include <SDL_Context.h>
 #include <config.h>
 #include <filestore/file.h>
 #include <filestore/filestore.h>
@@ -19,7 +19,7 @@ static void close();
 
 //global contexts and resources
 Config* config = NULL;
-SDL_context* sdl = NULL;
+SDL_Context* sdl = NULL;
 
 //the two main components
 FileStore* filestore = NULL;
@@ -111,7 +111,7 @@ int main(int argc, char * argv[])
 static bool init()
 {
 	config = new Config;
-	sdl = new SDL_context;
+	sdl = new SDL_Context;
 	filestore = new FileStore;
 	display = new Display(filestore->select(NULL)); //initial, empty, selection
 
