@@ -225,6 +225,7 @@ SDL_Rect SDL_Context::get_viewport()
 
 bool SDL_Context::rect_in_window(SDL_Rect &rect)
 {
-	SDL_Rect screen = config->get_window_rect();
+	SDL_Point size = window_size();
+	SDL_Rect screen = { 0, 0, size.x, size.y };
 	return SDL_HasIntersection(&screen, &rect);
 }

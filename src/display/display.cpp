@@ -61,9 +61,7 @@ void Display::render_child(Child& child)
 
 void Display::resize()
 {
-	SDL_GetWindowSize(sdl->get_window(),
-					  &(config->window.w),
-					  &(config->window.h));
+	SDL_Point window = sdl->window_size();
 
 	/*
 		Layout information
@@ -72,8 +70,8 @@ void Display::resize()
 
 	cli.rect = {
 		0,
-		WINDOW_H - CLI_H,
-		WINDOW_W,
+		window.y - CLI_H,
+		window.x,
 		CLI_H
 	};
 

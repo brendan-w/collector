@@ -50,5 +50,4 @@ class Config
 		Uint32 get_window_flags();
 		Uint32 get_render_flags();
 		SDL_Color get_color(Color c);
-		SDL_Rect get_window_rect();
 };

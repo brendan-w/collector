@@ -50,8 +50,8 @@ Config::Config()
 	window = {
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
-		640,
-		480
+		1000,
+		500
 	};
 
 	colors[BACKGROUND]    = { 50,  50,  50,  255 };
@@ -99,13 +99,3 @@ Uint32 Config::get_render_flags()
 }
 
 SDL_Color Config::get_color(Color c) { return colors[c]; }
-
-SDL_Rect Config::get_window_rect()
-{
-	return {
-		0, //disregard location on screen
-		0,
-		window.w,
-		window.h
-	};
-}
