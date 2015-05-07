@@ -5,7 +5,6 @@
 #include <SDL.h>
 
 #include <collector.h>
-#include <event.h>
 #include <filestore/file.h>
 #include <filestore/selector.h>
 #include <filestore/selection.h>
@@ -17,26 +16,28 @@
 
 
 
+
+
 Display::Display(Selection* init_selection)
 {
 	selection = init_selection;
 
 	//create the main components, with references to the displays state
-	cli    = new CLI(&selection);
-	// info   = new Info(&selection);
-	// grid   = new Grid(&selection);
-	// thumbs = new Thumbs(&selection);
+	cli.display    = new CLI(&selection);
+	// info.display   = new Info(&selection);
+	// grid.display   = new Grid(&selection);
+	// thumbs.display = new Thumbs(&selection);
 
 	//trigger the initial layout
-	on_resize();
+	resize();
 }
 
 Display::~Display()
 {
-	delete cli;
-	// delete info;
-	// delete grid;
-	// delete thumbs;
+	delete cli.display;
+	// delete info.display;
+	// delete grid.display;
+	// delete thumbs.display;
 
 	if(selection != NULL)
 		delete selection;
@@ -44,25 +45,54 @@ Display::~Display()
 
 void Display::render()
 {
-	// grid->render();
-	// thumbs->render();
-	// info->render();
-	cli->render();
+	// render_child(grid);
+	// render_child(thumbs);
+	// render_child(info);
+	render_child(cli);
+
+	sdl->reset_viewport();
 }
 
-void Display::on_resize()
+void Display::render_child(Child& child)
+{
+	sdl->set_viewport(child.rect);
+	child.display->render();
+}
+
+void Display::resize()
 {
 	SDL_GetWindowSize(sdl->get_window(),
 					  &(config->window.w),
 					  &(config->window.h));
 
-	// grid->layout(false);
-	// thumbs->layout(false);
-	// info->layout(false);
-	cli->layout(false);
+	/*
+		Layout information
+		Some day, this will be user configurable
+	*/
+
+	cli.rect = {
+		0,
+		WINDOW_H - CLI_H,
+		WINDOW_W,
+		CLI_H
+	};
+
+
+
+
+	// resize_child(grid, false);
+	// resize_child(thumbs, false);
+	// resize_child(info, false);
+	resize_child(cli, false);
 
 	//in case layout() never adjusts/handles the scroll
 	// view->limit_scroll();
+}
+
+void Display::resize_child(Child& child, bool force)
+{
+	sdl->set_viewport(child.rect);
+	child.display->resize(force);
 }
 
 void Display::on_key(SDL_KeyboardEvent &e)
@@ -81,7 +111,7 @@ void Display::on_key(SDL_KeyboardEvent &e)
 		case SDLK_PAGEDOWN:
 			break;
 		default:
-			if(cli->on_key(e))
+			if(cli.display->on_key(e))
 				send_selector();
 			break;
 	}
@@ -89,7 +119,7 @@ void Display::on_key(SDL_KeyboardEvent &e)
 
 void Display::on_text(SDL_TextInputEvent &e)
 {
-	if(cli->on_text(e))
+	if(cli.display->on_text(e))
 		send_selector();
 }
 
@@ -114,7 +144,7 @@ void Display::on_selection(Selection* new_selection)
 
 	//let the components update themselves
 	// view->on_selection();
-	cli->on_selection();
+	cli.display->on_selection();
 	// info->on_selection();
 }
 
@@ -128,7 +158,7 @@ void Display::send_selector()
 	Selector* selector = new Selector;
 
 	//ask the various components for their data
-	cli->fill_selector(selector);
+	cli.display->fill_selector(selector);
 
 	//send to SDL event queue
 	sdl->submit(SELECTOR, (void*) selector);

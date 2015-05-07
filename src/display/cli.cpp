@@ -133,17 +133,6 @@ void CLI::render_tags()
 	}
 }
 
-void CLI::layout(bool force)
-{
-	SDL_Rect r = {
-		0,
-		WINDOW_H - CLI_H,
-		WINDOW_W,
-		CLI_H
-	};
-	sdl->set_viewport(r);
-}
-
 
 void CLI::fill_selector(Selector* selector)
 {

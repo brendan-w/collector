@@ -1,8 +1,6 @@
 
 #pragma once
 
-#include <vector>
-
 #include <SDL.h>
 
 #include <filestore/file.h>
@@ -11,7 +9,21 @@
 #include <display/displayobject.h>
 
 
+//internal use only
+typedef struct {
 
+	//The Display object in question
+	DisplayObject* display;
+
+	//These aren't in the respective DisplayObjects because
+	//this Display acts as a layout manager for its children.
+	//This rect gets communicated via SDL_Context->set_viewport()
+	SDL_Rect rect;
+
+} Child;
+
+
+//the layout manager, and event distributor
 class Display
 {
 	public:
@@ -19,7 +31,7 @@ class Display
 		~Display();
 
 		void render();
-		void on_resize();
+		void resize();
 
 		void on_key(SDL_KeyboardEvent &e);
 		void on_text(SDL_TextInputEvent &e);
@@ -34,12 +46,14 @@ class Display
 		//all children are given a pointer to this pointer
 		Selection* selection;
 
-		DisplayObject* current; //the view currently under the mouse
+		Child* current; //the view currently under the mouse
 
-		DisplayObject* cli;
-		DisplayObject* info;
-		DisplayObject* grid;
-		DisplayObject* thumbs;
+		Child cli;
+		Child info;
+		Child grid;
+		Child thumbs;
 
+		void render_child(Child& child);
+		void resize_child(Child& child, bool force);
 		void send_selector();
 };

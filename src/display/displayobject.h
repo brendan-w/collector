@@ -21,7 +21,7 @@ class DisplayObject
 		virtual ~DisplayObject() {}
 
 		virtual void render() {}
-		virtual void layout(bool force=false) {}
+		virtual void resize(bool force=false) {}
 
 
 		//events, return bool for whether a state change merits broadcasting a new Selector

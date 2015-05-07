@@ -54,7 +54,7 @@ int main(int argc, char * argv[])
 
 				case SDL_WINDOWEVENT:
 					if(e.window.event == SDL_WINDOWEVENT_RESIZED)
-						display->on_resize();
+						display->resize();
 					break;
 
 				case SDL_KEYDOWN:
