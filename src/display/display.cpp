@@ -62,6 +62,10 @@ void Display::render_child(Child& child)
 void Display::resize()
 {
 	SDL_Point window = sdl->window_size();
+	SDL_Point middle = {
+		(window.x > 0) ? (window.x / 2) : 0,
+		(window.y > 0) ? (window.y / 2) : 0,
+	};
 
 	/*
 		Layout information
@@ -86,7 +90,7 @@ void Display::resize()
 		0,
 		CLI_H,
 		window.x,
-		(window.y / 2) - CLI_H
+		middle.y - CLI_H
 	};
 
 	// resize_child(thumbs);

@@ -50,6 +50,10 @@ void Grid::render()
 			render_file(*it, false);
 		}
 	}
+
+	//divider line
+	sdl->set_color(OVERLAY);
+	sdl->draw_line(rect.x, rect.h - 1, rect.w, rect.h - 1);
 }
 
 
@@ -87,7 +91,7 @@ void Grid::render_file(File* file, bool selected)
 void Grid::resize()
 {
 	SDL_Rect viewport = sdl->get_viewport();
-	size_t height_files = viewport.h / FILE_OFFSET;
+	size_t height_files = (viewport.h > 0) ? (viewport.h / FILE_OFFSET) : 1;
 
 	//don't recalc the tile positions unless we have to
 	if(current_height_files != height_files)

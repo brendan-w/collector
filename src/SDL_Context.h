@@ -27,6 +27,7 @@ class SDL_Context
 		void set_color(Color c);
 		void set_color(SDL_Color color);
 		void fill_rect(SDL_Rect &rect);
+		void draw_line(int x1, int y1, int x2, int y2);
 
 		SDL_Point window_size();
 		void set_viewport(SDL_Rect &rect);

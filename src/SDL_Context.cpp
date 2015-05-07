@@ -202,6 +202,11 @@ void SDL_Context::fill_rect(SDL_Rect &rect)
 	SDL_RenderFillRect(renderer, &rect);
 }
 
+void SDL_Context::draw_line(int x1, int y1, int x2, int y2)
+{
+	SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
+}
+
 void SDL_Context::set_viewport(SDL_Rect &rect)
 {
 	SDL_RenderSetViewport(renderer, &rect);
