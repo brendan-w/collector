@@ -37,11 +37,11 @@ void CLI::on_key(SDL_KeyboardEvent &e)
 	switch(e.keysym.sym)
 	{
 		case SDLK_BACKSPACE:
-			if(backspace())
-				mark_dirty();
+			backspace();
+			break;
 		case SDLK_DELETE:
-			if(delete_tag())
-				mark_dirty();
+			delete_tag();
+			break;
 		case SDLK_TAB:
 			//autocomplete
 			break;
@@ -155,10 +155,6 @@ void CLI::on_selection()
 }
 
 
-
-
-
-
 //deallocates all Text objects in tags
 void CLI::destroy_tags()
 {
@@ -189,7 +185,7 @@ void CLI::new_tag()
 
 //deletes the current tag, ensures that there is
 //always one tag in the vector
-bool CLI::delete_tag()
+void CLI::delete_tag()
 {
 	Text* t = current_tag();
 
@@ -203,27 +199,23 @@ bool CLI::delete_tag()
 		{
 			current_index--;
 		}
-		return true;
+		mark_dirty();
 	}
 	else if(t->get_text().length() > 0)
 	{
 		//if the user deleted the last tag, simply empty it
 		t->set_text("");
-		return true;
+		mark_dirty();
 	}
-
-	return false;
 }
 
-bool CLI::backspace()
+void CLI::backspace()
 {
 	std::string s = current_tag()->get_text();
 	if(s.length() > 0)
 	{
 		s.pop_back();
 		current_tag()->set_text(s);
-		return true;
+		mark_dirty();
 	}
-
-	return false;
 }

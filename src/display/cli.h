@@ -35,7 +35,7 @@ class CLI : public DisplayObject
 
 		void new_tag();
 		void destroy_tags();
-		bool delete_tag();
-		bool backspace();
+		void delete_tag();
+		void backspace();
 		Text* current_tag();
 };

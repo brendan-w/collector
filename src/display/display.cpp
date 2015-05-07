@@ -128,7 +128,7 @@ void Display::on_key(SDL_KeyboardEvent &e)
 			break;
 		default:
 			cli.display->on_key(e);
-			// send_selector();
+			send_selector();
 			break;
 	}
 }
@@ -136,7 +136,7 @@ void Display::on_key(SDL_KeyboardEvent &e)
 void Display::on_text(SDL_TextInputEvent &e)
 {
 	cli.display->on_text(e);
-	// send_selector();
+	send_selector();
 }
 
 void Display::on_wheel(SDL_MouseWheelEvent &e)
