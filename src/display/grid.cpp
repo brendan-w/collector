@@ -26,17 +26,21 @@ Grid::~Grid()
 
 void Grid::render()
 {
-	Selection* selection = get_selection();
-	file_vector_it begin = selection->all_begin();
-	file_vector_it end   = selection->all_end();
+	SDL_Rect rect = sdl->get_viewport();
+	sdl->set_color(BACKGROUND);
+	sdl->fill_rect(rect);
+
+	Selection* s = selection();
+	file_vector_it begin = s->all_begin();
+	file_vector_it end   = s->all_end();
 
 	//not very dry, but saves having to check for a null selection every iteration
-	if(selection->size() > 0)
+	if(s->size() > 0)
 	{
 		for(auto it = begin; it != end; ++it)
 		{
 			File* file = *it;
-			render_file(file, selection->has(file));
+			render_file(file, s->has(file));
 		}
 	}
 	else
@@ -52,8 +56,8 @@ void Grid::render()
 void Grid::render_file(File* file, bool selected)
 {
 	SDL_Rect rect = {
-		file->point.x + x_offset(), //adjust position for centering
-		file->point.y + y_offset(), //adjust position for scroll
+		file->grid_pos.x * FILE_OFFSET,
+		file->grid_pos.y * FILE_OFFSET,
 		FILE_SIZE,
 		FILE_SIZE
 	};
@@ -79,73 +83,45 @@ void Grid::render_file(File* file, bool selected)
 }
 
 
-//generates a stack of hilbert curves for this fileset
-//updates every File->point
-void Grid::layout(bool force)
+//updates every File->grid_pos
+void Grid::resize()
 {
-	rect = config->get_window_rect();
+	SDL_Rect viewport = sdl->get_viewport();
+	size_t height_files = viewport.h / FILE_OFFSET;
 
-	//find nearest power of 2 for the size of the H curve (flooring it)
-	const int new_grid_size = exp2(floor(log2( (double)(WINDOW_W / FILE_OFFSET) )));
-
-	//calculate the offset necessary to horizontally center the column
-	set_centered_width(FILE_OFFSET * new_grid_size);
-
-	//prevent excessive recomputation of the layout
-	if(force || (grid_size != new_grid_size))
+	//don't recalc the tile positions unless we have to
+	if(current_height_files != height_files)
 	{
-		grid_size = new_grid_size;
+		current_height_files = height_files;
 
-		//size of the grid in pixels (used for stacking multiple curves)
-		grid_pixel_size = grid_size * FILE_OFFSET;
+		Selection* s = selection();
+		file_vector_it begin = s->all_begin();
+		file_vector_it end   = s->all_end();
 
-		//number of files in one hilbert curve
-		d_per_hilbert = SQUARE(grid_size);
-
-		int d = 0; //distance along the current hilbert curve
-		int scroll = 0;
-
-		Selection* selection = get_selection();
-		file_vector_it begin = selection->all_begin();
-		file_vector_it end   = selection->all_end();
-
+		size_t count = 0;
 		for(auto it = begin; it != end; ++it)
 		{
 			File* file = *it;
-
-			//compute the Hilbert position
-			SDL_Point h = hilbert_d_to_point(grid_size, d);
-
-			file->point = {
-				h.x * FILE_OFFSET,
-				h.y * FILE_OFFSET
-			};
-
-			//update the maximum scroll limit
-			if(scroll < file->point.y)
-				scroll = file->point.y;
-
-			d++;
+			//compute the XY coordinates based on position in sequence
+			file->grid_pos.x = count / height_files;
+			file->grid_pos.y = count % height_files;
+			count++;
 		}
-
-		scroll += FILE_OFFSET; //don't forget the last line of files have thickness
-		
-		//since the window was resized, check the scroll position
-		set_scroll_height(scroll);
 	}
 }
 
 
 bool Grid::on_motion(SDL_MouseMotionEvent &e)
 {
-	file_under_mouse = mouse_to_file(e.x, e.y);
-	sdl->submit(FILE_INFO, (void*) file_under_mouse);
+	// file_under_mouse = mouse_to_file(e.x, e.y);
+	// sdl->submit(FILE_INFO, (void*) file_under_mouse);
 	return false;
 }
 
 //lookup the file under the cursor
 File* Grid::mouse_to_file(int x, int y)
 {
+	/*
 	//adjust for view offsets (scrolling & centering)
 	SDL_Point m = {
 		x - x_offset(),
@@ -170,12 +146,13 @@ File* Grid::mouse_to_file(int x, int y)
 		
 		//check that the point isn't in a void
 		//beyond the end the file list
-		if(d < get_selection()->all_size())
+		if(d < selection()->all_size())
 		{
 			//get this file by index
-			return get_selection()->all_at(d);
+			return selection()->all_at(d);
 		}
 	}
+	*/
 
 	return NULL;
 }

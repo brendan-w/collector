@@ -13,16 +13,19 @@
 typedef std::unordered_set<std::string> tag_set;
 
 
+//SDL_Point =  8 bytes
+//this = 4 bytes
+typedef struct {
+	uint16_t x;
+	uint16_t y;
+} File_Point;
+
+
 class File
 {
 	public:
 		File(std::string path);
 		~File();
-
-		void load();
-		void unload();
-		bool loaded();
-		Thumbnail* get_thumb();
 
 		tag_set get_tags();
 		size_t get_size();
@@ -31,7 +34,10 @@ class File
 		std::string get_full_path();
 		void set_path(std::string new_path) { path = new_path; }
 
-		SDL_Point point;
+		Thumbnail* get_thumb();
+
+		File_Point grid_pos;
+		File_Point thumb_pos;
 
 	private:
 		std::string path;

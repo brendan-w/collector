@@ -8,9 +8,9 @@
 
 
 
-DisplayObject::DisplayObject(Selection** s)
+DisplayObject::DisplayObject(Selection** _s)
 {
-	selection = s;
+	s = _s;
 }
 
 

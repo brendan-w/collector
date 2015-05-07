@@ -54,6 +54,6 @@ class Display
 		Child thumbs;
 
 		void render_child(Child& child);
-		void resize_child(Child& child, bool force);
+		void resize_child(Child& child);
 		void send_selector();
 };

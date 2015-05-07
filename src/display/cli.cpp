@@ -146,15 +146,15 @@ void CLI::fill_selector(Selector* selector)
 
 void CLI::on_selection()
 {
-	Selection* selection = get_selection();
+	Selection* s = selection();
 
 	//update the internal state
-	std::string s = "";
-	s += std::to_string(selection->size());
-	s += " / ";
-	s += std::to_string(selection->all_size());
+	std::string str = "";
+	str += std::to_string(s->size());
+	str += " / ";
+	str += std::to_string(s->all_size());
 
-	totals->set_text(s);
+	totals->set_text(str);
 }
 
 

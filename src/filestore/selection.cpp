@@ -20,8 +20,8 @@ Selection::Selection(file_vector* all, file_set fs)
 Selection::~Selection()
 {
 	//if it was loaded, make sure to release it
-	for(File* file: files)
-		file->unload();
+	// for(File* file: files)
+		// delete file->data;
 }
 
 bool Selection::has(File* file)

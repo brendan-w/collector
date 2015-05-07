@@ -25,7 +25,7 @@ Display::Display(Selection* init_selection)
 	//create the main components, with references to the displays state
 	cli.display    = new CLI(&selection);
 	info.display   = new Info(&selection);
-	// grid.display   = new Grid(&selection);
+	grid.display   = new Grid(&selection);
 	// thumbs.display = new Thumbs(&selection);
 
 	//trigger the initial layout
@@ -36,7 +36,7 @@ Display::~Display()
 {
 	delete cli.display;
 	delete info.display;
-	// delete grid.display;
+	delete grid.display;
 	// delete thumbs.display;
 
 	if(selection != NULL)
@@ -45,8 +45,8 @@ Display::~Display()
 
 void Display::render()
 {
-	// render_child(grid);
 	// render_child(thumbs);
+	render_child(grid);
 	render_child(info);
 	render_child(cli);
 
@@ -82,19 +82,26 @@ void Display::resize()
 		CLI_H
 	};
 
-	// resize_child(grid, false);
-	// resize_child(thumbs, false);
-	resize_child(info, false);
-	resize_child(cli, false);
+	grid.rect = {
+		0,
+		CLI_H,
+		window.x,
+		(window.y / 2) - CLI_H
+	};
+
+	// resize_child(thumbs);
+	resize_child(grid);
+	resize_child(info);
+	resize_child(cli);
 
 	//in case layout() never adjusts/handles the scroll
 	// view->limit_scroll();
 }
 
-void Display::resize_child(Child& child, bool force)
+void Display::resize_child(Child& child)
 {
 	sdl->set_viewport(child.rect);
-	child.display->resize(force);
+	child.display->resize();
 }
 
 void Display::on_key(SDL_KeyboardEvent &e)

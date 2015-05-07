@@ -17,11 +17,11 @@ class DisplayObject
 	public:
 
 		//all display objects must be initted with a pointer to the current state
-		DisplayObject(Selection** s);
+		DisplayObject(Selection** _s);
 		virtual ~DisplayObject() {}
 
 		virtual void render() {}
-		virtual void resize(bool force=false) {}
+		virtual void resize() {}
 
 
 		//events, return bool for whether a state change merits broadcasting a new Selector
@@ -41,7 +41,7 @@ class DisplayObject
 		virtual void fill_selector(Selector* selector) {}
 
 	protected:
-		Selection* get_selection() { return *selection; }
+		Selection* selection() { return *s; }
 
 		void set_centered_width(int w);
 		void set_scroll_height(int s);
@@ -51,8 +51,9 @@ class DisplayObject
 		//area consumed, usually, the whole window
 
 	private:
+
 		//pointer to the current selection pointer
-		Selection** selection;
+		Selection** s;
 
 		// offset.x --> used for centering the column of files
 		// offset.y --> used for vertical scrolling
