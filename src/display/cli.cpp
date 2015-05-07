@@ -4,6 +4,7 @@
 	which are used to query the filestore.
 */
 
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -91,6 +92,10 @@ bool CLI::on_text(SDL_TextInputEvent &e)
 
 void CLI::render()
 {
+	std::cout << "render" << std::endl;
+
+	SDL_Rect rect = sdl->get_viewport();
+
 	//draw the background
 	sdl->set_color(OVERLAY);
 	sdl->fill_rect(rect);
@@ -105,6 +110,7 @@ void CLI::render()
 
 void CLI::render_tags()
 {
+	SDL_Rect rect = sdl->get_viewport();
 	SDL_Rect tag_rect = rect;
 
 	//draw each tags text
@@ -129,12 +135,13 @@ void CLI::render_tags()
 
 void CLI::layout(bool force)
 {
-	rect = {
+	SDL_Rect r = {
 		0,
 		WINDOW_H - CLI_H,
 		WINDOW_W,
 		CLI_H
 	};
+	sdl->set_viewport(r);
 }
 
 

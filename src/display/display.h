@@ -11,8 +11,6 @@
 #include <display/displayobject.h>
 
 
-#define view (views[current_view])
-
 
 class Display
 {
@@ -36,17 +34,12 @@ class Display
 		//all children are given a pointer to this pointer
 		Selection* selection;
 
-		//fixed objects, always present
+		DisplayObject* current; //the view currently under the mouse
+
 		DisplayObject* cli;
 		DisplayObject* info;
+		DisplayObject* grid;
+		DisplayObject* thumbs;
 
-		//the current view
-		size_t current_view;
-
-		//array of all possible main displays
-		std::vector<DisplayObject*> views;
-
-		void cycle_view();
-		void send_quit();
 		void send_selector();
 };

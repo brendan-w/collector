@@ -49,7 +49,6 @@ class DisplayObject
 		int y_offset();
 
 		//area consumed, usually, the whole window
-		SDL_Rect rect;
 
 	private:
 		//pointer to the current selection pointer

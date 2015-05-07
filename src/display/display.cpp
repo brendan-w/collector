@@ -22,15 +22,10 @@ Display::Display(Selection* init_selection)
 	selection = init_selection;
 
 	//create the main components, with references to the displays state
-	info = new Info(&selection);
-	cli = new CLI(&selection);
-
-	//add all the different types of main displays
-	views.push_back(new Grid(&selection));
-	views.push_back(new Thumbs(&selection));
-
-	//set the default display
-	current_view = 0;
+	cli    = new CLI(&selection);
+	// info   = new Info(&selection);
+	// grid   = new Grid(&selection);
+	// thumbs = new Thumbs(&selection);
 
 	//trigger the initial layout
 	on_resize();
@@ -39,12 +34,9 @@ Display::Display(Selection* init_selection)
 Display::~Display()
 {
 	delete cli;
-	delete info;
-
-	for(DisplayObject* v: views)
-		delete v;
-
-	views.clear();
+	// delete info;
+	// delete grid;
+	// delete thumbs;
 
 	if(selection != NULL)
 		delete selection;
@@ -52,8 +44,9 @@ Display::~Display()
 
 void Display::render()
 {
-	view->render();
-	info->render();
+	// grid->render();
+	// thumbs->render();
+	// info->render();
 	cli->render();
 }
 
@@ -63,12 +56,13 @@ void Display::on_resize()
 					  &(config->window.w),
 					  &(config->window.h));
 
-	view->layout(false);
-	info->layout(false);
+	// grid->layout(false);
+	// thumbs->layout(false);
+	// info->layout(false);
 	cli->layout(false);
 
 	//in case layout() never adjusts/handles the scroll
-	view->limit_scroll();
+	// view->limit_scroll();
 }
 
 void Display::on_key(SDL_KeyboardEvent &e)
@@ -76,24 +70,15 @@ void Display::on_key(SDL_KeyboardEvent &e)
 	switch(e.keysym.sym)
 	{
 		case SDLK_ESCAPE:
-			send_quit();
+			sdl->quit();
 			break;
 		case SDLK_RETURN:
 			break;
 		case SDLK_TAB:
-			cycle_view();
-			/*
-				Force the layout to be recomputed, since either the window
-				may have changed around it, or the files are in positions
-				for a different view
-			*/
-			view->layout(true);
 			break;
 		case SDLK_PAGEUP:
-			view->pageup();
 			break;
 		case SDLK_PAGEDOWN:
-			view->pagedown();
 			break;
 		default:
 			if(cli->on_key(e))
@@ -110,14 +95,14 @@ void Display::on_text(SDL_TextInputEvent &e)
 
 void Display::on_wheel(SDL_MouseWheelEvent &e)
 {
-	if(view->on_wheel(e))
-		send_selector();
+	// if(view->on_wheel(e))
+	// 	send_selector();
 }
 
 void Display::on_motion(SDL_MouseMotionEvent &e)
 {
-	if(view->on_motion(e))
-		send_selector();
+	// if(view->on_motion(e))
+	// 	send_selector();
 }
 
 void Display::on_selection(Selection* new_selection)
@@ -128,29 +113,14 @@ void Display::on_selection(Selection* new_selection)
 	selection = new_selection;
 
 	//let the components update themselves
-	view->on_selection();
+	// view->on_selection();
 	cli->on_selection();
-	info->on_selection();
+	// info->on_selection();
 }
 
 void Display::on_file_info(File* f)
 {
-	info->on_file_info(f);
-}
-
-void Display::cycle_view()
-{
-	current_view++;
-	current_view = current_view % views.size();
-}
-
-void Display::send_quit()
-{
-	SDL_Event e;
-	e.type = SDL_QUIT;
-
-	//SDL copies memory into event queue, so this is memory safe
-	SDL_PushEvent(&e);
+	// info->on_file_info(f);
 }
 
 void Display::send_selector()

@@ -19,6 +19,7 @@ class SDL_context
 		TTF_Font* get_font() { return font; }
 
 		void submit(Uint32 type, void* data1=NULL, void* data2=NULL);
+		void quit();
 
 		void clear();
 		void present();
@@ -26,6 +27,9 @@ class SDL_context
 		void set_color(Color c);
 		void set_color(SDL_Color color);
 		void fill_rect(SDL_Rect &rect);
+
+		void set_viewport(SDL_Rect &rect);
+		SDL_Rect get_viewport();
 		bool rect_in_window(SDL_Rect &rect);
 
 		bool succeeded() { return success; }

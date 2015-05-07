@@ -159,6 +159,12 @@ void SDL_context::submit(Uint32 type, void* data1 /*=NULL*/, void* data2 /*=NULL
 		print_message("SDL_PushEvent() was filtered");
 }
 
+void SDL_context::quit()
+{
+	SDL_Event e;
+	e.type = SDL_QUIT;
+	SDL_PushEvent(&e);
+}
 
 void SDL_context::clear()
 {
@@ -187,6 +193,20 @@ void SDL_context::set_color(SDL_Color color)
 void SDL_context::fill_rect(SDL_Rect &rect)
 {
 	SDL_RenderFillRect(renderer, &rect);
+}
+
+void SDL_context::set_viewport(SDL_Rect &rect)
+{
+	SDL_RenderSetViewport(renderer, &rect);
+}
+
+SDL_Rect SDL_context::get_viewport()
+{
+	SDL_Rect rect;
+	SDL_RenderGetViewport(renderer, &rect);
+	rect.x = 0;
+	rect.y = 0;
+	return rect;
 }
 
 bool SDL_context::rect_in_window(SDL_Rect &rect)
