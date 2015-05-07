@@ -1,4 +1,5 @@
 
+#include <iostream>
 
 #include <SDL.h>
 
@@ -16,8 +17,10 @@ DisplayObject::DisplayObject(Selection** _s)
 
 void DisplayObject::on_wheel(SDL_MouseWheelEvent &e)
 {
+	std::cout << "asdf" << std::endl;
 	offset.x -= (e.y * config->scroll_speed);
 	limit_scroll();
+	mark_dirty();
 }
 
 
@@ -29,12 +32,14 @@ void DisplayObject::pageup()
 {
 	offset.x -= (sdl->get_viewport().w);
 	limit_scroll();
+	mark_dirty();
 }
 
 void DisplayObject::pagedown()
 {
 	offset.x += (sdl->get_viewport().w);
 	limit_scroll();
+	mark_dirty();
 }
 
 bool DisplayObject::is_dirty()

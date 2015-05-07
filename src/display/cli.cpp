@@ -90,8 +90,6 @@ void CLI::on_text(SDL_TextInputEvent &e)
 
 void CLI::render()
 {
-	std::cout << "render" << std::endl;
-
 	SDL_Rect rect = sdl->get_viewport();
 
 	//draw the background

@@ -5,6 +5,7 @@
 #include <SDL.h>
 
 #include <collector.h>
+#include <SDL_utils.h> //SDL_PointInRect()
 #include <filestore/file.h>
 #include <filestore/selector.h>
 #include <filestore/selection.h>
@@ -141,12 +142,22 @@ void Display::on_text(SDL_TextInputEvent &e)
 
 void Display::on_wheel(SDL_MouseWheelEvent &e)
 {
-
+	if(current != NULL)
+		current->display->on_wheel(e);		
 }
 
 void Display::on_motion(SDL_MouseMotionEvent &e)
 {
-
+	SDL_Point p = { e.x, e.y };
+	if(point_in_rect(&p, &grid.rect))
+	{
+		current = &grid;
+		current->display->on_motion(e);
+	}
+	else
+	{
+		current = NULL;
+	}
 }
 
 void Display::on_selection(Selection* new_selection)

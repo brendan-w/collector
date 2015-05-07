@@ -25,6 +25,8 @@ Grid::~Grid()
 
 void Grid::render()
 {
+	std::cout << "render" << std::endl;
+
 	SDL_Rect rect = sdl->get_viewport();
 	sdl->set_color(BACKGROUND);
 	sdl->fill_rect(rect);
@@ -59,7 +61,7 @@ void Grid::render()
 void Grid::render_file(File* file, bool selected)
 {
 	SDL_Rect rect = {
-		(file->grid_pos.x * FILE_OFFSET) + x_offset(),
+		(file->grid_pos.x * FILE_OFFSET) - x_offset(),
 		(file->grid_pos.y * FILE_OFFSET) + y_offset(),
 		FILE_SIZE,
 		FILE_SIZE
@@ -89,17 +91,20 @@ void Grid::render_file(File* file, bool selected)
 //updates every File->grid_pos
 void Grid::resize()
 {
+	Selection* s = selection();
+
 	SDL_Rect viewport = sdl->get_viewport();
 	const size_t height_files = (viewport.h > 0) ? (((viewport.h - CLI_H * 2)) / FILE_OFFSET) : 1;
 	const size_t height_px = height_files * FILE_OFFSET;
+	const size_t width_px = (s->all_size() / height_files) * FILE_OFFSET;
 
+	set_scroll_range(width_px);
 	set_centered_height(height_px);
 
 	//don't recalc the tile positions unless we have to
 	if(current_height_files != height_files)
 	{
 
-		Selection* s = selection();
 		file_vector_it begin = s->all_begin();
 		file_vector_it end   = s->all_end();
 

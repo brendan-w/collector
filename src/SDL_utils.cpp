@@ -54,3 +54,9 @@ void print_IMG_error(std::string message)
 {
 	std::cout << message << std::endl << IMG_GetError() << std::endl;
 }
+
+bool point_in_rect(SDL_Point* p, SDL_Rect* r)
+{
+	return (p->x >= r->x) && (p->x <= (r->x + r->w)) &&
+	       (p->y >= r->y) && (p->y <= (r->y + r->h));
+}
