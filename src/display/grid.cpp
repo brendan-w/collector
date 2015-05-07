@@ -1,7 +1,6 @@
 
 
 #include <iostream>
-#include <cmath> //log2(), exp2(), floor()
 
 #include <SDL.h>
 
@@ -91,8 +90,8 @@ void Grid::render_file(File* file, bool selected)
 void Grid::resize()
 {
 	SDL_Rect viewport = sdl->get_viewport();
-	const size_t height_px = ((viewport.h - CLI_H * 2) / FILE_OFFSET);
-	const size_t height_files = (viewport.h > 0) ? height_px : 1;
+	const size_t height_files = (viewport.h > 0) ? (((viewport.h - CLI_H * 2)) / FILE_OFFSET) : 1;
+	const size_t height_px = height_files * FILE_OFFSET;
 
 	set_centered_height(height_px);
 

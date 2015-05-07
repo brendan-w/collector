@@ -27,13 +27,13 @@ void DisplayObject::on_wheel(SDL_MouseWheelEvent &e)
 
 void DisplayObject::pageup()
 {
-	offset.x -= (sdl->window_size().x);
+	offset.x -= (sdl->get_viewport().w);
 	limit_scroll();
 }
 
 void DisplayObject::pagedown()
 {
-	offset.x += (sdl->window_size().x);
+	offset.x += (sdl->get_viewport().w);
 	limit_scroll();
 }
 
@@ -46,7 +46,7 @@ bool DisplayObject::is_dirty()
 
 void DisplayObject::set_centered_height(size_t h)
 {
-	offset.y = ((sdl->window_size().y) - h) / 2;
+	offset.y = ((sdl->get_viewport().h) - h) / 2;
 }
 
 void DisplayObject::set_scroll_range(size_t s)
@@ -58,7 +58,7 @@ void DisplayObject::set_scroll_range(size_t s)
 
 void DisplayObject::limit_scroll()
 {
-	int max_scroll = scroll_range - (sdl->window_size().x);
+	int max_scroll = scroll_range - (sdl->get_viewport().w);
 
 	if(max_scroll < 0) max_scroll = 0;
 
