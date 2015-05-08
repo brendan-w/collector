@@ -9,18 +9,21 @@
 
 
 
-DisplayObject::DisplayObject(Selection** _s)
+DisplayObject::DisplayObject(Selection** _selection)
 {
-	s = _s;
+	s = _selection;
 }
 
 
 void DisplayObject::on_wheel(SDL_MouseWheelEvent &e)
 {
-	std::cout << "asdf" << std::endl;
+	int old_offset = offset.x;
+
 	offset.x -= (e.y * config->scroll_speed);
 	limit_scroll();
-	mark_dirty();
+
+	if(offset.x != old_offset)
+		mark_dirty();
 }
 
 

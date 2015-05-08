@@ -5,7 +5,7 @@
 #include <SDL.h>
 
 #include <collector.h>
-#include <SDL_utils.h> //SDL_PointInRect()
+#include <SDL_utils.h> //point_in_rect()
 #include <filestore/file.h>
 #include <filestore/selector.h>
 #include <filestore/selection.h>
@@ -150,13 +150,16 @@ void Display::on_motion(SDL_MouseMotionEvent &e)
 {
 	SDL_Point p = { e.x, e.y };
 	if(point_in_rect(&p, &grid.rect))
-	{
 		current = &grid;
-		current->display->on_motion(e);
-	}
 	else
-	{
 		current = NULL;
+
+	if(current != NULL)
+	{
+		//adjust mouse coordinates to that of the selected viewport
+		e.x -= grid.rect.x;
+		e.y -= grid.rect.y;
+		current->display->on_motion(e);
 	}
 }
 

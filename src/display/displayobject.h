@@ -17,7 +17,7 @@ class DisplayObject
 	public:
 
 		//all display objects must be initted with a pointer to the current state
-		DisplayObject(Selection** _s);
+		DisplayObject(Selection** _selection);
 		virtual ~DisplayObject() {}
 
 		virtual void render() {}

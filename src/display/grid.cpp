@@ -121,51 +121,48 @@ void Grid::resize()
 		current_height_files = height_files;
 	}
 
-	mark_dirty();
+	//even if the grid_pos properties didn't change
+	//we still need to update the centering values
+	mark_dirty(); 
 }
 
 
 void Grid::on_motion(SDL_MouseMotionEvent &e)
 {
-	// file_under_mouse = mouse_to_file(e.x, e.y);
-	// sdl->submit(FILE_INFO, (void*) file_under_mouse);
+	File* old_file = file_under_mouse;
+	file_under_mouse = mouse_to_file(e.x, e.y);
+
+	if(file_under_mouse != old_file)
+	{
+		sdl->submit(FILE_INFO, (void*) file_under_mouse);
+		mark_dirty();
+	}
 }
 
 //lookup the file under the cursor
 File* Grid::mouse_to_file(int x, int y)
 {
-	/*
-	//adjust for view offsets (scrolling & centering)
 	SDL_Point m = {
-		x - x_offset(),
-		y - y_offset(),
+		x + x_offset(),
+		y - y_offset()
 	};
 
-	//prevents negative numbers from reaching the division
-	//save us from having to do a floor()
-	if(m.x < 0)
+	if((m.x < 0) || (m.y < 0))
 		return NULL;
 
-	//translate into H curve coordinate space
-	m = {
-		m.x / FILE_OFFSET,
-		m.y / FILE_OFFSET
-	};
+	if(m.y > (int)(current_height_files * FILE_OFFSET))
+		return NULL;
 
-	//check that the point is within the grid
-	if((m.x < grid_size) && (m.y >= 0))
+	m.x = m.x / FILE_OFFSET;
+	m.y = m.y / FILE_OFFSET;
+
+	size_t i = (m.x * current_height_files) + m.y;
+
+	if(i < selection()->all_size())
 	{
-		size_t d = hilbert_point_to_d(grid_size, m);
-		
-		//check that the point isn't in a void
-		//beyond the end the file list
-		if(d < selection()->all_size())
-		{
-			//get this file by index
-			return selection()->all_at(d);
-		}
+		//get this file by index
+		return selection()->all_at(i);
 	}
-	*/
 
 	return NULL;
 }
