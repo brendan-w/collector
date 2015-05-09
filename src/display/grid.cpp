@@ -25,8 +25,6 @@ Grid::~Grid()
 
 void Grid::render()
 {
-	std::cout << "render" << std::endl;
-
 	SDL_Rect rect = sdl->get_viewport();
 	sdl->set_color(BACKGROUND);
 	sdl->fill_rect(rect);

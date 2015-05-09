@@ -56,4 +56,6 @@ void Info::on_file_info(File* f)
 		filepath->set_text(file->get_path());
 		filesize->set_text(pretty_print_file_size(file->get_size()));
 	}
+
+	mark_dirty();
 }
