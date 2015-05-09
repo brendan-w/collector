@@ -1,6 +1,6 @@
 
+#include <iostream>
 #include <string>
-#include <vector>
 
 #include <SDL.h>
 
@@ -17,8 +17,16 @@ Subtags::Subtags(Selection** s) : DisplayObject(s)
 
 Subtags::~Subtags()
 {
-
+	destroy_tags();
 }
+
+void Subtags::destroy_tags()
+{
+	for(Text* text: tags)
+		delete text;
+	tags.clear();
+}
+
 
 void Subtags::render()
 {
@@ -33,24 +41,12 @@ void Subtags::render()
 void Subtags::render_tags()
 {
 	SDL_Rect rect = sdl->get_viewport();
-	SDL_Rect tag_rect = rect;
 
 	//draw each tags text
-	// sdl->set_color(CLI_HIGHLIGHT);
-	sdl->set_color(OVERLAY);
-
 	int x = CLI_PAD;
-	for(unsigned int i = 0; i < tags.size(); i++)
+	for(Text* t: tags)
 	{
-		Text* t = tags[i];
-		
-		if(i == current_index)
-		{
-			tag_rect.x = x - CLI_PAD;
-			tag_rect.w = t->width() + (CLI_PAD * 2);
-			sdl->fill_rect(tag_rect);
-		}
-
+		std::cout << "render " << x << ", " << (rect.y + CLI_PAD) << "   " << t->get_text() << std::endl;
 		t->render(x, rect.y + CLI_PAD);
 		x += t->width() + (CLI_PAD * 2);
 	}
@@ -58,13 +54,18 @@ void Subtags::render_tags()
 
 void Subtags::on_selection()
 {
-	Selection* s = selection();
+	destroy_tags();
 
-	//update the internal state
-	std::string str = "";
-	str += std::to_string(s->size());
-	str += " / ";
-	str += std::to_string(s->all_size());
+	tag_freq_vector subtags = selection()->get_subtags();
 
-	totals->set_text(str);
+	for(tag_freq tag: subtags)
+	{
+		//                          [          count         ]          [  tag  ]
+		std::string caption = "[" + std::to_string(tag.second) + "] " + tag.first;
+		std::cout << caption << std::endl;
+		Text* text = new Text(caption, config->get_color(CLI_TEXT));
+		tags.push_back(text);
+	}
+
+	mark_dirty();
 }

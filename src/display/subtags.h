@@ -23,6 +23,6 @@ class Subtags : public DisplayObject
 		std::vector<Text*> tags;
 
 		void render_tags();
-
+		void destroy_tags();
 		void new_tag();
 };

@@ -10,6 +10,7 @@
 #include <filestore/selector.h>
 #include <filestore/selection.h>
 #include <display/cli.h>
+#include <display/subtags.h>
 #include <display/info.h>
 #include <display/grid.h>
 #include <display/thumbs.h>
@@ -24,10 +25,11 @@ Display::Display(Selection* init_selection)
 	selection = init_selection;
 
 	//create the main components, with references to the displays state
-	cli.display    = new CLI(&selection);
-	info.display   = new Info(&selection);
-	grid.display   = new Grid(&selection);
-	thumbs.display = new Thumbs(&selection);
+	cli.display     = new CLI(&selection);
+	subtags.display = new Subtags(&selection);
+	info.display    = new Info(&selection);
+	grid.display    = new Grid(&selection);
+	thumbs.display  = new Thumbs(&selection);
 
 	//trigger the initial layout
 	resize();
@@ -36,6 +38,7 @@ Display::Display(Selection* init_selection)
 Display::~Display()
 {
 	delete cli.display;
+	delete subtags.display;
 	delete info.display;
 	delete grid.display;
 	delete thumbs.display;
@@ -49,6 +52,7 @@ void Display::render()
 	render_child(thumbs);
 	render_child(grid);
 	render_child(info);
+	render_child(subtags);
 	render_child(cli);
 
 	sdl->reset_viewport();
@@ -83,6 +87,13 @@ void Display::resize()
 		CLI_H
 	};
 
+	subtags.rect = {
+		0,
+		window.y - (CLI_H * 2) - 1,
+		window.x,
+		CLI_H
+	};
+
 	info.rect = {
 		0,
 		0,
@@ -101,23 +112,22 @@ void Display::resize()
 		0,
 		middle.y,
 		window.x,
-		middle.y - CLI_H
+		middle.y - subtags.rect.y
 	};
 
 
 	resize_child(thumbs);
 	resize_child(grid);
 	resize_child(info);
+	resize_child(subtags);
 	resize_child(cli);
-
-	//in case layout() never adjusts/handles the scroll
-	// view->limit_scroll();
 }
 
 void Display::resize_child(Child& child)
 {
 	sdl->set_viewport(child.rect);
 	child.display->resize();
+	// child.display->limit_scroll();
 }
 
 void Display::on_key(SDL_KeyboardEvent &e)
@@ -182,6 +192,7 @@ void Display::on_selection(Selection* new_selection)
 
 	//let the components update themselves
 	cli.display->on_selection();
+	subtags.display->on_selection();
 	info.display->on_selection();
 	grid.display->on_selection();
 

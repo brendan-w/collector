@@ -42,7 +42,8 @@ void Selector::add_operation(std::string tag, Set_operation op)
 }
 
 //used by the Selection object to avoid listing subtags
-//that are gauranteed to be in the result
+//that are gauranteed to be in the result (the user
+//already knows about them)
 bool Selector::has(std::string tag)
 {
 	return tag_intersections.find(tag) != tag_intersections.end();

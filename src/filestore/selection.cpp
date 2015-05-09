@@ -3,13 +3,11 @@
 #include <string>
 #include <iostream>
 #include <iterator>
+#include <algorithm> //sort()
 #include <unordered_map>
 
 #include <filestore/file.h>
 #include <filestore/selection.h>
-
-
-typedef std::unordered_map<std::string, int> tag_freq;
 
 
 Selection::Selection(Selector* s, file_vector* all, file_set fs)
@@ -46,9 +44,14 @@ File* Selection::all_at(size_t i)
 		return NULL;
 }
 
+static bool tag_freq_compare(tag_freq A, tag_freq B)
+{
+	return A.second < B.second;
+}
+
 void Selection::load_subtags()
 {
-	tag_freq freqs;
+	tag_freq_set freqs;
 	for(File* file: files)
 	{
 		tag_set file_tags = file->get_tags();
@@ -66,8 +69,11 @@ void Selection::load_subtags()
 		}
 	}
 
-	for(auto result: freqs)
+	for(tag_freq tag: freqs)
 	{
-		std::cout << result.first << " - " << result.second << std::endl;
+		if(tag.second > 1) //skip tags that only occur once
+			subtags.push_back(tag);
 	}
+
+	std::sort(subtags.begin(), subtags.end(), tag_freq_compare);
 }

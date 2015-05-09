@@ -49,6 +49,7 @@ class Display
 		Child* current; //the view currently under the mouse
 
 		Child cli;
+		Child subtags;
 		Child info;
 		Child grid;
 		Child thumbs;

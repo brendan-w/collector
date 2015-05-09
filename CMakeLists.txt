@@ -30,6 +30,7 @@ set(SOURCE_FILES
 	"src/display/display.cpp"
 	"src/display/displayobject.cpp"
 	"src/display/cli.cpp"
+	"src/display/subtags.cpp"
 	"src/display/info.cpp"
 	"src/display/grid.cpp"
 	"src/display/thumbs.cpp"

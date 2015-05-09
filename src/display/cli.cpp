@@ -113,7 +113,7 @@ void CLI::render_tags()
 	sdl->set_color(CLI_HIGHLIGHT);
 
 	int x = CLI_PAD;
-	for(unsigned int i = 0; i < tags.size(); i++)
+	for(size_t i = 0; i < tags.size(); i++)
 	{
 		Text* t = tags[i];
 		
@@ -148,7 +148,6 @@ void CLI::on_selection()
 	str += std::to_string(s->size());
 	str += " / ";
 	str += std::to_string(s->all_size());
-
 	totals->set_text(str);
 
 	mark_dirty();
@@ -158,10 +157,8 @@ void CLI::on_selection()
 //deallocates all Text objects in tags
 void CLI::destroy_tags()
 {
-	for(unsigned int i = 0; i < tags.size(); i++)
-	{
-		delete tags[i];
-	}
+	for(Text* text: tags)
+		delete text;
 	
 	tags.clear();
 }
