@@ -54,10 +54,15 @@ void Selection::load_subtags()
 		tag_set file_tags = file->get_tags();
 		for(std::string tag: file_tags)
 		{
-			if(freqs.find(tag) == freqs.end())
-				freqs[tag] = 1;
-			else
-				freqs[tag]++;
+			//avoid listing subtags the user already requested
+			if(!selector->has(tag))
+			{
+				//increment the frequency of this tag
+				if(freqs.find(tag) == freqs.end())
+					freqs[tag] = 1;
+				else
+					freqs[tag]++;
+			}
 		}
 	}
 

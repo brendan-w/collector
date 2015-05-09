@@ -28,6 +28,8 @@ class Selector
 		const file_set get_include() { return file_include; };
 		const file_set get_exclude() { return file_exclude; };
 
+		bool has(std::string tag);
+
 	private:
 		tag_set tag_intersections;
 		tag_set tag_exclusions;
