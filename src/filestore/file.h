@@ -35,6 +35,7 @@ class File
 		std::string get_full_path();
 		void set_path(std::string new_path) { path = new_path; }
 
+		void unload();
 		Thumbnail* get_thumb();
 
 		File_Point grid_pos;

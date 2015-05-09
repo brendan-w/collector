@@ -19,8 +19,23 @@ File::File(std::string file_path)
 
 File::~File()
 {
+	unload();
+}
+
+void File::unload()
+{
 	if(thumb != NULL)
+	{
 		delete thumb;
+		thumb = NULL;
+	}
+}
+
+Thumbnail* File::get_thumb()
+{
+	if(thumb == NULL)
+		thumb = new Thumbnail(get_full_path());
+	return thumb;
 }
 
 std::string File::get_path()
@@ -31,13 +46,6 @@ std::string File::get_path()
 std::string File::get_full_path()
 {
 	return path_join(config->cwd_path, path);
-}
-
-Thumbnail* File::get_thumb()
-{
-	if(thumb == NULL)
-		thumb = new Thumbnail(get_full_path());
-	return thumb;
 }
 
 //extracts tags from the file's path and name

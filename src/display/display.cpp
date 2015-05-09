@@ -112,9 +112,8 @@ void Display::resize()
 		0,
 		middle.y,
 		window.x,
-		middle.y - subtags.rect.y
+		subtags.rect.y - middle.y
 	};
-
 
 	resize_child(thumbs);
 	resize_child(grid);
@@ -127,7 +126,7 @@ void Display::resize_child(Child& child)
 {
 	sdl->set_viewport(child.rect);
 	child.display->resize();
-	// child.display->limit_scroll();
+	child.display->limit_scroll();
 }
 
 void Display::on_key(SDL_KeyboardEvent &e)

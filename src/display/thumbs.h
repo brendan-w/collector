@@ -17,7 +17,6 @@ class Thumbs : public virtual DisplayObject
 		void resize();
 
 		void on_motion(SDL_MouseMotionEvent &e);
-
 		void on_selection();
 
 	private:

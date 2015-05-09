@@ -22,6 +22,9 @@ Selection::Selection(Selector* s, file_vector* all, file_set fs)
 Selection::~Selection()
 {
 	delete selector;
+
+	// for(File* file: files)
+	// 	file->unload();
 }
 
 bool Selection::has(File* file)
@@ -44,9 +47,10 @@ File* Selection::all_at(size_t i)
 		return NULL;
 }
 
+//sorts tags into descending frequency
 static bool tag_freq_compare(tag_freq A, tag_freq B)
 {
-	return A.second < B.second;
+	return A.second > B.second;
 }
 
 void Selection::load_subtags()

@@ -12,7 +12,6 @@
 
 
 
-
 //threaded image loader
 static void* load(void* data)
 {

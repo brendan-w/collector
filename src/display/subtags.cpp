@@ -46,7 +46,7 @@ void Subtags::render_tags()
 	int x = CLI_PAD;
 	for(Text* t: tags)
 	{
-		std::cout << "render " << x << ", " << (rect.y + CLI_PAD) << "   " << t->get_text() << std::endl;
+		// std::cout << "render " << x << ", " << (rect.y + CLI_PAD) << "   " << t->get_text() << std::endl;
 		t->render(x, rect.y + CLI_PAD);
 		x += t->width() + (CLI_PAD * 2);
 	}
@@ -60,9 +60,8 @@ void Subtags::on_selection()
 
 	for(tag_freq tag: subtags)
 	{
-		//                          [          count         ]          [  tag  ]
-		std::string caption = "[" + std::to_string(tag.second) + "] " + tag.first;
-		std::cout << caption << std::endl;
+		//                    [  tag  ]          [          count         ]
+		std::string caption = tag.first + " (" + std::to_string(tag.second) + ")";
 		Text* text = new Text(caption, config->get_color(CLI_TEXT));
 		tags.push_back(text);
 	}
