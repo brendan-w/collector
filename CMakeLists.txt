@@ -32,7 +32,7 @@ set(SOURCE_FILES
 	"src/display/cli.cpp"
 	"src/display/info.cpp"
 	"src/display/grid.cpp"
-	#"src/display/thumbs.cpp"
+	"src/display/thumbs.cpp"
 	"src/filestore/filestore.cpp"
 	"src/filestore/file.cpp"
 	"src/filestore/selector.cpp"

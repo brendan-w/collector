@@ -65,7 +65,7 @@ void Grid::render_file(File* file, bool selected)
 		FILE_SIZE
 	};
 
-	if(sdl->rect_in_window(rect))
+	if(sdl->rect_in_viewport(rect))
 	{
 		bool under_mouse = (file == file_under_mouse);
 
@@ -102,7 +102,6 @@ void Grid::resize()
 	//don't recalc the tile positions unless we have to
 	if(current_height_files != height_files)
 	{
-
 		file_vector_it begin = s->all_begin();
 		file_vector_it end   = s->all_end();
 
@@ -121,9 +120,13 @@ void Grid::resize()
 
 	//even if the grid_pos properties didn't change
 	//we still need to update the centering values
-	mark_dirty(); 
+	mark_dirty();
 }
 
+void Grid::on_selection()
+{
+	mark_dirty();
+}
 
 void Grid::on_motion(SDL_MouseMotionEvent &e)
 {
@@ -148,7 +151,7 @@ File* Grid::mouse_to_file(int x, int y)
 	if((m.x < 0) || (m.y < 0))
 		return NULL;
 
-	if(m.y > (int)(current_height_files * FILE_OFFSET))
+	if(m.y >= (int)(current_height_files * FILE_OFFSET))
 		return NULL;
 
 	m.x = m.x / FILE_OFFSET;

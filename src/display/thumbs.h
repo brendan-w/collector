@@ -14,15 +14,18 @@ class Thumbs : public virtual DisplayObject
 		Thumbs(Selection** s);
 		~Thumbs();
 		void render();
-		void layout(bool force);
+		void resize();
 
-		void on_wheel(SDL_MouseWheelEvent &e);
 		void on_motion(SDL_MouseMotionEvent &e);
 
 		void on_selection();
 
 	private:
-		int width; //width of column in number of files
+
+		File* file_under_mouse = NULL;
+
+		//used to prevent excessive recalculation during window resize
+		size_t current_height_files = 0;
 
 		void render_file(File* file);
 		File* mouse_to_file(int x, int y);

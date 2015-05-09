@@ -16,9 +16,11 @@ class Grid : public virtual DisplayObject
 		void render();
 		void resize();
 
+		void on_selection();
 		void on_motion(SDL_MouseMotionEvent &e);
 
 	private:
+
 		File* file_under_mouse = NULL;
 
 		//used to prevent excessive recalculation during window resize

@@ -27,7 +27,7 @@ Display::Display(Selection* init_selection)
 	cli.display    = new CLI(&selection);
 	info.display   = new Info(&selection);
 	grid.display   = new Grid(&selection);
-	// thumbs.display = new Thumbs(&selection);
+	thumbs.display = new Thumbs(&selection);
 
 	//trigger the initial layout
 	resize();
@@ -38,7 +38,7 @@ Display::~Display()
 	delete cli.display;
 	delete info.display;
 	delete grid.display;
-	// delete thumbs.display;
+	delete thumbs.display;
 
 	if(selection != NULL)
 		delete selection;
@@ -46,7 +46,7 @@ Display::~Display()
 
 void Display::render()
 {
-	// render_child(thumbs);
+	render_child(thumbs);
 	render_child(grid);
 	render_child(info);
 	render_child(cli);
@@ -97,7 +97,14 @@ void Display::resize()
 		middle.y - CLI_H
 	};
 
-	// resize_child(thumbs);
+	thumbs.rect = {
+		0,
+		middle.y,
+		window.x,
+		middle.y - CLI_H
+	};
+
+	resize_child(thumbs);
 	resize_child(grid);
 	resize_child(info);
 	resize_child(cli);
@@ -151,14 +158,16 @@ void Display::on_motion(SDL_MouseMotionEvent &e)
 	SDL_Point p = { e.x, e.y };
 	if(point_in_rect(&p, &grid.rect))
 		current = &grid;
+	else if(point_in_rect(&p, &thumbs.rect))
+		current = &thumbs;
 	else
 		current = NULL;
 
 	if(current != NULL)
 	{
 		//adjust mouse coordinates to that of the selected viewport
-		e.x -= grid.rect.x;
-		e.y -= grid.rect.y;
+		e.x -= current->rect.x;
+		e.y -= current->rect.y;
 		current->display->on_motion(e);
 	}
 }
@@ -173,6 +182,8 @@ void Display::on_selection(Selection* new_selection)
 	//let the components update themselves
 	cli.display->on_selection();
 	info.display->on_selection();
+	grid.display->on_selection();
+	thumbs.display->on_selection();
 }
 
 void Display::on_file_info(File* f)

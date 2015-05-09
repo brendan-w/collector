@@ -32,7 +32,7 @@ class SDL_Context
 		void set_viewport(SDL_Rect &rect);
 		SDL_Rect get_viewport();
 		void reset_viewport();
-		bool rect_in_window(SDL_Rect &rect);
+		bool rect_in_viewport(SDL_Rect &rect);
 
 		bool succeeded() { return success; }
 

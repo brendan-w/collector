@@ -69,7 +69,7 @@ static void* load(void* data)
 
 	SDL_FreeSurface(surface);
 
-	//thumbnail load finished, call for a render
+	//threaded thumbnail load finished, call for a render
 	sdl->submit(RENDER);
 
 	return (void*) thumb;

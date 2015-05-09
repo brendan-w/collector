@@ -26,8 +26,8 @@ Config::Config()
 
 	//get the pathname for the current working directory
 	// cwd_path = std::string(getcwd(NULL, 0));
-	cwd_path = "/home/brendan/Andromeda";
-	// cwd_path = "/home/brendan/cool";
+	// cwd_path = "/home/brendan/Andromeda";
+	cwd_path = "/home/brendan/cool";
 
 	//lists all items in the current directory and below
 	//only returns files
@@ -64,12 +64,11 @@ Config::Config()
 	colors[FILE_NEUTRAL_HOVER]  = { 95,  95,  95,  255 };
 	colors[FILE_SELECTED_HOVER] = { 68,  161, 206, 255 };
 
-	
 	font_size = 12;
 	max_suggest = 4;
-	scroll_speed = 60;
-	file_size = 15;
-	file_thumb_size = 199;
+	scroll_speed = 120;
+	file_size = 9;
+	file_thumb_size = 40;
 	file_padding = 1;
 	CLI_height = 20;
 	CLI_padding = 4;

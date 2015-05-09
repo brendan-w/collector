@@ -27,9 +27,12 @@ Thumbs::~Thumbs()
 
 void Thumbs::render()
 {
-	sdl->set_color(FILE_NEUTRAL);
+	SDL_Rect rect = sdl->get_viewport();
+	sdl->set_color(BACKGROUND);
+	sdl->fill_rect(rect);
 
-	for(File* file : *get_selection())
+	sdl->set_color(FILE_NEUTRAL);
+	for(File* file : *selection())
 	{
 		render_file(file);
 	}
@@ -39,103 +42,96 @@ void Thumbs::render()
 void Thumbs::render_file(File* file)
 {
 	SDL_Rect rect = {
-		file->point.x + x_offset(), //adjust position for centering
-		file->point.y + y_offset(), //adjust position for scroll
+		(file->thumb_pos.x * FILE_THUMB_OFFSET) - x_offset(),
+		(file->thumb_pos.y * FILE_THUMB_OFFSET) + y_offset(),
 		FILE_THUMB_SIZE,
 		FILE_THUMB_SIZE
 	};
 
-	if(sdl->rect_in_window(rect))
-	{
-		file->load();
+	if(sdl->rect_in_viewport(rect))
 		file->get_thumb()->render(&rect);
-	}
 }
 
 
-//generates a raster column of files
-//updates every File->point
-void Thumbs::layout(bool force)
+//updates every File->thumb_pos
+void Thumbs::resize()
 {
-	rect = config->get_window_rect();
+	Selection* s = selection();
 
-	//compute how many file thumbnails will fit in the window
-	const int new_width = (int) floor( (double)(WINDOW_W / FILE_THUMB_OFFSET) );
+	SDL_Rect viewport = sdl->get_viewport();
+	const size_t height_files = (viewport.h > 0) ? (((viewport.h - CLI_H * 2)) / FILE_THUMB_OFFSET) : 1;
+	const size_t height_px = height_files * FILE_THUMB_OFFSET;
+	const size_t width_px = (s->size() / height_files) * FILE_THUMB_OFFSET;
 
-	//calculate the offset necessary to horizontally center the column
-	set_centered_width(new_width * FILE_THUMB_OFFSET);
+	set_scroll_range(width_px);
+	set_centered_height(height_px);
 
-	const int num_rows = (int) ceil( (double)get_selection()->size() / new_width );
-
-	set_scroll_height(num_rows * FILE_THUMB_OFFSET);
-
-	//prevent excessive recomputation of the layout
-	if(force || (width != new_width))
+	//don't recalc the tile positions unless we have to
+	if(current_height_files != height_files)
 	{
-		width = new_width;
+		file_set_it begin = s->begin();
+		file_set_it end   = s->end();
 
-		int i = 0;
-
-		for(File* file : *get_selection())
+		size_t count = 0;
+		for(auto it = begin; it != end; ++it)
 		{
-			file->point = {
-				(i % width) * FILE_THUMB_OFFSET,
-				(i / width) * FILE_THUMB_OFFSET
-			};
-
-			i++;
+			File* file = *it;
+			//compute the XY coordinates based on position in sequence
+			file->thumb_pos.x = count / height_files;
+			file->thumb_pos.y = count % height_files;
+			count++;
 		}
+
+		current_height_files = height_files;
 	}
-}
 
-void Thumbs::on_wheel(SDL_MouseWheelEvent &e)
-{
-	DisplayObject::on_wheel(e);
-
-	// for(File* file : *get_selection())
-	// {
-
-	// }
+	//even if the thumb_pos properties didn't change
+	//we still need to update the centering values
+	mark_dirty();
 }
 
 void Thumbs::on_selection()
 {
-	layout(true);
+	//the new selection's layout must be computed
+	resize();
+	//mark_dirty(); //called in resize()
 }
 
 void Thumbs::on_motion(SDL_MouseMotionEvent &e)
 {
-	File* file = mouse_to_file(e.x, e.y);
-	sdl->submit(FILE_INFO, (void*) file);
+	File* old_file = file_under_mouse;
+	file_under_mouse = mouse_to_file(e.x, e.y);
+
+	if(file_under_mouse != old_file)
+	{
+		sdl->submit(FILE_INFO, (void*) file_under_mouse);
+		mark_dirty();
+	}
 }
 
 //lookup the file under the cursor
 File* Thumbs::mouse_to_file(int x, int y)
 {
-	//adjust for view offsets (scrolling & centering)
 	SDL_Point m = {
-		x - x_offset(),
-		y - y_offset(),
+		x + x_offset(),
+		y - y_offset()
 	};
 
-	//prevents negative numbers from reaching the division
-	//save us from having to do a floor()
-	if(m.x < 0)
+	if((m.x < 0) || (m.y < 0))
 		return NULL;
 
-	//translate into H curve coordinate space
-	m = {
-		m.x / FILE_THUMB_OFFSET,
-		m.y / FILE_THUMB_OFFSET
-	};
+	if(m.y >= (int)(current_height_files * FILE_THUMB_OFFSET))
+		return NULL;
 
-	if((m.x < width) && (m.y >= 0))
+	m.x = m.x / FILE_THUMB_OFFSET;
+	m.y = m.y / FILE_THUMB_OFFSET;
+
+	size_t i = (m.x * current_height_files) + m.y;
+
+	if(i < selection()->size())
 	{
-		size_t d = m.x + (m.y * width);
-		if(d < get_selection()->size())
-		{
-			return get_selection()->at(d);
-		}
+		//get this file by index
+		return selection()->at(i);
 	}
 
 	return NULL;
