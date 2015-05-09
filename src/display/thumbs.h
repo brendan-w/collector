@@ -24,7 +24,6 @@ class Thumbs : public virtual DisplayObject
 
 		File* file_under_mouse = NULL;
 
-		//used to prevent excessive recalculation during window resize
 		size_t current_height_files = 0;
 
 		void render_file(File* file);

@@ -1,7 +1,5 @@
 
 
-#include <iostream>
-
 #include <SDL.h>
 
 #include <collector.h>
@@ -59,31 +57,27 @@ void Thumbs::resize()
 	Selection* s = selection();
 
 	SDL_Rect viewport = sdl->get_viewport();
-	const size_t height_files = (viewport.h > 0) ? (((viewport.h - CLI_H * 2)) / FILE_THUMB_OFFSET) : 1;
+	const size_t height_files = (viewport.h > 0) ? (viewport.h / FILE_THUMB_OFFSET) : 1;
 	const size_t height_px = height_files * FILE_THUMB_OFFSET;
 	const size_t width_px = (s->size() / height_files) * FILE_THUMB_OFFSET;
 
 	set_scroll_range(width_px);
 	set_centered_height(height_px);
 
-	//don't recalc the tile positions unless we have to
-	if(current_height_files != height_files)
+	file_set_it begin = s->begin();
+	file_set_it end   = s->end();
+
+	size_t count = 0;
+	for(auto it = begin; it != end; ++it)
 	{
-		file_set_it begin = s->begin();
-		file_set_it end   = s->end();
-
-		size_t count = 0;
-		for(auto it = begin; it != end; ++it)
-		{
-			File* file = *it;
-			//compute the XY coordinates based on position in sequence
-			file->thumb_pos.x = count / height_files;
-			file->thumb_pos.y = count % height_files;
-			count++;
-		}
-
-		current_height_files = height_files;
+		File* file = *it;
+		//compute the XY coordinates based on position in sequence
+		file->thumb_pos.x = count / height_files;
+		file->thumb_pos.y = count % height_files;
+		count++;
 	}
+
+	current_height_files = height_files;
 
 	//even if the thumb_pos properties didn't change
 	//we still need to update the centering values
@@ -92,9 +86,7 @@ void Thumbs::resize()
 
 void Thumbs::on_selection()
 {
-	//the new selection's layout must be computed
-	resize();
-	//mark_dirty(); //called in resize()
+	mark_dirty();
 }
 
 void Thumbs::on_motion(SDL_MouseMotionEvent &e)

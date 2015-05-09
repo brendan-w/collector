@@ -51,7 +51,7 @@ Config::Config()
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
 		1000,
-		500
+		650
 	};
 
 	colors[BACKGROUND]    = { 50,  50,  50,  255 };
@@ -68,7 +68,7 @@ Config::Config()
 	max_suggest = 4;
 	scroll_speed = 120;
 	file_size = 9;
-	file_thumb_size = 40;
+	file_thumb_size = 80;
 	file_padding = 1;
 	CLI_height = 20;
 	CLI_padding = 4;

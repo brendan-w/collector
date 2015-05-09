@@ -1,5 +1,5 @@
 
-
+#include <iostream>
 #include <string>
 
 #include <SDL.h>
@@ -104,6 +104,7 @@ void Display::resize()
 		middle.y - CLI_H
 	};
 
+
 	resize_child(thumbs);
 	resize_child(grid);
 	resize_child(info);
@@ -183,6 +184,16 @@ void Display::on_selection(Selection* new_selection)
 	cli.display->on_selection();
 	info.display->on_selection();
 	grid.display->on_selection();
+
+	//the new selection's layout must be computed
+	/*
+		TODO:
+		This should really be moved to the Thumbs class,
+		but the viewport must be set by this Display manager.
+		Consider using a dirty state for layout
+		(as well as the one for graphics).
+	*/
+	resize_child(thumbs); 
 	thumbs.display->on_selection();
 }
 
