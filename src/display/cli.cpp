@@ -134,7 +134,7 @@ void CLI::fill_selector(Selector* selector)
 	//dump our tags into the selector
 	for(Text* t: tags)
 	{
-		selector->add_operation(t->get_text());
+		selector->add_operation(t->get_text(), INTERSECTION);
 	}
 }
 
@@ -150,6 +150,8 @@ void CLI::on_selection()
 	str += std::to_string(s->all_size());
 
 	totals->set_text(str);
+
+	mark_dirty();
 }
 
 

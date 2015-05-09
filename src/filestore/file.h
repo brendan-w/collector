@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <unordered_set>
+#include <unordered_map>
 
 #include <SDL.h>
 
@@ -51,3 +52,6 @@ typedef file_vector::iterator file_vector_it;
 //file_set
 typedef std::unordered_set<File*> file_set;
 typedef file_set::iterator file_set_it;
+
+//tag map
+typedef std::unordered_map<std::string, file_set> tag_map;

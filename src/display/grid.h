@@ -8,7 +8,7 @@
 #include <filestore/selection.h>
 
 
-class Grid : public virtual DisplayObject
+class Grid : public DisplayObject
 {
 	public:
 		Grid(Selection** s);

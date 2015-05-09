@@ -1,27 +1,29 @@
 
 
+#include <string>
+#include <iostream>
 #include <iterator>
+#include <unordered_map>
 
 #include <filestore/file.h>
 #include <filestore/selection.h>
 
 
-Selection::Selection(file_vector* all)
-{
-	all_files = all;
-}
+typedef std::unordered_map<std::string, int> tag_freq;
 
-Selection::Selection(file_vector* all, file_set fs)
+
+Selection::Selection(Selector* s, file_vector* all, file_set fs)
 {
+	selector = s;
 	all_files = all;
 	files = fs;
+
+	load_subtags();
 }
 
 Selection::~Selection()
 {
-	//if it was loaded, make sure to release it
-	// for(File* file: files)
-		// delete file->data;
+	delete selector;
 }
 
 bool Selection::has(File* file)
@@ -42,4 +44,25 @@ File* Selection::all_at(size_t i)
 		return (*all_files)[i];
 	else
 		return NULL;
+}
+
+void Selection::load_subtags()
+{
+	tag_freq freqs;
+	for(File* file: files)
+	{
+		tag_set file_tags = file->get_tags();
+		for(std::string tag: file_tags)
+		{
+			if(freqs.find(tag) == freqs.end())
+				freqs[tag] = 1;
+			else
+				freqs[tag]++;
+		}
+	}
+
+	for(auto result: freqs)
+	{
+		std::cout << result.first << " - " << result.second << std::endl;
+	}
 }

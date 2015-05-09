@@ -9,28 +9,10 @@
 
 enum Set_operation
 {
-	NONE = 0,
-	INTERSECTION = 1,
-	UNION = '+',
-	EXCLUSION = '-'
+	INTERSECTION = 0,
+	EXCLUSION,
+	UNION
 };
-
-
-class Tag_operation
-{
-	public:
-		Tag_operation(std::string input);
-		~Tag_operation();
-		std::string get_tag() { return tag; };
-		Set_operation get_op() { return op; };
-
-	private:
-		std::string tag = "";
-		Set_operation op = NONE;
-};
-
-
-typedef std::vector<Tag_operation*> Tag_operations;
 
 
 class Selector
@@ -38,14 +20,17 @@ class Selector
 	public:
 		Selector();
 		~Selector();
-		void add_operation(std::string input);
 
-		const Tag_operations get_operations() { return tags; };
-		const file_set get_include() { return include; };
-		const file_set get_exclude() { return exclude; };
+		void add_operation(std::string tag, Set_operation op);
+
+		const tag_set get_tag_intersections() { return tag_intersections; }
+		const tag_set get_tag_exclusions()    { return tag_exclusions; }
+		const file_set get_include() { return file_include; };
+		const file_set get_exclude() { return file_exclude; };
 
 	private:
-		Tag_operations tags;
-		file_set include;
-		file_set exclude;
+		tag_set tag_intersections;
+		tag_set tag_exclusions;
+		file_set file_include;
+		file_set file_exclude;
 };

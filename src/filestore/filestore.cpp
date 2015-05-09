@@ -72,31 +72,28 @@ Selection* FileStore::select(Selector* selector)
 
 	if(selector != NULL)
 	{
-		Tag_operations ops = selector->get_operations();
+		tag_set intersections = selector->get_tag_intersections();
 
 		bool first = true;
-
-		for(Tag_operation* op: ops)
+		for(std::string tag: intersections)
 		{
 			if(first)
 			{
 				//the first tag to be processed is a subset of the universe
-				result = set_for_tag(op->get_tag());
+				result = set_for_tag(tag);
 				first = false;
 			}
 			else
 			{
 				file_set copy = result;
-				file_set current = set_for_tag(op->get_tag());
-
+				file_set current = set_for_tag(tag);
 				set_intersect(result, copy, current);
 			}
 		}
 	}
 
 	//done selecting
-	delete selector;
-	return new Selection(&files, result);
+	return new Selection(selector, &files, result);
 }
 
 

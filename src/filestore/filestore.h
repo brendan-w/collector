@@ -3,15 +3,10 @@
 
 
 #include <string>
-#include <unordered_set>
-#include <unordered_map>
 
 #include <filestore/file.h>
 #include <filestore/selector.h>
 #include <filestore/selection.h>
-
-
-typedef std::unordered_map<std::string, file_set> tag_map;
 
 
 class FileStore
