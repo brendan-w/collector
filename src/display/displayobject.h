@@ -39,9 +39,9 @@ class DisplayObject
 		virtual void on_autocomplete(Tag_Info* completion) {}
 
 		bool is_dirty();
+		void mark_dirty() { dirty = true; }
 
 	protected:
-		void mark_dirty() { dirty = true; }
 		void set_scroll_range(size_t s);
 		void set_centered_height(size_t h);
 		int x_offset() { return offset.x; }

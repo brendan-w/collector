@@ -11,7 +11,7 @@
 
 #define NUM_USER_EVENTS 6
 
-Uint32 RENDER = 0;
+Uint32 RENDER_THUMBS = 0;
 Uint32 SELECTOR = 0;
 Uint32 SELECTION = 0;
 Uint32 FILE_INFO = 0;
@@ -114,7 +114,7 @@ SDL_Context::SDL_Context()
 		return;
 	}
 
-	RENDER         = begin;
+	RENDER_THUMBS  = begin;
 	SELECTOR       = begin + 1;
 	SELECTION      = begin + 2;
 	FILE_INFO      = begin + 3;

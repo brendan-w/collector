@@ -6,9 +6,7 @@
 #include <thumbnail.h>
 #include <event.h>
 #include <utils.h>
-#include <filestore/file.h>
-#include <filestore/selector.h>
-#include <filestore/selection.h>
+#include <filestore/types.h>
 #include <display/thumbs.h>
 
 

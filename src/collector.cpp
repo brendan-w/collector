@@ -95,6 +95,10 @@ int main(int argc, char * argv[])
 					{
 						display->on_autocomplete((Tag_Info*) e.user.data1);
 					}
+					else if(e.type == RENDER_THUMBS)
+					{
+						display->mark_dirty(RENDER_THUMBS);
+					}
 					break;
 			}
 		}

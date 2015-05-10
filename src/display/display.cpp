@@ -127,6 +127,12 @@ void Display::resize_child(Child& child)
 	child.display->limit_scroll();
 }
 
+void Display::mark_dirty(Uint32 component)
+{
+	if(component == RENDER_THUMBS)
+		thumbs.display->mark_dirty();
+}
+
 void Display::on_key(SDL_KeyboardEvent &e)
 {
 	switch(e.keysym.sym)
