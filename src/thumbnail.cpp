@@ -141,7 +141,7 @@ void Thumbnail::render(SDL_Rect* rect)
 	join(false);
 
 	if(texture == NULL)
-		SDL_RenderFillRect(sdl->get_renderer(), rect);
+		sdl->fill_rect(*rect);
 	else
 		texture->render(rect);
 }

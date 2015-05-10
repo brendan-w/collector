@@ -1,4 +1,5 @@
 
+#include <iostream>
 
 #include <SDL_ttf.h>
 
@@ -9,8 +10,8 @@
 
 Text::Text(std::string t, SDL_Color c)
 {
-	set_text(t);
 	set_color(c);
+	set_text(t);
 }
 
 
@@ -28,9 +29,7 @@ void Text::set_text(std::string s)
 
 	//if the texture needs updating
 	if(text != current_text)
-	{
 		load_text();
-	}	
 }
 
 
