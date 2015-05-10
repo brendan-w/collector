@@ -7,17 +7,14 @@
 #include <filestore/selector.h>
 
 
-typedef std::vector<std::string> str_tag_vector;
-
-
 class Selection
 {
 	public:
-		Selection(Selector* s, file_vector* all, file_set fs);
+		Selection(Selector* s, file_vector* all, file_set fs, tag_vector st);
 		~Selection();
 
 		bool has(File* file);
-		str_tag_vector get_subtags() { return subtags; }
+		tag_vector get_subtags() { return subtags; }
 
 		//the selection
 		const file_set_it begin() { return files.begin(); }
@@ -44,8 +41,5 @@ class Selection
 		Selector* selector;
 
 		//subtags
-		str_tag_vector subtags;
-
-		//functions
-		// void load_subtags();
+		tag_vector subtags;
 };

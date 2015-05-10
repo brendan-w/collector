@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <stdio.h>
+#include <algorithm> //sort()
 
 #include <collector.h>
 #include <utils.h>
@@ -62,16 +63,22 @@ Tag_Info* FileStore::tag_info(Tag_Info* c)
 }
 
 
+static bool tag_entry_compare(Tag_Entry* A, Tag_Entry* B)
+{
+	return A->files.size() > B->files.size();
+}
+
+
 //turns Selectors into Selections
 Selection* FileStore::select(Selector* selector)
 {
 	//result holders
 	file_set r_files;
-	tag_set r_subtags;
+	entry_set r_subtags;
 
 	if(selector != NULL)
 	{
-		str_tag_set intersections = selector->get_tag_intersections();
+		tag_set intersections = selector->get_tag_intersections();
 
 		bool first = true;
 		for(std::string tag: intersections)
@@ -83,20 +90,53 @@ Selection* FileStore::select(Selector* selector)
 				{
 					//the first tag to be processed is a subset of the universe
 					r_files = tags[tag]->files;
+					r_subtags = tags[tag]->subtags;
 					first = false;
 				}
 				else
 				{
-					file_set copy = r_files;
-					file_set current = tags[tag]->files;
-					set_intersect(r_files, copy, current);
+					//files
+					file_set r_files_copy = r_files;
+					file_set current_files = tags[tag]->files;
+
+					set_intersect<file_set>(r_files,
+											r_files_copy,
+											current_files);
+
+					//subtags
+					entry_set r_subtags_copy = r_subtags;
+					entry_set current_subtags = tags[tag]->subtags;
+
+					set_intersect<entry_set>(r_subtags,
+											r_subtags_copy,
+											current_subtags);
 				}
 			}
 		}
 	}
 
+	//convert the subtags into a sorted tag_vector
+
+	//dump the set to a sortable vector
+	entry_vector subtag_entries;
+	for(Tag_Entry* entry: r_subtags)
+	{
+		subtag_entries.push_back(entry);
+	}
+
+	//sort in descending number of files per tag
+	std::sort(subtag_entries.begin(),
+			  subtag_entries.end(),
+			  tag_entry_compare);
+	
+	tag_vector subtags;
+	for(Tag_Entry* entry: subtag_entries)
+	{
+		subtags.push_back(entry->tag);
+	}
+
 	//done selecting
-	return new Selection(selector, &files, r_files);
+	return new Selection(selector, &files, r_files, subtags);
 }
 
 
@@ -110,7 +150,7 @@ void FileStore::insert_file(File* file)
 	files.push_back(file);
 
 	//get all tags, relative to the current working directory
-	str_tag_set file_tags = file->get_tags();
+	tag_set file_tags = file->get_tags();
 
 
 	//first iteration, populate the tag map with any new tags

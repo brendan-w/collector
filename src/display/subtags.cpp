@@ -55,7 +55,7 @@ void Subtags::on_selection()
 {
 	destroy_tags();
 
-	str_tag_vector subtags = selection()->get_subtags();
+	tag_vector subtags = selection()->get_subtags();
 
 	for(std::string tag: subtags)
 	{

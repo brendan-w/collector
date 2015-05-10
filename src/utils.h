@@ -26,5 +26,36 @@ std::string path_join(std::string a_str, std::string b_str);
 SDL_Point hilbert_d_to_point(int n, int d);
 size_t hilbert_point_to_d(int n, SDL_Point p);
 
-void set_intersect(file_set & out, const file_set & in_A, const file_set & in_B);
-void set_union(file_set & out, const file_set & in_A, const file_set & in_B);
+
+/*
+    Set Operations
+*/
+
+template<typename T>
+void set_intersect(T & out, const T & in_A, const T & in_B)
+{
+    if(in_B.size() < in_A.size())
+    {
+        //swap the arguments so that we only iterate through the smaller set
+        set_intersect<T>(out, in_B, in_A);
+        return;
+    }
+
+    out.clear();
+
+    for(auto it = in_A.begin(); it != in_A.end(); it++)
+    {
+        if(in_B.find(*it) != in_B.end())
+        {
+            out.insert(*it);
+        }
+    }
+}
+
+template<typename T>
+void set_union(T & out, const T & in_A, const T & in_B)
+{
+    out.clear();
+    out.insert(in_A.begin(), in_A.end());
+    out.insert(in_B.begin(), in_B.end());
+}

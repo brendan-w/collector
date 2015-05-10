@@ -17,7 +17,8 @@ class Tag_Entry
 		std::unordered_set<Tag_Entry*> subtags;
 };
 
-typedef std::unordered_set<Tag_Entry*> tag_set;
+typedef std::vector<Tag_Entry*> entry_vector;
+typedef std::unordered_set<Tag_Entry*> entry_set;
 typedef std::unordered_map<std::string, Tag_Entry*> tag_map;
 
 
