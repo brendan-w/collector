@@ -50,9 +50,9 @@ std::string File::get_full_path()
 
 //extracts tags from the file's path and name
 //splits a string on multiple delimeters
-tag_set File::get_tags()
+str_tag_set File::get_tags()
 {
-	tag_set tags;
+	str_tag_set tags;
 
 	//copy the path, so to_lower won't affect the original
 	std::string p = path;

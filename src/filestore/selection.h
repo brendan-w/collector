@@ -7,9 +7,7 @@
 #include <filestore/selector.h>
 
 
-typedef std::unordered_map<std::string, size_t> tag_freq_set;
-typedef std::pair<std::string, size_t> tag_freq;
-typedef std::vector<tag_freq> tag_freq_vector;
+typedef std::vector<std::string> str_tag_vector;
 
 
 class Selection
@@ -19,7 +17,7 @@ class Selection
 		~Selection();
 
 		bool has(File* file);
-		tag_freq_vector get_subtags() { return subtags; }
+		str_tag_vector get_subtags() { return subtags; }
 
 		//the selection
 		const file_set_it begin() { return files.begin(); }
@@ -46,8 +44,8 @@ class Selection
 		Selector* selector;
 
 		//subtags
-		tag_freq_vector subtags;
+		str_tag_vector subtags;
 
 		//functions
-		void load_subtags();
+		// void load_subtags();
 };

@@ -65,11 +65,13 @@ Tag_Info* FileStore::tag_info(Tag_Info* c)
 //turns Selectors into Selections
 Selection* FileStore::select(Selector* selector)
 {
-	file_set result;
+	//result holders
+	file_set r_files;
+	tag_set r_subtags;
 
 	if(selector != NULL)
 	{
-		tag_set intersections = selector->get_tag_intersections();
+		str_tag_set intersections = selector->get_tag_intersections();
 
 		bool first = true;
 		for(std::string tag: intersections)
@@ -80,21 +82,21 @@ Selection* FileStore::select(Selector* selector)
 				if(first)
 				{
 					//the first tag to be processed is a subset of the universe
-					result = set_for_tag(tag);
+					r_files = tags[tag]->files;
 					first = false;
 				}
 				else
 				{
-					file_set copy = result;
-					file_set current = set_for_tag(tag);
-					set_intersect(result, copy, current);
+					file_set copy = r_files;
+					file_set current = tags[tag]->files;
+					set_intersect(r_files, copy, current);
 				}
 			}
 		}
 	}
 
 	//done selecting
-	return new Selection(selector, &files, result);
+	return new Selection(selector, &files, r_files);
 }
 
 
@@ -103,28 +105,51 @@ bool FileStore::has_tag(const std::string & tag)
 	return (tags.find(tag) != tags.end());
 }
 
-file_set FileStore::set_for_tag(const std::string & tag)
-{
-	tag_map::const_iterator result = tags.find(tag);
-
-	file_set output;
-	if(result != tags.end())
-		output = result->second;
-
-	return output;
-}
-
 void FileStore::insert_file(File* file)
 {
 	files.push_back(file);
 
 	//get all tags, relative to the current working directory
-	tag_set file_tags = file->get_tags();
+	str_tag_set file_tags = file->get_tags();
 
-	for(std::string t: file_tags)
+
+	//first iteration, populate the tag map with any new tags
+	for(std::string tag: file_tags)
 	{
-		//add the file to the correct tag file_set
-		tags[t].insert(file);
+		if(!has_tag(tag))
+		{
+			//create a new entry object for this tag
+			Tag_Entry* entry = new Tag_Entry;
+			entry->tag = tag;
+			entry->files.insert(file);
+
+			tags[tag] = entry;
+		}
+		else
+		{
+			//add the file to the correct tag file_set
+			tags[tag]->files.insert(file);
+		}
+	}
+
+	//get convert every string to a pointer to an entry
+	std::vector<Tag_Entry*> entries;
+
+	for(std::string tag: file_tags)
+	{
+		entries.push_back(tags[tag]);
+	}
+
+	//complete graph to populate subtags
+
+	for(size_t a = 0; a < entries.size(); a++)
+	{
+		// +1 prevents tags from being subtags of themselves
+		for(size_t b = a+1; b < entries.size(); b++)
+		{
+			entries[a]->subtags.insert(entries[b]);
+			entries[b]->subtags.insert(entries[a]);
+		}
 	}
 }
 

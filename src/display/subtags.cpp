@@ -55,12 +55,11 @@ void Subtags::on_selection()
 {
 	destroy_tags();
 
-	tag_freq_vector subtags = selection()->get_subtags();
+	str_tag_vector subtags = selection()->get_subtags();
 
-	for(tag_freq tag: subtags)
+	for(std::string tag: subtags)
 	{
-		std::string caption = tag.first;
-		Text* text = new Text(caption, config->get_color(CLI_TEXT));
+		Text* text = new Text(tag, config->get_color(CLI_TEXT));
 		tags.push_back(text);
 	}
 

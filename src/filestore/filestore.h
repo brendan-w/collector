@@ -3,8 +3,23 @@
 
 
 #include <string>
+#include <vector>
+#include <unordered_map>
 
 #include <filestore/types.h>
+
+
+class Tag_Entry
+{
+	public:
+		std::string tag;
+		file_set files;
+		std::unordered_set<Tag_Entry*> subtags;
+};
+
+typedef std::unordered_set<Tag_Entry*> tag_set;
+typedef std::unordered_map<std::string, Tag_Entry*> tag_map;
+
 
 
 class FileStore

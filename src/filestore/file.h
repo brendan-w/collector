@@ -11,7 +11,7 @@
 #include <thumbnail.h>
 
 
-typedef std::unordered_set<std::string> tag_set;
+typedef std::unordered_set<std::string> str_tag_set;
 
 
 //SDL_Point =  8 bytes
@@ -28,7 +28,7 @@ class File
 		File(std::string path);
 		~File();
 
-		tag_set get_tags();
+		str_tag_set get_tags();
 		size_t get_size();
 
 		std::string get_path();
@@ -53,6 +53,3 @@ typedef file_vector::iterator file_vector_it;
 //file_set
 typedef std::unordered_set<File*> file_set;
 typedef file_set::iterator file_set_it;
-
-//tag map
-typedef std::unordered_map<std::string, file_set> tag_map;
