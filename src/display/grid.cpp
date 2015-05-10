@@ -1,5 +1,4 @@
 
-
 #include <SDL.h>
 
 #include <collector.h>

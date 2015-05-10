@@ -12,8 +12,7 @@
 
 #include <collector.h>
 #include <text.h>
-#include <filestore/selector.h>
-#include <filestore/selection.h>
+#include <filestore/types.h>
 #include <display/cli.h>
 
 
@@ -43,7 +42,7 @@ void CLI::on_key(SDL_KeyboardEvent &e)
 			delete_tag();
 			break;
 		case SDLK_TAB:
-			//autocomplete
+			send_autocomplete();
 			break;
 		case SDLK_UP:
 			break;
@@ -215,4 +214,24 @@ void CLI::backspace()
 		current_tag()->set_text(s);
 		mark_dirty();
 	}
+}
+
+void CLI::send_autocomplete()
+{
+	std::string tag = current_tag()->get_text();
+	if(tag.length() > 0)
+		sdl->submit(TAG_INFO_QUERY, (void*) new Tag_Info(tag));
+}
+
+void CLI::on_autocomplete(Tag_Info* c)
+{
+	Text* t = current_tag();
+
+	if(t->get_text() == c->get_partial())
+	{
+		t->set_text(c->get_completed());
+		mark_dirty();
+	}
+
+	delete c;
 }

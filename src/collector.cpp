@@ -5,10 +5,8 @@
 #include <collector.h>
 #include <SDL_Context.h>
 #include <config.h>
-#include <filestore/file.h>
+#include <filestore/types.h>
 #include <filestore/filestore.h>
-#include <filestore/selector.h>
-#include <filestore/selection.h>
 #include <display/display.h>
 
 
@@ -87,6 +85,15 @@ int main(int argc, char * argv[])
 					else if(e.type == FILE_INFO)
 					{
 						display->on_file_info((File*) e.user.data1);
+					}
+					else if(e.type == TAG_INFO_QUERY)
+					{
+						Tag_Info* completion = filestore->autocomplete((Tag_Info*) e.user.data1);
+						sdl->submit(TAG_INFO_RESP, (void*) completion);
+					}
+					else if(e.type == TAG_INFO_RESP)
+					{
+						display->on_autocomplete((Tag_Info*) e.user.data1);
 					}
 					break;
 			}

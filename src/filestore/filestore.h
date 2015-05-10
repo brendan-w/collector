@@ -4,9 +4,7 @@
 
 #include <string>
 
-#include <filestore/file.h>
-#include <filestore/selector.h>
-#include <filestore/selection.h>
+#include <filestore/types.h>
 
 
 class FileStore
@@ -16,7 +14,7 @@ class FileStore
 		~FileStore();
 
 		//primary accessors
-		tag_set auto_complete(const std::string &partial_tag);
+		Tag_Info* autocomplete(Tag_Info* c);
 		Selection* select(Selector* selector);
 
 	private:

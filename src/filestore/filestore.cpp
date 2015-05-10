@@ -5,9 +5,7 @@
 
 #include <collector.h>
 #include <utils.h>
-#include <filestore/selector.h>
-#include <filestore/selection.h>
-#include <filestore/file.h>
+#include <filestore/types.h>
 #include <filestore/filestore.h>
 
 
@@ -57,11 +55,11 @@ FileStore::~FileStore()
 }
 
 
-tag_set FileStore::auto_complete(const std::string & partial_tag)
+Tag_Info* FileStore::autocomplete(Tag_Info* c)
 {
-	tag_set result;
-	result.insert(fuzzy_match(partial_tag));
-	return result;
+
+	c->set_completed(fuzzy_match(c->get_partial()));
+	return c;
 }
 
 

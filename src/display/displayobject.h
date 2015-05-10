@@ -3,9 +3,7 @@
 
 #include <SDL.h>
 
-#include <filestore/file.h>
-#include <filestore/selector.h>
-#include <filestore/selection.h>
+#include <filestore/types.h>
 
 
 /*
@@ -36,8 +34,9 @@ class DisplayObject
 
 		//IO with the outside world
 		virtual void on_selection() {}
-		virtual void on_file_info(File* f) {}
 		virtual void fill_selector(Selector* selector) {}
+		virtual void on_file_info(File* f) {}
+		virtual void on_autocomplete(Tag_Info* completion) {}
 
 		bool is_dirty();
 

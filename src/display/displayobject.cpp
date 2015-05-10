@@ -4,7 +4,7 @@
 #include <SDL.h>
 
 #include <collector.h>
-#include <filestore/selection.h>
+#include <filestore/types.h>
 #include <display/displayobject.h>
 
 
@@ -33,16 +33,22 @@ void DisplayObject::on_wheel(SDL_MouseWheelEvent &e)
 
 void DisplayObject::pageup()
 {
+	int old_offset = offset.x;
 	offset.x -= (sdl->get_viewport().w);
 	limit_scroll();
-	mark_dirty();
+
+	if(offset.x != old_offset)
+		mark_dirty();
 }
 
 void DisplayObject::pagedown()
 {
+	int old_offset = offset.x;
 	offset.x += (sdl->get_viewport().w);
 	limit_scroll();
-	mark_dirty();
+
+	if(offset.x != old_offset)
+		mark_dirty();
 }
 
 bool DisplayObject::is_dirty()

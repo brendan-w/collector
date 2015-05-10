@@ -8,15 +8,15 @@
 extern SDL_Context* sdl;
 extern Config* config;
 
-//each of the custom events
+//each of the custom events (declared in SDL_Context.cpp)
 extern Uint32 RENDER;
 extern Uint32 SELECTOR;
 extern Uint32 SELECTION;
 extern Uint32 FILE_INFO;
+extern Uint32 TAG_INFO_QUERY;
+extern Uint32 TAG_INFO_RESP;
 
 //just to make the code cleaner
-#define WINDOW_W (config->window.w)
-#define WINDOW_H (config->window.h)
 #define CLI_H (config->CLI_height)
 #define CLI_PAD (config->CLI_padding)
 #define FILE_SIZE (config->file_size)

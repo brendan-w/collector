@@ -3,9 +3,7 @@
 
 #include <SDL.h>
 
-#include <filestore/file.h>
-#include <filestore/selector.h>
-#include <filestore/selection.h>
+#include <filestore/types.h>
 #include <display/displayobject.h>
 
 
@@ -40,6 +38,7 @@ class Display
 
 		void on_selection(Selection* new_selection);
 		void on_file_info(File* f);
+		void on_autocomplete(Tag_Info* completion);
 
 	private:
 		//the latest Selection from the FileStore

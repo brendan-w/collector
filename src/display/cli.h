@@ -6,10 +6,10 @@
 
 #include "SDL.h"
 
-#include <filestore/selector.h>
-#include <filestore/selection.h>
+#include <filestore/types.h>
 #include <display/displayobject.h>
 #include <text.h>
+
 
 class CLI : public DisplayObject
 {
@@ -23,6 +23,7 @@ class CLI : public DisplayObject
 		void on_text(SDL_TextInputEvent &e);
 
 		void on_selection();
+		void on_autocomplete(Tag_Info* completion);
 		void fill_selector(Selector* selector);
 
 	private:
@@ -32,10 +33,10 @@ class CLI : public DisplayObject
 		Text* totals;
 
 		void render_tags();
-
 		void new_tag();
 		void destroy_tags();
 		void delete_tag();
 		void backspace();
+		void send_autocomplete();
 		Text* current_tag();
 };

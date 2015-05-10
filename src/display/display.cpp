@@ -6,9 +6,7 @@
 
 #include <collector.h>
 #include <SDL_utils.h> //point_in_rect()
-#include <filestore/file.h>
-#include <filestore/selector.h>
-#include <filestore/selection.h>
+#include <filestore/types.h>
 #include <display/cli.h>
 #include <display/subtags.h>
 #include <display/info.h>
@@ -138,11 +136,13 @@ void Display::on_key(SDL_KeyboardEvent &e)
 			break;
 		case SDLK_RETURN:
 			break;
-		case SDLK_TAB:
-			break;
 		case SDLK_PAGEUP:
+			if(current != NULL)
+				current->display->pageup();
 			break;
 		case SDLK_PAGEDOWN:
+			if(current != NULL)
+				current->display->pagedown();
 			break;
 		default:
 			cli.display->on_key(e);
@@ -210,6 +210,11 @@ void Display::on_selection(Selection* new_selection)
 void Display::on_file_info(File* f)
 {
 	info.display->on_file_info(f);
+}
+
+void Display::on_autocomplete(Tag_Info* completion)
+{
+	cli.display->on_autocomplete(completion);
 }
 
 void Display::send_selector()
