@@ -42,7 +42,7 @@ void CLI::on_key(SDL_KeyboardEvent &e)
 			delete_tag();
 			break;
 		case SDLK_TAB:
-			send_tag_info();
+			auto_complete();
 			break;
 		case SDLK_UP:
 			break;
@@ -229,9 +229,20 @@ void CLI::on_tag_info(Tag_Info* c)
 
 	if(t->get_text() == c->get_partial())
 	{
-		t->set_text(c->get_completed());
+		// t->set_text(c->get_completed());
 		mark_dirty();
 	}
 
 	delete c;
+}
+
+void CLI::auto_complete()
+{
+	Text* t = current_tag();
+	std::string partial = t->get_text();
+
+	if(partial.length() > 0)
+	{
+		t->set_text(selection()->auto_complete(partial));
+	}
 }

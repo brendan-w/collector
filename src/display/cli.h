@@ -38,5 +38,6 @@ class CLI : public DisplayObject
 		void delete_tag();
 		void backspace();
 		void send_tag_info();
+		void auto_complete();
 		Text* current_tag();
 };

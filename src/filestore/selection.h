@@ -33,6 +33,8 @@ class Selection
 		size_t all_size()          { return all_files->size(); }
 		File* all_at(size_t i);
 
+		std::string auto_complete(std::string partial);
+
 	private:
 		 //set of Files selected by the previous Selector
 		file_set files;

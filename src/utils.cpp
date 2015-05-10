@@ -52,6 +52,13 @@ bool file_exists(const char* filename)
   return fin;
 }
 
+bool starts_with(std::string str, std::string partial)
+{
+    size_t l = partial.length();
+    if(l > str.length()) return false;
+    return (str.substr(0, l) == partial);
+}
+
 std::string double_to_str(double d, int p)
 {
     std::stringstream out;

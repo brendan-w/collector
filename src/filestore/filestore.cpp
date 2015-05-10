@@ -74,17 +74,21 @@ Selection* FileStore::select(Selector* selector)
 		bool first = true;
 		for(std::string tag: intersections)
 		{
-			if(first)
+			//prevent unknown tags from destroying the query
+			if(has_tag(tag))
 			{
-				//the first tag to be processed is a subset of the universe
-				result = set_for_tag(tag);
-				first = false;
-			}
-			else
-			{
-				file_set copy = result;
-				file_set current = set_for_tag(tag);
-				set_intersect(result, copy, current);
+				if(first)
+				{
+					//the first tag to be processed is a subset of the universe
+					result = set_for_tag(tag);
+					first = false;
+				}
+				else
+				{
+					file_set copy = result;
+					file_set current = set_for_tag(tag);
+					set_intersect(result, copy, current);
+				}
 			}
 		}
 	}
@@ -94,7 +98,10 @@ Selection* FileStore::select(Selector* selector)
 }
 
 
-
+bool FileStore::has_tag(const std::string & tag)
+{
+	return (tags.find(tag) != tags.end());
+}
 
 file_set FileStore::set_for_tag(const std::string & tag)
 {

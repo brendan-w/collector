@@ -21,6 +21,7 @@ class FileStore
 		file_vector files;
 		tag_map tags;
 
+		bool has_tag(const std::string & tag);
 		file_set set_for_tag(const std::string &tag);
 		void insert_file(File* file);
 		std::string fuzzy_match(const std::string & partial_tag);

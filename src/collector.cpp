@@ -97,7 +97,7 @@ int main(int argc, char * argv[])
 					}
 					else if(e.type == RENDER_THUMBS)
 					{
-						display->mark_dirty(RENDER_THUMBS);
+						display->request_render(RENDER_THUMBS);
 					}
 					break;
 			}

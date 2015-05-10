@@ -6,6 +6,7 @@
 #include <algorithm> //sort()
 #include <unordered_map>
 
+#include <utils.h> //starts_with()
 #include <filestore/file.h>
 #include <filestore/selection.h>
 
@@ -45,6 +46,17 @@ File* Selection::all_at(size_t i)
 		return (*all_files)[i];
 	else
 		return NULL;
+}
+
+std::string Selection::auto_complete(std::string partial)
+{
+	for(tag_freq tag: subtags)
+	{
+		if(starts_with(tag.first, partial))
+			return tag.first;
+	}
+
+	return partial;
 }
 
 //sorts tags into descending frequency

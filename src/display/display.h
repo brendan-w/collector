@@ -30,7 +30,7 @@ class Display
 
 		void render();
 		void resize();
-		void mark_dirty(Uint32 component);
+		void request_render(Uint32 component);
 
 		void on_key(SDL_KeyboardEvent &e);
 		void on_text(SDL_TextInputEvent &e);
