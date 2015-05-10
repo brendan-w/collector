@@ -88,12 +88,12 @@ int main(int argc, char * argv[])
 					}
 					else if(e.type == TAG_INFO_QUERY)
 					{
-						Tag_Info* completion = filestore->autocomplete((Tag_Info*) e.user.data1);
-						sdl->submit(TAG_INFO_RESP, (void*) completion);
+						Tag_Info* t = filestore->tag_info((Tag_Info*) e.user.data1);
+						sdl->submit(TAG_INFO_RESP, (void*) t);
 					}
 					else if(e.type == TAG_INFO_RESP)
 					{
-						display->on_autocomplete((Tag_Info*) e.user.data1);
+						display->on_tag_info((Tag_Info*) e.user.data1);
 					}
 					else if(e.type == RENDER_THUMBS)
 					{

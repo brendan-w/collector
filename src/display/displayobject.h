@@ -36,7 +36,7 @@ class DisplayObject
 		virtual void on_selection() {}
 		virtual void fill_selector(Selector* selector) {}
 		virtual void on_file_info(File* f) {}
-		virtual void on_autocomplete(Tag_Info* completion) {}
+		virtual void on_tag_info(Tag_Info* completion) {}
 
 		bool is_dirty();
 		void mark_dirty() { dirty = true; }

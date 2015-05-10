@@ -218,9 +218,9 @@ void Display::on_file_info(File* f)
 	info.display->on_file_info(f);
 }
 
-void Display::on_autocomplete(Tag_Info* completion)
+void Display::on_tag_info(Tag_Info* completion)
 {
-	cli.display->on_autocomplete(completion);
+	cli.display->on_tag_info(completion);
 }
 
 void Display::send_selector()

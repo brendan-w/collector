@@ -42,7 +42,7 @@ void CLI::on_key(SDL_KeyboardEvent &e)
 			delete_tag();
 			break;
 		case SDLK_TAB:
-			send_autocomplete();
+			send_tag_info();
 			break;
 		case SDLK_UP:
 			break;
@@ -216,14 +216,14 @@ void CLI::backspace()
 	}
 }
 
-void CLI::send_autocomplete()
+void CLI::send_tag_info()
 {
 	std::string tag = current_tag()->get_text();
 	if(tag.length() > 0)
 		sdl->submit(TAG_INFO_QUERY, (void*) new Tag_Info(tag));
 }
 
-void CLI::on_autocomplete(Tag_Info* c)
+void CLI::on_tag_info(Tag_Info* c)
 {
 	Text* t = current_tag();
 

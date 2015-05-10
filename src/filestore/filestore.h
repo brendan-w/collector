@@ -14,7 +14,7 @@ class FileStore
 		~FileStore();
 
 		//primary accessors
-		Tag_Info* autocomplete(Tag_Info* c);
+		Tag_Info* tag_info(Tag_Info* c);
 		Selection* select(Selector* selector);
 
 	private:

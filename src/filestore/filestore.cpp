@@ -55,9 +55,8 @@ FileStore::~FileStore()
 }
 
 
-Tag_Info* FileStore::autocomplete(Tag_Info* c)
+Tag_Info* FileStore::tag_info(Tag_Info* c)
 {
-
 	c->set_completed(fuzzy_match(c->get_partial()));
 	return c;
 }

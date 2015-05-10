@@ -23,7 +23,7 @@ class CLI : public DisplayObject
 		void on_text(SDL_TextInputEvent &e);
 
 		void on_selection();
-		void on_autocomplete(Tag_Info* completion);
+		void on_tag_info(Tag_Info* completion);
 		void fill_selector(Selector* selector);
 
 	private:
@@ -37,6 +37,6 @@ class CLI : public DisplayObject
 		void destroy_tags();
 		void delete_tag();
 		void backspace();
-		void send_autocomplete();
+		void send_tag_info();
 		Text* current_tag();
 };
