@@ -53,9 +53,7 @@ void set_intersect(T & out, const T & in_A, const T & in_B)
 }
 
 template<typename T>
-void set_union(T & out, const T & in_A, const T & in_B)
+void set_union(T & out, const T & in)
 {
-    out.clear();
-    out.insert(in_A.begin(), in_A.end());
-    out.insert(in_B.begin(), in_B.end());
+    out.insert(in.begin(), in.end());
 }

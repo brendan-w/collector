@@ -9,18 +9,6 @@
 #include <filestore/types.h>
 
 
-class Tag_Entry
-{
-	public:
-		std::string tag;
-		file_set files;
-		std::unordered_set<Tag_Entry*> subtags;
-};
-
-typedef std::vector<Tag_Entry*> entry_vector;
-typedef std::unordered_set<Tag_Entry*> entry_set;
-typedef std::unordered_map<std::string, Tag_Entry*> tag_map;
-
 
 
 class FileStore
@@ -40,5 +28,6 @@ class FileStore
 		bool has_tag(const std::string & tag);
 		file_set set_for_tag(const std::string &tag);
 		void insert_file(File* file);
+		tag_set tags_for_file(File* file);
 		std::string fuzzy_match(const std::string & partial_tag);
 };

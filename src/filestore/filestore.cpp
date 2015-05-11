@@ -74,7 +74,7 @@ Selection* FileStore::select(Selector* selector)
 {
 	//result holders
 	file_set r_files;
-	entry_set r_subtags;
+	entry_set selected_entries;
 
 	if(selector != NULL)
 	{
@@ -86,43 +86,48 @@ Selection* FileStore::select(Selector* selector)
 			//prevent unknown tags from destroying the query
 			if(has_tag(tag))
 			{
+				Tag_Entry* entry = tags[tag];
+				selected_entries.insert(entry);
+
 				if(first)
 				{
 					//the first tag to be processed is a subset of the universe
-					r_files = tags[tag]->files;
-					r_subtags = tags[tag]->subtags;
+					r_files = entry->files;
 					first = false;
 				}
 				else
 				{
-					//files
 					file_set r_files_copy = r_files;
-					file_set current_files = tags[tag]->files;
+					file_set current_files = entry->files;
 
 					set_intersect<file_set>(r_files,
 											r_files_copy,
 											current_files);
-
-					//subtags
-					entry_set r_subtags_copy = r_subtags;
-					entry_set current_subtags = tags[tag]->subtags;
-
-					set_intersect<entry_set>(r_subtags,
-											r_subtags_copy,
-											current_subtags);
 				}
 			}
 		}
 	}
 
-	//convert the subtags into a sorted tag_vector
+	//compute the set of subtags by performing a union
+	entry_set r_subtags;
+	for(File* file: r_files)
+	{
+		set_union(r_subtags, file->tags);
+	}
 
 	//dump the set to a sortable vector
 	entry_vector subtag_entries;
 	for(Tag_Entry* entry: r_subtags)
 	{
-		if(entry->files.size() > 1)
-			subtag_entries.push_back(entry);
+		//strain out lone subtags
+		if(entry->files.size() == 1)
+			continue;
+
+		//strain out tags that were used to select this file set
+		if(selected_entries.find(entry) != selected_entries.end())
+			continue;	
+
+		subtag_entries.push_back(entry);
 	}
 
 	//sort in descending number of files per tag
@@ -130,6 +135,7 @@ Selection* FileStore::select(Selector* selector)
 			  subtag_entries.end(),
 			  tag_entry_compare);
 	
+	//convert entries to plain-text tags
 	tag_vector subtags;
 	for(Tag_Entry* entry: subtag_entries)
 	{
@@ -151,16 +157,18 @@ void FileStore::insert_file(File* file)
 	files.push_back(file);
 
 	//get all tags, relative to the current working directory
-	tag_set file_tags = file->get_tags();
+	tag_set file_tags = tags_for_file(file);
 
 
 	//first iteration, populate the tag map with any new tags
 	for(std::string tag: file_tags)
 	{
+		Tag_Entry* entry = NULL;
+
 		if(!has_tag(tag))
 		{
 			//create a new entry object for this tag
-			Tag_Entry* entry = new Tag_Entry;
+			entry = new Tag_Entry;
 			entry->tag = tag;
 			entry->files.insert(file);
 
@@ -169,29 +177,44 @@ void FileStore::insert_file(File* file)
 		else
 		{
 			//add the file to the correct tag file_set
-			tags[tag]->files.insert(file);
+			entry = tags[tag];
+			entry->files.insert(file);
 		}
+
+		//give the file a pointer to each of its Tag_Entry
+		file->tags.insert(entry);
 	}
+}
 
-	//get convert every string to a pointer to an entry
-	std::vector<Tag_Entry*> entries;
 
-	for(std::string tag: file_tags)
+tag_set FileStore::tags_for_file(File* file)
+{
+	tag_set tags;
+
+	//copy the path, so to_lower won't affect the original
+	std::string p = file->get_path();
+	to_lower(p);
+
+	size_t prev = 0;
+	size_t pos = 0;
+
+	//while there is another delimeter
+	while((pos = p.find_first_of(config->tag_delim, prev)) != std::string::npos)
 	{
-		entries.push_back(tags[tag]);
-	}
-
-	//complete graph to populate subtags
-
-	for(size_t a = 0; a < entries.size(); a++)
-	{
-		// +1 prevents tags from being subtags of themselves
-		for(size_t b = a+1; b < entries.size(); b++)
+		if(pos > prev)
 		{
-			entries[a]->subtags.insert(entries[b]);
-			entries[b]->subtags.insert(entries[a]);
+			tags.insert(p.substr(prev, pos-prev));
 		}
+		prev = pos + 1;
 	}
+
+	//add the last tag to the set
+	if(prev < p.length())
+	{
+		tags.insert(p.substr(prev, std::string::npos));
+	}
+
+	return tags;
 }
 
 
