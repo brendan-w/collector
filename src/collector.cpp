@@ -119,7 +119,7 @@ static bool init()
 	config    = new Config;
 	sdl       = new SDL_Context;
 	filestore = new FileStore;
-	display   = new Display(filestore->select(NULL)); //initial, empty, selection
+	display   = new Display(filestore->select(new Selector())); //initial, empty, selection
 
 	return sdl->succeeded();
 }

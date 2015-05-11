@@ -48,3 +48,8 @@ bool Selector::has(std::string tag)
 {
 	return tag_intersections.find(tag) != tag_intersections.end();
 }
+
+bool Selector::is_empty()
+{
+	return (tag_intersections.size() + tag_exclusions.size()) == 0;
+}

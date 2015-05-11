@@ -2,7 +2,6 @@
 #include <iostream>
 #include <string>
 #include <stdio.h>
-#include <algorithm> //sort()
 
 #include <collector.h>
 #include <utils.h>
@@ -55,28 +54,23 @@ FileStore::~FileStore()
 	tags.clear();
 }
 
-
 Tag_Info* FileStore::tag_info(Tag_Info* c)
 {
 	c->set_completed(fuzzy_match(c->get_partial()));
 	return c;
 }
 
-
-static bool tag_entry_compare(Tag_Entry* A, Tag_Entry* B)
-{
-	return A->files.size() > B->files.size();
-}
-
-
 //turns Selectors into Selections
 Selection* FileStore::select(Selector* selector)
 {
 	//result holders
 	file_set r_files;
-	entry_set selected_entries;
 
-	if(selector != NULL)
+	if(selector->is_empty())
+	{
+
+	}
+	else
 	{
 		tag_set intersections = selector->get_tag_intersections();
 
@@ -87,7 +81,6 @@ Selection* FileStore::select(Selector* selector)
 			if(has_tag(tag))
 			{
 				Tag_Entry* entry = tags[tag];
-				selected_entries.insert(entry);
 
 				if(first)
 				{
@@ -115,35 +108,8 @@ Selection* FileStore::select(Selector* selector)
 		set_union(r_subtags, file->tags);
 	}
 
-	//dump the set to a sortable vector
-	entry_vector subtag_entries;
-	for(Tag_Entry* entry: r_subtags)
-	{
-		//strain out lone subtags
-		if(entry->files.size() == 1)
-			continue;
-
-		//strain out tags that were used to select this file set
-		if(selected_entries.find(entry) != selected_entries.end())
-			continue;	
-
-		subtag_entries.push_back(entry);
-	}
-
-	//sort in descending number of files per tag
-	std::sort(subtag_entries.begin(),
-			  subtag_entries.end(),
-			  tag_entry_compare);
-	
-	//convert entries to plain-text tags
-	tag_vector subtags;
-	for(Tag_Entry* entry: subtag_entries)
-	{
-		subtags.push_back(entry->tag);
-	}
-
 	//done selecting
-	return new Selection(selector, &files, r_files, subtags);
+	return new Selection(selector, &files, r_files, r_subtags);
 }
 
 

@@ -10,7 +10,7 @@
 class Selection
 {
 	public:
-		Selection(Selector* s, file_vector* all, file_set fs, tag_vector st);
+		Selection(Selector* s, file_vector* all, file_set fs, entry_set es);
 		~Selection();
 
 		bool has(File* file);
@@ -28,6 +28,7 @@ class Selection
 		size_t all_size()          { return all_files->size(); }
 		File* all_at(size_t i);
 
+		bool has_subtag(std::string partial);
 		std::string auto_complete(std::string partial);
 
 	private:
@@ -41,5 +42,6 @@ class Selection
 		Selector* selector;
 
 		//subtags
+		tag_set subtag_set;
 		tag_vector subtags;
 };

@@ -29,6 +29,7 @@ class Selector
 		const file_set get_exclude() { return file_exclude; };
 
 		bool has(std::string tag);
+		bool is_empty();
 
 	private:
 		tag_set tag_intersections;
