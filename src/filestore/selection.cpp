@@ -37,7 +37,7 @@ Selection::Selection(Selector* s, file_vector* all, file_set fs, entry_set es)
 	std::sort(subtag_entries.begin(),
 			  subtag_entries.end(),
 			  tag_entry_compare);
-	
+
 	tag_set selected;
 	set_union(selected, selector->get_tag_intersections());
 	set_union(selected, selector->get_tag_exclusions());
@@ -99,8 +99,10 @@ std::string Selection::auto_complete(std::string partial)
 	for(std::string tag: subtags)
 	{
 		if(starts_with(tag, partial))
-			return tag;
+		{
+			return tag.substr(partial.length());
+		}
 	}
 
-	return partial;
+	return "";
 }

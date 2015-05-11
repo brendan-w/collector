@@ -16,6 +16,45 @@
 #include <display/cli.h>
 
 
+
+Tag::Tag()
+{
+	text       = new Text("", config->get_color(CLI_TEXT));
+	completion = new Text("", config->get_color(OVERLAY));
+	valid      = true;
+}
+
+Tag::~Tag()
+{
+	delete text;
+	delete completion;
+}
+
+std::string Tag::get_text()
+{
+	return text->get_text();
+}
+
+void Tag::set_text(const std::string & t)
+{
+	text->set_text(t);
+}
+
+std::string Tag::get_completion()
+{
+	return completion->get_text();
+}
+
+void Tag::set_completion(const std::string & t)
+{
+	completion->set_text(t);
+}
+
+
+
+
+
+
 CLI::CLI(Selection** s) : DisplayObject(s)
 {
 	new_tag(); //create the initial empty tag field
@@ -80,8 +119,7 @@ void CLI::on_text(SDL_TextInputEvent &e)
 	}
 	else
 	{
-		Text* t = current_tag();
-		t->set_text(t->get_text() += e.text);
+		set_current_text(current_tag()->get_text() += e.text);
 		mark_dirty();
 	}
 }
@@ -112,26 +150,38 @@ void CLI::render_tags()
 	sdl->set_color(CLI_HIGHLIGHT);
 
 	int x = CLI_PAD;
+	const int y = rect.y + CLI_PAD;
+
 	for(size_t i = 0; i < tags.size(); i++)
 	{
-		Text* t = tags[i];
+		Tag* t = tags[i];
+		int tw = t->text->width();
+		int cw = t->completion->width();
+
+		tag_rect.x = x - CLI_PAD;
+		tag_rect.w = tw + (CLI_PAD * 2);
 		
 		if(i == current_index)
 		{
-			tag_rect.x = x - CLI_PAD;
-			tag_rect.w = t->width() + (CLI_PAD * 2);
+			tag_rect.w += cw;
 			sdl->fill_rect(tag_rect);
 		}
 
-		t->render(x, rect.y + CLI_PAD);
-		x += t->width() + (CLI_PAD * 2);
+		t->text->render(x, y);
+
+		if(i == current_index)
+		{
+			t->completion->render(x + tw, y);
+		}
+
+		x += tag_rect.w;
 	}
 }
 
 void CLI::fill_selector(Selector* selector)
 {
 	//dump our tags into the selector
-	for(Text* t: tags)
+	for(Tag* t: tags)
 	{
 		selector->add_operation(t->get_text(), INTERSECTION);
 	}
@@ -156,14 +206,14 @@ void CLI::on_selection()
 //deallocates all Text objects in tags
 void CLI::destroy_tags()
 {
-	for(Text* text: tags)
-		delete text;
-	
+	for(Tag* tag: tags)
+		delete tag;
+
 	tags.clear();
 }
 
 
-Text* CLI::current_tag()
+Tag* CLI::current_tag()
 {
 	return tags[current_index];
 }
@@ -173,7 +223,7 @@ Text* CLI::current_tag()
 //and sets it as the current
 void CLI::new_tag()
 {
-	Text* t = new Text("", config->get_color(CLI_TEXT));
+	Tag* t = new Tag();
 	tags.push_back(t);
 	current_index = tags.size() - 1;
 }
@@ -183,7 +233,7 @@ void CLI::new_tag()
 //always one tag in the vector
 void CLI::delete_tag()
 {
-	Text* t = current_tag();
+	Tag* t = current_tag();
 
 	//ensure that there is always at least one tag preset
 	if(tags.size() > 1)
@@ -201,6 +251,7 @@ void CLI::delete_tag()
 	{
 		//if the user deleted the last tag, simply empty it
 		t->set_text("");
+		t->set_completion("");
 		mark_dirty();
 	}
 }
@@ -211,38 +262,24 @@ void CLI::backspace()
 	if(s.length() > 0)
 	{
 		s.pop_back();
-		current_tag()->set_text(s);
+		set_current_text(s);
 		mark_dirty();
 	}
 }
 
-void CLI::send_tag_info()
+void CLI::set_current_text(std::string s)
 {
-	std::string tag = current_tag()->get_text();
-	if(tag.length() > 0)
-		sdl->submit(TAG_INFO_QUERY, (void*) new Tag_Info(tag));
-}
-
-void CLI::on_tag_info(Tag_Info* c)
-{
-	Text* t = current_tag();
-
-	if(t->get_text() == c->get_partial())
-	{
-		// t->set_text(c->get_completed());
-		mark_dirty();
-	}
-
-	delete c;
+	Tag* t = current_tag();
+	t->set_text(s);
+	if(s.length() == 0)
+		t->set_completion("");
+	else
+		t->set_completion(selection()->auto_complete(s));
 }
 
 void CLI::auto_complete()
 {
-	Text* t = current_tag();
-	std::string partial = t->get_text();
-
-	if(partial.length() > 0)
-	{
-		t->set_text(selection()->auto_complete(partial));
-	}
+	Tag* t = current_tag();
+	t->set_text(t->get_text() + t->get_completion());
+	t->set_completion("");
 }

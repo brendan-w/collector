@@ -11,6 +11,24 @@
 #include <text.h>
 
 
+class Tag
+{
+	public:
+		Tag();
+		~Tag();
+
+
+		std::string get_text();
+		void set_text(const std::string & t);
+		std::string get_completion();
+		void set_completion(const std::string & t);
+
+		Text* text;
+		Text* completion;
+		bool valid;
+};
+
+
 class CLI : public DisplayObject
 {
 	public:
@@ -23,11 +41,11 @@ class CLI : public DisplayObject
 		void on_text(SDL_TextInputEvent &e);
 
 		void on_selection();
-		void on_tag_info(Tag_Info* completion);
+		// void on_tag_info(Tag_Info* completion);
 		void fill_selector(Selector* selector);
 
 	private:
-		std::vector<Text*> tags;
+		std::vector<Tag*> tags;
 		unsigned int current_index;
 
 		Text* totals;
@@ -38,6 +56,7 @@ class CLI : public DisplayObject
 		void delete_tag();
 		void backspace();
 		void send_tag_info();
+		void set_current_text(std::string s);
 		void auto_complete();
-		Text* current_tag();
+		Tag* current_tag();
 };
