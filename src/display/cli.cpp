@@ -19,8 +19,8 @@
 
 Tag::Tag()
 {
-	text       = new Text("", config->get_color(CLI_TEXT));
-	completion = new Text("", config->get_color(OVERLAY));
+	text       = new Text("", config->get_color(CLI_LIGHT));
+	completion = new Text("", config->get_color(CLI_DARK));
 	valid      = true;
 }
 
@@ -58,7 +58,7 @@ void Tag::set_completion(const std::string & t)
 CLI::CLI(Selection** s) : DisplayObject(s)
 {
 	new_tag(); //create the initial empty tag field
-	totals = new Text("", config->get_color(CLI_TEXT));
+	totals = new Text("", config->get_color(CLI_LIGHT));
 	on_selection();
 }
 
@@ -147,7 +147,7 @@ void CLI::render_tags()
 	SDL_Rect tag_rect = rect;
 
 	//draw each tags text
-	sdl->set_color(CLI_HIGHLIGHT);
+	sdl->set_color(HIGHLIGHT);
 
 	int x = CLI_PAD;
 	const int y = rect.y + CLI_PAD;

@@ -17,8 +17,8 @@
 
 Info::Info(Selection** s) : DisplayObject(s)
 {
-	filepath = new Text("", config->get_color(CLI_TEXT));
-	filesize = new Text("", config->get_color(CLI_TEXT));
+	filepath = new Text("", config->get_color(CLI_LIGHT));
+	filesize = new Text("", config->get_color(CLI_LIGHT));
 }
 
 Info::~Info()

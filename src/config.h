@@ -4,15 +4,16 @@
 #include <string>
 #include <SDL.h>
 
-#define NUM_COLORS 8
+#define NUM_COLORS 9
 
 //use these keys with get_color()
 enum Color
 {
 	BACKGROUND = 0,
 	OVERLAY,
-	CLI_HIGHLIGHT,
-	CLI_TEXT,
+	HIGHLIGHT,
+	CLI_LIGHT,
+	CLI_DARK,
 	FILE_NEUTRAL,
 	FILE_SELECTED,
 	FILE_NEUTRAL_HOVER,

@@ -55,10 +55,11 @@ Config::Config()
 		650
 	};
 
-	colors[BACKGROUND]    = { 50,  50,  50,  255 };
-	colors[OVERLAY]       = { 0,   0,   0,   255 };
-	colors[CLI_HIGHLIGHT] = { 48,  141, 186, 110 };
-	colors[CLI_TEXT]      = { 255, 255, 255, 255 };
+	colors[BACKGROUND] = { 50,  50,  50,  255 };
+	colors[OVERLAY]    = { 0,   0,   0,   255 };
+	colors[HIGHLIGHT]  = { 48,  141, 186, 110 };
+	colors[CLI_LIGHT]  = { 255, 255, 255, 255 };
+	colors[CLI_DARK]   = { 128, 128, 128, 255 };
 
 	colors[FILE_NEUTRAL]        = { 75,  75,  75,  255 };
 	colors[FILE_SELECTED]       = { 48,  141, 186, 255 };
