@@ -26,19 +26,20 @@ Config::Config()
 
 	//get the pathname for the current working directory
 	// cwd_path = std::string(getcwd(NULL, 0));
-	cwd_path = "/home/brendan/Andromeda";
-	// cwd_path = "/home/brendan/cool";
+	// cwd_path = "/home/brendan/Andromeda";
+	cwd_path = "/home/brendan/cool";
 
 	//lists all items in the current directory and below
 	//only returns files
 	//excludes dot-files and dot-folders
 	//excludes executables where o=x
-	#ifdef _WIN32
-		//untested
-		find_cmd = "dir * /b/s";
-	#else
-		find_cmd = "find " + cwd_path + " -type f -path \"*\" ! -path \"*/.*\" ! -perm -o=x";
-	#endif
+	find_cmd = "find " + cwd_path + " -type f -path \"*\" ! -path \"*/.*\" ! -perm -o=x";
+
+	//command returning the mime-type of the requested file
+	mime_cmd = "xdg-mime query filetype ";
+
+	//command to open arbitrary files
+	open_cmd = "exo-open ";
 
 	//the delimeters by which paths will be split
 	tag_delim = " ._-+&%%()[]{}";

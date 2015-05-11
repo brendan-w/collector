@@ -26,6 +26,9 @@ class Config
 		~Config();
 
 		std::string find_cmd;
+		std::string mime_cmd;
+		std::string open_cmd;
+
 		std::string bin_path;
 		std::string cwd_path;
 		std::string tag_delim;

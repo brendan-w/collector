@@ -121,7 +121,8 @@ Selection* FileStore::select(Selector* selector)
 	entry_vector subtag_entries;
 	for(Tag_Entry* entry: r_subtags)
 	{
-		subtag_entries.push_back(entry);
+		if(entry->files.size() > 1)
+			subtag_entries.push_back(entry);
 	}
 
 	//sort in descending number of files per tag
