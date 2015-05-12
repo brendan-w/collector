@@ -5,7 +5,7 @@
 #include <iterator>
 #include <algorithm> //sort()
 
-#include <utils.h> //starts_with(), set_union
+#include <utils.h> //is_number(), starts_with(), set_union()
 #include <filestore/file.h>
 #include <filestore/selection.h>
 
@@ -29,7 +29,12 @@ Selection::Selection(Selector* s, file_vector* all, file_set fs, entry_set es)
 	for(Tag_Entry* entry: es)
 	{
 		//strain out lone subtags
-		if(entry->files.size() > 1)
+		if(entry->files.size() == 1)
+			continue;
+
+		if(is_number(entry->tag))
+			continue;
+
 		subtag_entries.push_back(entry);
 	}
 

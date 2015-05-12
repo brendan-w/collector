@@ -59,6 +59,13 @@ bool starts_with(std::string str, std::string partial)
     return (str.substr(0, l) == partial);
 }
 
+bool is_number(const std::string& s)
+{
+    std::string::const_iterator it = s.begin();
+    while (it != s.end() && std::isdigit(*it)) ++it;
+    return !s.empty() && it == s.end();
+}
+
 std::string double_to_str(double d, int p)
 {
     std::stringstream out;
