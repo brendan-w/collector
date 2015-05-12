@@ -39,7 +39,7 @@ Config::Config()
 	mime_cmd = "xdg-mime query filetype ";
 
 	//command to open arbitrary files
-	open_cmd = "exo-open ";
+	open_cmd = "xdg-open ";
 
 	//the delimeters by which paths will be split
 	tag_delim = " ._-+&%%()[]{}";

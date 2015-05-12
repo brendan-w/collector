@@ -87,10 +87,22 @@ void Thumbs::on_selection()
 	mark_dirty();
 }
 
+void Thumbs::on_wheel(SDL_MouseWheelEvent &e)
+{
+	DisplayObject::on_wheel(e);
+	update_hover();
+}
+
 void Thumbs::on_motion(SDL_MouseMotionEvent &e)
 {
+	mouse = { e.x, e.y };
+	update_hover();
+}
+
+void Thumbs::update_hover()
+{
 	File* old_file = file_under_mouse;
-	file_under_mouse = mouse_to_file(e.x, e.y);
+	file_under_mouse = mouse_to_file(mouse.x, mouse.y);
 
 	if(file_under_mouse != old_file)
 	{
