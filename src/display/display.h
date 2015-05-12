@@ -39,7 +39,6 @@ class Display
 
 		void on_selection(Selection* new_selection);
 		void on_file_info(File* f);
-		void on_tag_info(Tag_Info* completion);
 
 	private:
 		//the latest Selection from the FileStore

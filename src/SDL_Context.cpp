@@ -9,14 +9,12 @@
 #include <SDL_utils.h>
 
 
-#define NUM_USER_EVENTS 6
+#define NUM_USER_EVENTS 4
 
 Uint32 RENDER_THUMBS = 0;
 Uint32 SELECTOR = 0;
 Uint32 SELECTION = 0;
 Uint32 FILE_INFO = 0;
-Uint32 TAG_INFO_QUERY = 0;
-Uint32 TAG_INFO_RESP = 0;
 
 
 SDL_Context::SDL_Context()
@@ -118,8 +116,6 @@ SDL_Context::SDL_Context()
 	SELECTOR       = begin + 1;
 	SELECTION      = begin + 2;
 	FILE_INFO      = begin + 3;
-	TAG_INFO_QUERY = begin + 4;
-	TAG_INFO_RESP  = begin + 5;
 }
 
 

@@ -3,9 +3,13 @@
 #include <string>
 #include <iostream>
 #include <iterator>
-#include <algorithm> //sort()
+#include <cstdlib> //system()
+#include <unistd.h> //symlink()
+#include <algorithm> //sort(), replace()
+#include <sys/stat.h> //mkdir()
 
-#include <utils.h> //is_number(), starts_with(), set_union()
+#include <collector.h> //config
+#include <utils.h> //is_number(), starts_with(), set_union(), path_join(), PATH_SEP
 #include <filestore/file.h>
 #include <filestore/selection.h>
 
@@ -67,6 +71,32 @@ Selection::~Selection()
 
 	// for(File* file: files)
 	// 	file->unload();
+}
+
+
+void Selection::export_()
+{
+	//remains silent when directory already exists
+	mkdir(config->export_path.c_str(), 0777);
+
+	std::string rm_cmd = "exec rm -r " + path_join(config->export_path, "*");
+	system(rm_cmd.c_str());
+
+	for(File* file: files)
+	{
+		//compute the name of the symlink
+		std::string link = file->get_path();
+		std::replace(link.begin(), link.end(), PATH_SEP, '_');
+		link = path_join(config->export_path, link);
+
+		symlink(file->get_full_path().c_str(), link.c_str());
+	}
+}
+
+void Selection::export_and_open(File* file)
+{
+	export_();
+
 }
 
 bool Selection::has(File* file)

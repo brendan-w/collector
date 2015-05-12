@@ -8,4 +8,3 @@
 #include <filestore/file.h>
 #include <filestore/selector.h>
 #include <filestore/selection.h>
-#include <filestore/tag_info.h>

@@ -18,7 +18,6 @@ class FileStore
 		~FileStore();
 
 		//primary accessors
-		Tag_Info* tag_info(Tag_Info* c);
 		Selection* select(Selector* selector);
 
 	private:

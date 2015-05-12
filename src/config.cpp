@@ -3,7 +3,7 @@
 
 #include <SDL.h>
 
-#include <utils.h>
+#include <utils.h> //PATH_SEP
 #include <config.h>
 
 
@@ -28,6 +28,10 @@ Config::Config()
 	// cwd_path = std::string(getcwd(NULL, 0));
 	// cwd_path = "/home/brendan/Andromeda";
 	cwd_path = "/home/brendan/cool";
+
+	//the directory where symlinks will be placed
+	//(representing the selection)
+	export_path = "/tmp/collector";
 
 	//lists all items in the current directory and below
 	//only returns files

@@ -141,6 +141,7 @@ void Display::on_key(SDL_KeyboardEvent &e)
 			sdl->quit();
 			break;
 		case SDLK_RETURN:
+			selection->export_();
 			break;
 		case SDLK_PAGEUP:
 			if(current != NULL)
@@ -216,11 +217,6 @@ void Display::on_selection(Selection* new_selection)
 void Display::on_file_info(File* f)
 {
 	info.display->on_file_info(f);
-}
-
-void Display::on_tag_info(Tag_Info* completion)
-{
-	cli.display->on_tag_info(completion);
 }
 
 void Display::send_selector()
