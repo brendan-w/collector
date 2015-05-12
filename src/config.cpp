@@ -70,7 +70,7 @@ Config::Config()
 	max_suggest = 4;
 	scroll_speed = 120;
 	file_size = 9;
-	file_thumb_size = 199;
+	file_thumb_size = 149;
 	file_padding = 1;
 	CLI_height = 20;
 	CLI_padding = 4;

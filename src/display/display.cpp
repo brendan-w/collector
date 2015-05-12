@@ -78,20 +78,6 @@ void Display::resize()
 		Some day, this should be user configurable
 	*/
 
-	cli.rect = {
-		0,
-		window.y - CLI_H,
-		window.x,
-		CLI_H
-	};
-
-	subtags.rect = {
-		0,
-		window.y - (CLI_H * 2),
-		window.x,
-		CLI_H
-	};
-
 	info.rect = {
 		0,
 		0,
@@ -101,16 +87,30 @@ void Display::resize()
 
 	grid.rect = {
 		0,
-		CLI_H,
+		info.rect.y + info.rect.h,
 		window.x,
-		middle.y - CLI_H
+		middle.y - (CLI_H * 2)
+	};
+
+	subtags.rect = {
+		0,
+		grid.rect.y + grid.rect.h,
+		window.x,
+		CLI_H
 	};
 
 	thumbs.rect = {
 		0,
-		middle.y,
+		subtags.rect.y + subtags.rect.h,
 		window.x,
-		subtags.rect.y - middle.y
+		middle.y - CLI_H
+	};
+
+	cli.rect = {
+		0,
+		thumbs.rect.y + thumbs.rect.h,
+		window.x,
+		CLI_H
 	};
 
 	resize_child(thumbs);
