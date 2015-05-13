@@ -90,9 +90,11 @@ void Grid::resize()
 	Selection* s = selection();
 
 	SDL_Rect viewport = sdl->get_viewport();
+	const size_t total_files = s->all_size();
 	const size_t height_files = (viewport.h > 0) ? (((viewport.h - CLI_H * 2)) / FILE_OFFSET) : 1;
 	const size_t height_px = height_files * FILE_OFFSET;
-	const size_t width_px = (s->all_size() / height_files) * FILE_OFFSET;
+	const size_t width_files = (total_files / height_files);
+	const size_t width_px = width_files * FILE_OFFSET;
 
 	set_scroll_range(width_px);
 	set_centered_height(height_px);
@@ -110,10 +112,12 @@ void Grid::resize()
 			//compute the XY coordinates based on position in sequence
 			file->grid_pos.x = count / height_files;
 			file->grid_pos.y = count % height_files;
+
 			count++;
 		}
 
 		current_height_files = height_files;
+		current_width_files = width_files;
 	}
 
 	//even if the grid_pos properties didn't change

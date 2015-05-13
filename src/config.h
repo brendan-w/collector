@@ -42,9 +42,8 @@ class Config
 
 		SDL_Color colors[NUM_COLORS];
 
-		int font_size;
-		size_t max_suggest;
 		size_t scroll_speed;
+		int font_size;
 		int file_size;
 		int file_thumb_size;
 		int file_padding;

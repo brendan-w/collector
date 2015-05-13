@@ -70,9 +70,8 @@ Config::Config()
 	colors[FILE_NEUTRAL_HOVER]  = { 95,  95,  95,  255 };
 	colors[FILE_SELECTED_HOVER] = { 68,  161, 206, 255 };
 
-	font_size = 12;
-	max_suggest = 4;
 	scroll_speed = 120;
+	font_size = 12;
 	file_size = 9;
 	file_thumb_size = 149;
 	file_padding = 1;

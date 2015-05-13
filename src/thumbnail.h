@@ -13,7 +13,7 @@
 class Thumbnail
 {
 	public:
-		Thumbnail(std::string path);
+		Thumbnail(std::string p);
 		~Thumbnail();
 		void render(SDL_Rect* rect);
 	private:

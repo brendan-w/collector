@@ -1,11 +1,19 @@
 
 #pragma once
 
+#include <vector>
+
 #include <SDL.h>
 
 #include <display/displayobject.h>
 #include <filestore/file.h>
 #include <filestore/selection.h>
+
+
+typedef struct {
+	int lower;
+	int upper;
+} Bounds;
 
 
 class Grid : public DisplayObject
@@ -22,11 +30,15 @@ class Grid : public DisplayObject
 
 	private:
 
+		//highlighted regions of the minimap
+		std::vector<Bounds> minimap;
+
 		SDL_Point mouse;
 		File* file_under_mouse = NULL;
 
 		//used to prevent excessive recalculation during window resize
 		size_t current_height_files = 0;
+		size_t current_width_files = 0;
 
 		void render_file(File* file, bool selected);
 		void update_hover();
