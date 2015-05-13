@@ -5,7 +5,7 @@
 #include <iterator>
 #include <cstdlib> //system()
 #include <unistd.h> //symlink()
-#include <algorithm> //sort(), replace()
+#include <algorithm> //sort()
 #include <sys/stat.h> //mkdir()
 
 #include <collector.h> //config
@@ -24,6 +24,7 @@ static bool tag_entry_compare(Tag_Entry* A, Tag_Entry* B)
 
 Selection::Selection(Selector* s, file_vector* all, file_set fs, entry_set es)
 {
+	exported = false;
 	selector = s;
 	all_files = all;
 	files = fs;
@@ -76,27 +77,30 @@ Selection::~Selection()
 
 void Selection::export_()
 {
-	//remains silent when directory already exists
-	mkdir(config->export_path.c_str(), 0777);
-
-	std::string rm_cmd = "exec rm -r " + path_join(config->export_path, "*");
-	system(rm_cmd.c_str());
-
-	for(File* file: files)
+	if(!exported)
 	{
-		//compute the name of the symlink
-		std::string link = file->get_path();
-		std::replace(link.begin(), link.end(), PATH_SEP, '_');
-		link = path_join(config->export_path, link);
+		//remains silent when directory already exists
+		mkdir(config->export_path.c_str(), 0777);
 
-		symlink(file->get_full_path().c_str(), link.c_str());
+		std::string rm_cmd = "exec rm -r " + path_join(config->export_path, "*");
+		system(rm_cmd.c_str());
+
+		for(File* file: files)
+		{
+			//compute the name of the symlink
+			symlink(file->get_full_path().c_str(),
+					file->get_link_path().c_str());
+		}
+
+		exported = true;
 	}
 }
 
 void Selection::export_and_open(File* file)
 {
 	export_();
-
+	std::string cmd = config->open_cmd + " " + file->get_link_path();
+	system(cmd.c_str());
 }
 
 bool Selection::has(File* file)

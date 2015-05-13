@@ -42,6 +42,7 @@ class File
 
 		std::string get_path();
 		std::string get_full_path();
+		std::string get_link_path();
 		void set_path(std::string new_path);
 
 		void unload();

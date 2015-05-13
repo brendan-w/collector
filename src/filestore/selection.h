@@ -48,4 +48,7 @@ class Selection
 		//subtags
 		tag_set subtag_set;
 		tag_vector subtags;
+
+		//don't export the selection more than once
+		bool exported;
 };

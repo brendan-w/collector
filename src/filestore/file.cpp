@@ -2,7 +2,7 @@
 
 #include <string>
 #include <fstream>
-
+#include <algorithm> //replace()
 
 #include <collector.h>
 #include <utils.h>
@@ -46,6 +46,13 @@ std::string File::get_path()
 std::string File::get_full_path()
 {
 	return path_join(config->cwd_path, path);
+}
+
+std::string File::get_link_path()
+{
+	std::string link = path;
+	std::replace(link.begin(), link.end(), PATH_SEP, '_');
+	return path_join(config->export_path, link);
 }
 
 void File::set_path(std::string new_path)
