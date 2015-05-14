@@ -99,7 +99,8 @@ Thumbnail::Thumbnail(std::string p)
 
 Thumbnail::~Thumbnail()
 {
-	join(true);
+	if(thread_running)
+		join(true);
 
 	if(texture != NULL)
 		delete texture;
