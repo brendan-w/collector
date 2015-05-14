@@ -32,7 +32,7 @@ class Selection
 		size_t all_size()                { return all_files->size(); }
 		File* all_at(size_t i);
 
-		bool has_subtag(std::string partial);
+		bool has_subtag(std::string tag);
 		std::string auto_complete(std::string partial);
 
 	private:

@@ -59,10 +59,10 @@ Selection* FileStore::select(Selector* selector)
 {
 	//result holders
 	file_set r_files;
+	entry_set r_subtags;
 
 	if(selector->is_empty())
 	{
-
 	}
 	else
 	{
@@ -72,34 +72,40 @@ Selection* FileStore::select(Selector* selector)
 		for(std::string tag: intersections)
 		{
 			//prevent unknown tags from destroying the query
-			if(has_tag(tag))
+			if(!has_tag(tag))
+				continue;
+
+			Tag_Entry* entry = tags[tag];
+
+			if(first)
 			{
-				Tag_Entry* entry = tags[tag];
+				//the first tag to be processed is a subset of the universe
+				r_files = entry->files;
+				first = false;
+			}
+			else
+			{
+				file_set r_files_copy = r_files;
+				file_set current_files = entry->files;
 
-				if(first)
-				{
-					//the first tag to be processed is a subset of the universe
-					r_files = entry->files;
-					first = false;
-				}
-				else
-				{
-					file_set r_files_copy = r_files;
-					file_set current_files = entry->files;
+				set_intersect<file_set>(r_files,
+										r_files_copy,
+										current_files);
 
-					set_intersect<file_set>(r_files,
-											r_files_copy,
-											current_files);
+				//if the intersection created a null set, stop
+				if(r_files.size() == 0)
+				{
+					r_files = r_files_copy;
+					//break;
 				}
 			}
 		}
-	}
 
-	//compute the set of subtags by performing a union
-	entry_set r_subtags;
-	for(File* file: r_files)
-	{
-		set_union(r_subtags, file->tags);
+		//compute the set of subtags by performing a union
+		for(File* file: r_files)
+		{
+			set_union(r_subtags, file->tags);
+		}
 	}
 
 	//done selecting

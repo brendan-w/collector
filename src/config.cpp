@@ -64,6 +64,7 @@ Config::Config()
 	colors[HIGHLIGHT]  = { 48,  141, 186, 110 };
 	colors[CLI_LIGHT]  = { 255, 255, 255, 255 };
 	colors[CLI_DARK]   = { 128, 128, 128, 255 };
+	colors[CLI_ERROR]  = { 255, 70,  70,  255 };
 
 	colors[FILE_NEUTRAL]        = { 75,  75,  75,  255 };
 	colors[FILE_SELECTED]       = { 48,  141, 186, 255 };

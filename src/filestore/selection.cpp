@@ -48,9 +48,9 @@ Selection::Selection(Selector* s, file_vector* all, file_set fs, entry_set es)
 			  subtag_entries.end(),
 			  tag_entry_compare);
 
-	tag_set selected;
-	set_union(selected, selector->get_tag_intersections());
-	set_union(selected, selector->get_tag_exclusions());
+	// tag_set selected;
+	// set_union(selected, selector->get_tag_intersections());
+	// set_union(selected, selector->get_tag_exclusions());
 
 	//convert entries to plain-text tags
 	for(Tag_Entry* entry: subtag_entries)
@@ -58,17 +58,19 @@ Selection::Selection(Selector* s, file_vector* all, file_set fs, entry_set es)
 		std::string tag = entry->tag;
 
 		//strain out tags that were used to select this file set
-		if(selected.find(tag) == selected.end())
-		{
+		// if(selected.find(tag) == selected.end())
+		// {
 			subtag_set.insert(tag);
 			subtags.push_back(tag);
-		}
+		// }
 	}
 }
 
 Selection::~Selection()
 {
 	delete selector;
+	subtags.clear();
+	subtag_set.clear();
 
 	// for(File* file: files)
 	// 	file->unload();
@@ -123,14 +125,9 @@ File* Selection::all_at(size_t i)
 		return NULL;
 }
 
-bool Selection::has_subtag(std::string partial)
+bool Selection::has_subtag(std::string tag)
 {
-	for(std::string tag: subtags)
-	{
-		if(partial == tag)
-			return true;
-	}
-	return false;
+	return (subtag_set.find(tag) != subtag_set.end());
 }
 
 std::string Selection::auto_complete(std::string partial)
@@ -138,9 +135,7 @@ std::string Selection::auto_complete(std::string partial)
 	for(std::string tag: subtags)
 	{
 		if(starts_with(tag, partial))
-		{
 			return tag.substr(partial.length());
-		}
 	}
 
 	return "";

@@ -89,11 +89,17 @@ void CLI::on_key(SDL_KeyboardEvent &e)
 			break;
 		case SDLK_LEFT:
 			if(current_index > 0)
+			{
 				current_index--;
+				mark_dirty();
+			}
 			break;
 		case SDLK_RIGHT:
 			if(current_index < (tags.size() - 1))
+			{
 				current_index++;
+				mark_dirty();
+			}
 			break;
 		default:
 			break;
@@ -193,11 +199,28 @@ void CLI::on_selection()
 	Selection* s = selection();
 
 	//update the internal state
-	std::string str = "";
-	str += std::to_string(s->size());
-	str += " / ";
-	str += std::to_string(s->all_size());
-	totals->set_text(str);
+	std::string totals_str = "";
+	totals_str += std::to_string(s->size());
+	totals_str += " / ";
+	totals_str += std::to_string(s->all_size());
+	totals->set_text(totals_str);
+
+	//update the status of the current tag
+	Tag* t = current_tag();
+	std::string tag = t->get_text();
+	if(s->has_subtag(tag))
+	{
+		// std::cout << "found" << std::endl;
+		t->text->set_color(config->get_color(CLI_LIGHT));
+		t->set_completion("");
+	}
+	else
+	{
+		// std::cout << "not found" << std::endl;
+		t->text->set_color(config->get_color(CLI_ERROR));
+		t->set_completion(s->auto_complete(tag));
+	}
+
 
 	mark_dirty();
 }
@@ -267,19 +290,17 @@ void CLI::backspace()
 	}
 }
 
-void CLI::set_current_text(std::string s)
+void CLI::set_current_text(std::string str)
 {
 	Tag* t = current_tag();
-	t->set_text(s);
-	if(s.length() == 0)
-		t->set_completion("");
-	else
-		t->set_completion(selection()->auto_complete(s));
+	t->set_text(str);
 }
 
 void CLI::auto_complete()
 {
 	Tag* t = current_tag();
-	t->set_text(t->get_text() + t->get_completion());
+
+	set_current_text(t->get_text() + t->get_completion());
 	t->set_completion("");
+	mark_dirty();
 }

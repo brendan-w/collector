@@ -5,12 +5,12 @@
 
 #include <collector.h>
 #include <text.h>
-#include <SDL_utils.h>
+#include <SDL_utils.h> //colors_equal()
 
 
 Text::Text(std::string t, SDL_Color c)
 {
-	set_color(c);
+	color = c;
 	set_text(t);
 }
 
@@ -42,8 +42,12 @@ SDL_Color Text::get_color()
 }
 
 void Text::set_color(SDL_Color c)
-{ 
-	color = c;
+{
+	if(!colors_equal(color, c))
+	{
+		color = c;
+		load_text();
+	}
 }
 
 

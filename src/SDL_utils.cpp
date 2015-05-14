@@ -60,3 +60,8 @@ bool point_in_rect(SDL_Point* p, SDL_Rect* r)
 	return (p->x >= r->x) && (p->x <= (r->x + r->w)) &&
 	       (p->y >= r->y) && (p->y <= (r->y + r->h));
 }
+
+bool colors_equal(SDL_Color & a, SDL_Color & b)
+{
+	return ((a.r == b.r) && (a.g == b.g) && (a.b == b.b) && (a.a == b.a));
+}
