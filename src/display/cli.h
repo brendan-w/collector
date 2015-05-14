@@ -41,7 +41,6 @@ class CLI : public DisplayObject
 		void on_text(SDL_TextInputEvent &e);
 
 		void on_selection();
-		// void on_tag_info(Tag_Info* completion);
 		void fill_selector(Selector* selector);
 
 	private:
@@ -56,7 +55,6 @@ class CLI : public DisplayObject
 		void delete_tag();
 		void backspace();
 		void send_tag_info();
-		void set_current_text(std::string s);
 		void auto_complete();
 		Tag* current_tag();
 };

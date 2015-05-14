@@ -125,7 +125,8 @@ void CLI::on_text(SDL_TextInputEvent &e)
 	}
 	else
 	{
-		set_current_text(current_tag()->get_text() += e.text);
+		Tag* t = current_tag();
+		t->set_text(t->get_text() += e.text);
 		mark_dirty();
 	}
 }
@@ -218,9 +219,11 @@ void CLI::on_selection()
 	{
 		// std::cout << "not found" << std::endl;
 		t->text->set_color(config->get_color(CLI_ERROR));
-		t->set_completion(s->auto_complete(tag));
+		if(tag.length() > 0)
+			t->set_completion(s->auto_complete(tag));
+		else
+			t->set_completion("");
 	}
-
 
 	mark_dirty();
 }
@@ -285,22 +288,16 @@ void CLI::backspace()
 	if(s.length() > 0)
 	{
 		s.pop_back();
-		set_current_text(s);
+		current_tag()->set_text(s);
 		mark_dirty();
 	}
-}
-
-void CLI::set_current_text(std::string str)
-{
-	Tag* t = current_tag();
-	t->set_text(str);
 }
 
 void CLI::auto_complete()
 {
 	Tag* t = current_tag();
 
-	set_current_text(t->get_text() + t->get_completion());
+	t->set_text(t->get_text() + t->get_completion());
 	t->set_completion("");
 	mark_dirty();
 }
