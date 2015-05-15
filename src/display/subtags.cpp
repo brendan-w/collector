@@ -35,6 +35,10 @@ void Subtags::render()
 	sdl->set_color(OVERLAY);
 	sdl->fill_rect(rect);
 
+	//divider line
+	sdl->set_color(HIGHLIGHT);
+	sdl->draw_line(rect.x, 0, rect.w, 0);
+
 	render_tags();
 }
 
