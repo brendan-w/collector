@@ -28,7 +28,6 @@ void Thumbs::render()
 	sdl->set_color(BACKGROUND);
 	sdl->fill_rect(rect);
 
-	sdl->set_color(FILE_NEUTRAL);
 	for(File* file : *selection())
 	{
 		render_file(file);
@@ -46,7 +45,21 @@ void Thumbs::render_file(File* file)
 	};
 
 	if(sdl->rect_in_viewport(rect))
+	{
+		sdl->set_color(FILE_NEUTRAL);
 		file->get_thumb()->render(&rect);
+
+		//if this file was manually included,
+		//draw the green border marking it as included
+		if(state->inexclude_has(file))
+		{
+			if(state->inexclude[file])
+			{
+				sdl->set_color(THUMB_INCLUDED);
+				sdl->fill_rect(rect);
+			}
+		}
+	}
 }
 
 

@@ -61,7 +61,7 @@ Config::Config()
 
 	colors[BACKGROUND] = { 50,  50,  50,  255 };
 	colors[OVERLAY]    = { 0,   0,   0,   255 };
-	colors[HIGHLIGHT]  = { 48,  141, 186, 110 };
+	colors[HIGHLIGHT]  = { 24,  71,  93,  255 };
 	colors[CLI_LIGHT]  = { 255, 255, 255, 255 };
 	colors[CLI_DARK]   = { 128, 128, 128, 255 };
 	colors[CLI_ERROR]  = { 255, 70,  70,  255 };
@@ -74,6 +74,8 @@ Config::Config()
 	colors[FILE_INCLUDED_HOVER] = { 100, 255, 100, 255 };
 	colors[FILE_EXCLUDED]       = { 255, 70,  70,  255 };
 	colors[FILE_EXCLUDED_HOVER] = { 255, 100, 100, 255 };
+
+	colors[THUMB_INCLUDED]      = { 70,  255, 70,  100 };
 
 	scroll_speed = 120;
 	font_size = 12;

@@ -4,7 +4,7 @@
 #include <string>
 #include <SDL.h>
 
-#define NUM_COLORS 14
+#define NUM_COLORS 15
 
 //use these keys with get_color()
 enum Color
@@ -22,7 +22,8 @@ enum Color
 	FILE_INCLUDED,
 	FILE_INCLUDED_HOVER,
 	FILE_EXCLUDED,
-	FILE_EXCLUDED_HOVER
+	FILE_EXCLUDED_HOVER,
+	THUMB_INCLUDED
 };
 
 class Config
