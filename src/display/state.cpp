@@ -31,6 +31,17 @@ void State::fill_selector(Selector* s)
 		s->add_inexclude(e.first, e.second);
 }
 
+void State::toggle_inexclude(File* f, bool include)
+{
+	if(f != NULL)
+	{
+		if(inexclude_has(f))
+			inexclude.erase(f);
+		else
+			inexclude[f] = include;
+	}
+}
+
 bool State::inexclude_has(File* f)
 {
 	return (inexclude.find(f) != inexclude.end());

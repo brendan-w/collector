@@ -223,7 +223,11 @@ void Display::on_selection(Selection* s)
 
 void Display::on_state_change()
 {
+	cli.display->on_state_change();
+	subtags.display->on_state_change();
 	info.display->on_state_change();
+	grid.display->on_state_change();
+	thumbs.display->on_state_change();
 }
 
 void Display::send_selector()

@@ -78,6 +78,9 @@ void Thumbs::resize()
 
 	current_height_files = height_files;
 
+	//in case the layout changed out from under the mouse
+	update_hover();
+
 	//even if the thumb_pos properties didn't change
 	//we still need to update the centering values
 	mark_dirty();
@@ -92,6 +95,18 @@ void Thumbs::on_wheel(SDL_MouseWheelEvent &e)
 {
 	DisplayObject::on_wheel(e);
 	update_hover();
+}
+
+void Thumbs::on_click(SDL_MouseButtonEvent &e)
+{
+	if((e.button == SDL_BUTTON_LEFT) || (e.button == SDL_BUTTON_RIGHT))
+	{
+		bool include = (e.button == SDL_BUTTON_LEFT);
+		state->toggle_inexclude(state->file_under_mouse, include);
+		sdl->submit(STATE_CHANGE);
+	}
+
+	mark_dirty();
 }
 
 void Thumbs::on_motion(SDL_MouseMotionEvent &e)

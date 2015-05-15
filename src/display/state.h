@@ -19,5 +19,6 @@ class State
 
 		void replace_selection(Selection* s);
 		void fill_selector(Selector* s);
+		void toggle_inexclude(File* f, bool include);
 		bool inexclude_has(File* f);
 };

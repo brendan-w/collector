@@ -42,6 +42,7 @@ class CLI : public DisplayObject
 		void on_text(SDL_TextInputEvent &e);
 
 		void on_selection();
+		void on_state_change();
 		void fill_selector(Selector* selector);
 
 	private:
@@ -49,6 +50,8 @@ class CLI : public DisplayObject
 		unsigned int current_index;
 
 		Text* totals;
+		Text* includes;
+		Text* excludes;
 
 		void render_tags();
 		void new_tag();

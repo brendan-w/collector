@@ -59,8 +59,11 @@ void Tag::set_completion(const std::string & t)
 CLI::CLI(State* s) : DisplayObject(s)
 {
 	new_tag(); //create the initial empty tag field
-	totals = new Text("", config->get_color(CLI_LIGHT));
+	totals   = new Text("", config->get_color(CLI_LIGHT));
+	includes = new Text("", config->get_color(CLI_DARK));
+	excludes = new Text("", config->get_color(CLI_DARK));
 	on_selection();
+	on_state_change();
 }
 
 
@@ -141,8 +144,21 @@ void CLI::render()
 	sdl->set_color(OVERLAY);
 	sdl->fill_rect(rect);
 
-	totals->render(rect.w - totals->width() - CLI_PAD,
-				   rect.y + CLI_PAD);
+	int x = rect.w - CLI_PAD;
+	const int y = rect.y + CLI_PAD;
+
+	x -= totals->width();
+	totals->render(x, y);
+
+	x -= (CLI_PAD * 6);
+
+	x -= excludes->width();
+	excludes->render(x, y);
+
+	x -= (CLI_PAD * 2);
+
+	x -= includes->width();
+	includes->render(x, y);
 
 	render_tags();
 }
@@ -227,6 +243,30 @@ void CLI::on_selection()
 	mark_dirty();
 }
 
+
+void CLI::on_state_change()
+{
+	//update the include/exclude counts
+	size_t n_includes = 0;
+	size_t n_excludes = 0;
+
+	//sum up them up
+	for(auto e: state->inexclude)
+	{
+		if(e.second) n_includes++;
+		else         n_excludes++;
+	}
+
+	includes->set_text("+" + std::to_string(n_includes));
+	if(n_includes == 0) includes->set_color(config->get_color(CLI_DARK));
+	else                includes->set_color(config->get_color(FILE_INCLUDED));
+
+	excludes->set_text("-" + std::to_string(n_excludes));
+	if(n_excludes == 0) excludes->set_color(config->get_color(CLI_DARK));
+	else                excludes->set_color(config->get_color(FILE_EXCLUDED));
+
+	mark_dirty();
+}
 
 //deallocates all Text objects in tags
 void CLI::destroy_tags()

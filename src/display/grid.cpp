@@ -166,26 +166,11 @@ void Grid::on_wheel(SDL_MouseWheelEvent &e)
 
 void Grid::on_click(SDL_MouseButtonEvent &e)
 {
-
-	File* f = state->file_under_mouse;
-	if(f != NULL)
+	if((e.button == SDL_BUTTON_LEFT) || (e.button == SDL_BUTTON_RIGHT))
 	{
-		if(e.button == SDL_BUTTON_LEFT)
-		{
-			//include file
-			if(state->inexclude_has(f))
-				state->inexclude.erase(f);
-			else
-				state->inexclude[f] = true;
-		}
-		else if(e.button == SDL_BUTTON_RIGHT)
-		{
-			//exclude file
-			if(state->inexclude_has(f))
-				state->inexclude.erase(f);
-			else
-				state->inexclude[f] = false;
-		}
+		bool include = (e.button == SDL_BUTTON_LEFT);
+		state->toggle_inexclude(state->file_under_mouse, include);
+		sdl->submit(STATE_CHANGE);
 	}
 
 	mark_dirty();
