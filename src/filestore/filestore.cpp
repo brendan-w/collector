@@ -66,7 +66,7 @@ Selection* FileStore::select(Selector* selector)
 	}
 	else
 	{
-		tag_set intersections = selector->get_tag_intersections();
+		tag_vector intersections = selector->get_tag_intersections();
 
 		bool first = true;
 		for(std::string tag: intersections)
@@ -85,20 +85,19 @@ Selection* FileStore::select(Selector* selector)
 			}
 			else
 			{
-				file_set r_files_copy = r_files;
-				file_set current_files = entry->files;
+				file_set r_files_intersect;
+				set_intersect<file_set>(r_files_intersect,
+										r_files,
+										entry->files);
 
-				set_intersect<file_set>(r_files,
-										r_files_copy,
-										current_files);
-
-				//if the intersection created a null set, stop
-				if(r_files.size() == 0)
+				//if the intersection created a null set, disregard this tag
+				if(r_files_intersect.size() > 0)
 				{
-					r_files = r_files_copy;
-					//break;
+					r_files = r_files_intersect;
 				}
 			}
+
+			std::cout << tag << "  " << r_files.size() << std::endl;
 		}
 
 		//compute the set of subtags by performing a union

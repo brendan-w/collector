@@ -47,9 +47,7 @@ void set_intersect(T & out, const T & in_A, const T & in_B)
     for(auto it = in_A.begin(); it != in_A.end(); it++)
     {
         if(in_B.find(*it) != in_B.end())
-        {
             out.insert(*it);
-        }
     }
 }
 

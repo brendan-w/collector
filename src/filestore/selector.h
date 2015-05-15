@@ -23,17 +23,16 @@ class Selector
 
 		void add_operation(std::string tag, Set_operation op);
 
-		const tag_set get_tag_intersections() { return tag_intersections; }
-		const tag_set get_tag_exclusions()    { return tag_exclusions; }
+		const tag_vector get_tag_intersections() { return tag_intersections; }
+		const tag_vector get_tag_exclusions()    { return tag_exclusions; }
 		const file_set get_include() { return file_include; };
 		const file_set get_exclude() { return file_exclude; };
 
-		bool has(std::string tag);
 		bool is_empty();
 
 	private:
-		tag_set tag_intersections;
-		tag_set tag_exclusions;
+		tag_vector tag_intersections;
+		tag_vector tag_exclusions;
 		file_set file_include;
 		file_set file_exclude;
 };

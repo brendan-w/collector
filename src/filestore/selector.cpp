@@ -30,23 +30,15 @@ void Selector::add_operation(std::string tag, Set_operation op)
 		switch(op)
 		{
 			case INTERSECTION:
-				tag_intersections.insert(tag);
+				tag_intersections.push_back(tag);
 				break;
 			case EXCLUSION:
-				tag_exclusions.insert(tag);
+				tag_exclusions.push_back(tag);
 				break;
 			case UNION:
 				break;
 		}
 	}
-}
-
-//used by the Selection object to avoid listing subtags
-//that are gauranteed to be in the result (the user
-//already knows about them)
-bool Selector::has(std::string tag)
-{
-	return tag_intersections.find(tag) != tag_intersections.end();
 }
 
 bool Selector::is_empty()
