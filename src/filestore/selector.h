@@ -22,6 +22,8 @@ class Selector
 		~Selector();
 
 		void add_operation(std::string tag, Set_operation op);
+		void include(File* f);
+		void exclude(File* f);
 
 		const tag_vector get_tag_intersections() { return tag_intersections; }
 		const tag_vector get_tag_exclusions()    { return tag_exclusions; }

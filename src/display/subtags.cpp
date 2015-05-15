@@ -63,7 +63,7 @@ void Subtags::on_selection()
 
 	for(std::string tag: subtags)
 	{
-		Text* text = new Text(tag, config->get_color(CLI_LIGHT));
+		Text* text = new Text(tag, config->get_color(CLI_DARK));
 		tags.push_back(text);
 	}
 

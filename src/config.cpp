@@ -67,9 +67,13 @@ Config::Config()
 	colors[CLI_ERROR]  = { 255, 70,  70,  255 };
 
 	colors[FILE_NEUTRAL]        = { 75,  75,  75,  255 };
-	colors[FILE_SELECTED]       = { 48,  141, 186, 255 };
 	colors[FILE_NEUTRAL_HOVER]  = { 95,  95,  95,  255 };
+	colors[FILE_SELECTED]       = { 48,  141, 186, 255 };
 	colors[FILE_SELECTED_HOVER] = { 68,  161, 206, 255 };
+	colors[FILE_INCLUDED]       = { 70,  255, 70,  255 };
+	colors[FILE_INCLUDED_HOVER] = { 100, 255, 100, 255 };
+	colors[FILE_EXCLUDED]       = { 255, 70,  70,  255 };
+	colors[FILE_EXCLUDED_HOVER] = { 255, 100, 100, 255 };
 
 	scroll_speed = 120;
 	font_size = 12;

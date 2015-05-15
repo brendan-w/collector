@@ -25,6 +25,7 @@ class DisplayObject
 		virtual void on_key(SDL_KeyboardEvent &e) {}
 		virtual void on_text(SDL_TextInputEvent &e) {}
 		virtual void on_wheel(SDL_MouseWheelEvent &e);
+		virtual void on_click(SDL_MouseButtonEvent &e) {}
 		virtual void on_motion(SDL_MouseMotionEvent &e) {}
 
 		//scroll utilities

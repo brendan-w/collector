@@ -35,6 +35,7 @@ class Display
 		void on_key(SDL_KeyboardEvent &e);
 		void on_text(SDL_TextInputEvent &e);
 		void on_wheel(SDL_MouseWheelEvent &e);
+		void on_click(SDL_MouseButtonEvent &e);
 		void on_motion(SDL_MouseMotionEvent &e);
 
 		void on_selection(Selection* new_selection);

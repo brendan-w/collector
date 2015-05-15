@@ -41,6 +41,17 @@ void Selector::add_operation(std::string tag, Set_operation op)
 	}
 }
 
+void Selector::include(File* f)
+{
+	file_include.insert(f);
+}
+
+void Selector::exclude(File* f)
+{
+	file_exclude.insert(f);
+}
+
+
 bool Selector::is_empty()
 {
 	return (tag_intersections.size() + tag_exclusions.size()) == 0;

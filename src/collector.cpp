@@ -66,6 +66,10 @@ int main(int argc, char * argv[])
 					display->on_motion(e.motion);
 					break;
 
+				case SDL_MOUSEBUTTONDOWN:
+					display->on_click(e.button);
+					break;
+
 				case SDL_MOUSEWHEEL:
 					display->on_wheel(e.wheel);
 					break;

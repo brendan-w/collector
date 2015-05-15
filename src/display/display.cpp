@@ -189,6 +189,18 @@ void Display::on_motion(SDL_MouseMotionEvent &e)
 	}
 }
 
+void Display::on_click(SDL_MouseButtonEvent &e)
+{
+	if(current != NULL)
+	{
+		//adjust mouse coordinates to that of the selected viewport
+		e.x -= current->rect.x;
+		e.y -= current->rect.y;
+		current->display->on_click(e);
+		send_selector();
+	}
+}
+
 void Display::on_selection(Selection* new_selection)
 {
 	//replace the current selection
@@ -225,6 +237,7 @@ void Display::send_selector()
 
 	//ask the various components for their data
 	cli.display->fill_selector(selector);
+	grid.display->fill_selector(selector);
 
 	//send to SDL event queue
 	sdl->submit(SELECTOR, (void*) selector);

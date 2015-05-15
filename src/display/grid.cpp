@@ -18,7 +18,7 @@ Grid::Grid(Selection** s) : DisplayObject(s)
 
 Grid::~Grid()
 {
-
+	inexclude.clear();
 }
 
 void Grid::render()
@@ -66,8 +66,27 @@ void Grid::render_file(File* file, bool selected)
 	if(sdl->rect_in_viewport(rect))
 	{
 		bool under_mouse = (file == file_under_mouse);
-
-		if(!selected && !under_mouse)
+		
+		if(inexclude.find(file) != inexclude.end())
+		{
+			if(inexclude[file])
+			{
+				//included
+				if(under_mouse)
+					sdl->set_color(FILE_INCLUDED_HOVER);
+				else
+					sdl->set_color(FILE_INCLUDED);
+			}
+			else
+			{
+				//excluded
+				if(under_mouse)
+					sdl->set_color(FILE_EXCLUDED_HOVER);
+				else
+					sdl->set_color(FILE_EXCLUDED);
+			}
+		}
+		else if(!selected && !under_mouse)
 			sdl->set_color(FILE_NEUTRAL);
 
 		else if(selected && !under_mouse)
@@ -140,6 +159,30 @@ void Grid::on_wheel(SDL_MouseWheelEvent &e)
 {
 	DisplayObject::on_wheel(e);
 	update_hover();
+}
+
+void Grid::on_click(SDL_MouseButtonEvent &e)
+{
+	File* f = file_under_mouse;
+	if(f != NULL)
+	{
+		if(e.button == SDL_BUTTON_LEFT)
+		{
+			//include file
+			if(inexclude.find(f) == inexclude.end())
+				inexclude[f] = true;
+			else
+				inexclude.erase(f);
+		}
+		else if(e.button == SDL_BUTTON_RIGHT)
+		{
+			//exclude file
+			if(inexclude.find(f) == inexclude.end())
+				inexclude[f] = false;
+			else
+				inexclude.erase(f);
+		}
+	}
 }
 
 void Grid::update_hover()
