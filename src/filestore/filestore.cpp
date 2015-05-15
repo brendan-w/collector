@@ -61,10 +61,7 @@ Selection* FileStore::select(Selector* selector)
 	file_set r_files;
 	entry_set r_subtags;
 
-	if(selector->is_empty())
-	{
-	}
-	else
+	if(!selector->is_empty())
 	{
 		tag_vector intersections = selector->get_tag_intersections();
 
@@ -116,7 +113,8 @@ Selection* FileStore::select(Selector* selector)
 	}
 
 	//done selecting
-	return new Selection(selector, &files, r_files, r_subtags);
+	delete selector;
+	return new Selection(&files, r_files, r_subtags);
 }
 
 

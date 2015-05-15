@@ -22,10 +22,9 @@ static bool tag_entry_compare(Tag_Entry* A, Tag_Entry* B)
 
 
 
-Selection::Selection(Selector* s, file_vector* all, file_set fs, entry_set es)
+Selection::Selection(file_vector* all, file_set fs, entry_set es)
 {
 	exported = false;
-	selector = s;
 	all_files = all;
 	files = fs;
 
@@ -48,27 +47,17 @@ Selection::Selection(Selector* s, file_vector* all, file_set fs, entry_set es)
 			  subtag_entries.end(),
 			  tag_entry_compare);
 
-	// tag_set selected;
-	// set_union(selected, selector->get_tag_intersections());
-	// set_union(selected, selector->get_tag_exclusions());
-
 	//convert entries to plain-text tags
 	for(Tag_Entry* entry: subtag_entries)
 	{
 		std::string tag = entry->tag;
-
-		//strain out tags that were used to select this file set
-		// if(selected.find(tag) == selected.end())
-		// {
-			subtag_set.insert(tag);
-			subtags.push_back(tag);
-		// }
+		subtag_set.insert(tag);
+		subtags.push_back(tag);
 	}
 }
 
 Selection::~Selection()
 {
-	delete selector;
 	subtags.clear();
 	subtag_set.clear();
 

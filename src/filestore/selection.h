@@ -4,13 +4,12 @@
 #include <utility>
 
 #include <filestore/file.h>
-#include <filestore/selector.h>
 
 
 class Selection
 {
 	public:
-		Selection(Selector* s, file_vector* all, file_set fs, entry_set es);
+		Selection(file_vector* all, file_set fs, entry_set es);
 		~Selection();
 
 		//the main IO of collector
@@ -41,9 +40,6 @@ class Selection
 		
 		//the whole file list
 		file_vector* all_files;
-
-		//the selector that generated this selection
-		Selector* selector;
 
 		//subtags
 		tag_set subtag_set;
