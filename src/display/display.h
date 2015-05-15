@@ -56,7 +56,11 @@ class Display
 		Child grid;
 		Child thumbs;
 
+		//the mouses current position (passed with wheel events)
+		SDL_MouseMotionEvent mouse;
+
 		void render_child(Child& child);
 		void resize_child(Child& child);
+		void update_mouse();
 		void send_selector();
 };

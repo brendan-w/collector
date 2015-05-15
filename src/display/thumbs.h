@@ -24,11 +24,8 @@ class Thumbs : public virtual DisplayObject
 
 	private:
 
-		SDL_Point mouse;
-
 		size_t current_height_files = 0;
 
 		void render_file(File* file);
-		void update_hover();
 		File* mouse_to_file(int x, int y);
 };

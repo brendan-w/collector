@@ -28,6 +28,10 @@ void Thumbs::render()
 	sdl->set_color(BACKGROUND);
 	sdl->fill_rect(rect);
 
+	//divider line
+	sdl->set_color(OVERLAY);
+	sdl->draw_line(rect.x, 0, rect.w, 0);
+
 	for(File* file : *selection())
 	{
 		render_file(file);
@@ -91,9 +95,6 @@ void Thumbs::resize()
 
 	current_height_files = height_files;
 
-	//in case the layout changed out from under the mouse
-	update_hover();
-
 	//even if the thumb_pos properties didn't change
 	//we still need to update the centering values
 	mark_dirty();
@@ -107,7 +108,7 @@ void Thumbs::on_selection()
 void Thumbs::on_wheel(SDL_MouseWheelEvent &e)
 {
 	DisplayObject::on_wheel(e);
-	update_hover();
+	mark_dirty();
 }
 
 void Thumbs::on_click(SDL_MouseButtonEvent &e)
@@ -124,14 +125,8 @@ void Thumbs::on_click(SDL_MouseButtonEvent &e)
 
 void Thumbs::on_motion(SDL_MouseMotionEvent &e)
 {
-	mouse = { e.x, e.y };
-	update_hover();
-}
-
-void Thumbs::update_hover()
-{
 	File* old_file = state->file_under_mouse;
-	state->file_under_mouse = mouse_to_file(mouse.x, mouse.y);
+	state->file_under_mouse = mouse_to_file(e.x, e.y);
 
 	if(state->file_under_mouse != old_file)
 	{

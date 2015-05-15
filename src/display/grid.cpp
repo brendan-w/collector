@@ -50,10 +50,6 @@ void Grid::render()
 			render_file(*it, false);
 		}
 	}
-
-	//divider line
-	sdl->set_color(OVERLAY);
-	sdl->draw_line(rect.x, rect.h - 1, rect.w, rect.h - 1);
 }
 
 
@@ -152,16 +148,10 @@ void Grid::on_selection()
 	mark_dirty();
 }
 
-void Grid::on_motion(SDL_MouseMotionEvent &e)
-{
-	mouse = { e.x, e.y };
-	update_hover();
-}
-
 void Grid::on_wheel(SDL_MouseWheelEvent &e)
 {
 	DisplayObject::on_wheel(e);
-	update_hover();
+	mark_dirty();
 }
 
 void Grid::on_click(SDL_MouseButtonEvent &e)
@@ -176,10 +166,10 @@ void Grid::on_click(SDL_MouseButtonEvent &e)
 	mark_dirty();
 }
 
-void Grid::update_hover()
+void Grid::on_motion(SDL_MouseMotionEvent &e)
 {
 	File* old_file = state->file_under_mouse;
-	state->file_under_mouse = mouse_to_file(mouse.x, mouse.y);
+	state->file_under_mouse = mouse_to_file(e.x, e.y);
 
 	if(state->file_under_mouse != old_file)
 	{

@@ -36,13 +36,10 @@ class Grid : public DisplayObject
 		//highlighted regions of the minimap
 		std::vector<Bounds> minimap;
 
-		SDL_Point mouse;
-
 		//used to prevent excessive recalculation during window resize
 		size_t current_height_files = 0;
 		size_t current_width_files = 0;
 
 		void render_file(File* file, bool selected);
-		void update_hover();
 		File* mouse_to_file(int x, int y);
 };

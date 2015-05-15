@@ -164,11 +164,18 @@ void Display::on_text(SDL_TextInputEvent &e)
 void Display::on_wheel(SDL_MouseWheelEvent &e)
 {
 	if(current != NULL)
-		current->display->on_wheel(e);		
+	{
+		current->display->on_wheel(e);
+
+		//kick the current DisplayObject to consider the mouse again
+		update_mouse();
+	}
 }
 
 void Display::on_motion(SDL_MouseMotionEvent &e)
 {
+	mouse = e;
+
 	SDL_Point p = { e.x, e.y };
 	if(point_in_rect(&p, &grid.rect))
 		current = &grid;
@@ -177,9 +184,15 @@ void Display::on_motion(SDL_MouseMotionEvent &e)
 	else
 		current = NULL;
 
+	update_mouse();
+}
+
+void Display::update_mouse()
+{
 	if(current != NULL)
 	{
 		//adjust mouse coordinates to that of the selected viewport
+		SDL_MouseMotionEvent e = mouse;
 		e.x -= current->rect.x;
 		e.y -= current->rect.y;
 		current->display->on_motion(e);
@@ -219,6 +232,9 @@ void Display::on_selection(Selection* s)
 	*/
 	resize_child(thumbs); 
 	thumbs.display->on_selection();
+
+	//kick the current DisplayObject to consider the mouse again
+	update_mouse();
 }
 
 void Display::on_state_change()
