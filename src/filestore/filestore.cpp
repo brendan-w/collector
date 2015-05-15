@@ -98,6 +98,16 @@ Selection* FileStore::select(Selector* selector)
 			}
 		}
 
+		//process the manually included and excluded files
+		file_map_bool inexclude = selector->get_inexclude();
+		for(auto e: inexclude)
+		{
+			if(e.second)
+				r_files.insert(e.first); //include this file
+			else
+				r_files.erase(e.first); //exclude this file
+		}
+
 		//compute the set of subtags by performing a union
 		for(File* file: r_files)
 		{

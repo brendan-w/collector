@@ -19,8 +19,7 @@ Selector::~Selector()
 {
 	tag_intersections.clear();
 	tag_exclusions.clear();
-	file_include.clear();
-	file_exclude.clear();
+	inexclude.clear();
 }
 
 void Selector::add_operation(std::string tag, Set_operation op)
@@ -41,18 +40,12 @@ void Selector::add_operation(std::string tag, Set_operation op)
 	}
 }
 
-void Selector::include(File* f)
+void Selector::add_inexclude(File* f, bool included)
 {
-	file_include.insert(f);
+	inexclude[f] = included;
 }
-
-void Selector::exclude(File* f)
-{
-	file_exclude.insert(f);
-}
-
 
 bool Selector::is_empty()
 {
-	return (tag_intersections.size() + tag_exclusions.size()) == 0;
+	return (tag_intersections.size() + tag_exclusions.size() + inexclude.size()) == 0;
 }

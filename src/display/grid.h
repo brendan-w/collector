@@ -11,8 +11,6 @@
 #include <filestore/selection.h>
 
 
-typedef std::unordered_map<File*, bool> file_map_bool;
-
 typedef struct {
 	int lower;
 	int upper;
@@ -28,6 +26,7 @@ class Grid : public DisplayObject
 		void resize();
 
 		void on_selection();
+		void fill_selector(Selector* s);
 		void on_wheel(SDL_MouseWheelEvent &e);
 		void on_click(SDL_MouseButtonEvent &e);
 		void on_motion(SDL_MouseMotionEvent &e);

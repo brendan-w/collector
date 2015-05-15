@@ -149,6 +149,13 @@ void Grid::on_selection()
 	mark_dirty();
 }
 
+void Grid::fill_selector(Selector* s)
+{
+	//dump the include/exclude table into the Selector
+	for(auto e: inexclude)
+		s->add_inexclude(e.first, e.second);
+}
+
 void Grid::on_motion(SDL_MouseMotionEvent &e)
 {
 	mouse = { e.x, e.y };
