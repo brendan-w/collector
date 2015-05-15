@@ -1,4 +1,6 @@
 
+#include <iostream>
+
 #include <SDL.h>
 
 #include <collector.h>
@@ -7,18 +9,19 @@
 #include <filestore/selector.h>
 #include <filestore/selection.h>
 #include <display/displayobject.h>
+#include <display/state.h>
 #include <display/grid.h>
 
 
 
-Grid::Grid(Selection** s) : DisplayObject(s)
+Grid::Grid(State* s) : DisplayObject(s)
 {
 
 }
 
 Grid::~Grid()
 {
-	inexclude.clear();
+
 }
 
 void Grid::render()
@@ -65,11 +68,11 @@ void Grid::render_file(File* file, bool selected)
 
 	if(sdl->rect_in_viewport(rect))
 	{
-		bool under_mouse = (file == file_under_mouse);
+		bool under_mouse = (file == state->file_under_mouse);
 		
-		if(inexclude.find(file) != inexclude.end())
+		if(state->inexclude_has(file))
 		{
-			if(inexclude[file])
+			if(state->inexclude[file])
 			{
 				//included
 				if(under_mouse)
@@ -149,13 +152,6 @@ void Grid::on_selection()
 	mark_dirty();
 }
 
-void Grid::fill_selector(Selector* s)
-{
-	//dump the include/exclude table into the Selector
-	for(auto e: inexclude)
-		s->add_inexclude(e.first, e.second);
-}
-
 void Grid::on_motion(SDL_MouseMotionEvent &e)
 {
 	mouse = { e.x, e.y };
@@ -170,36 +166,39 @@ void Grid::on_wheel(SDL_MouseWheelEvent &e)
 
 void Grid::on_click(SDL_MouseButtonEvent &e)
 {
-	File* f = file_under_mouse;
+
+	File* f = state->file_under_mouse;
 	if(f != NULL)
 	{
 		if(e.button == SDL_BUTTON_LEFT)
 		{
 			//include file
-			if(inexclude.find(f) == inexclude.end())
-				inexclude[f] = true;
+			if(state->inexclude_has(f))
+				state->inexclude.erase(f);
 			else
-				inexclude.erase(f);
+				state->inexclude[f] = true;
 		}
 		else if(e.button == SDL_BUTTON_RIGHT)
 		{
 			//exclude file
-			if(inexclude.find(f) == inexclude.end())
-				inexclude[f] = false;
+			if(state->inexclude_has(f))
+				state->inexclude.erase(f);
 			else
-				inexclude.erase(f);
+				state->inexclude[f] = false;
 		}
 	}
+
+	mark_dirty();
 }
 
 void Grid::update_hover()
 {
-	File* old_file = file_under_mouse;
-	file_under_mouse = mouse_to_file(mouse.x, mouse.y);
+	File* old_file = state->file_under_mouse;
+	state->file_under_mouse = mouse_to_file(mouse.x, mouse.y);
 
-	if(file_under_mouse != old_file)
+	if(state->file_under_mouse != old_file)
 	{
-		sdl->submit(FILE_INFO, (void*) file_under_mouse);
+		sdl->submit(STATE_CHANGE);
 		mark_dirty();
 	}
 }

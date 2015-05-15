@@ -8,6 +8,7 @@
 
 #include <filestore/types.h>
 #include <display/displayobject.h>
+#include <display/state.h>
 #include <text.h>
 
 
@@ -32,7 +33,7 @@ class Tag
 class CLI : public DisplayObject
 {
 	public:
-		CLI(Selection** s);
+		CLI(State* s);
 		~CLI();
 
 		void render();

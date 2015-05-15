@@ -13,6 +13,7 @@
 #include <collector.h>
 #include <text.h>
 #include <filestore/types.h>
+#include <display/state.h>
 #include <display/cli.h>
 
 
@@ -55,7 +56,7 @@ void Tag::set_completion(const std::string & t)
 
 
 
-CLI::CLI(Selection** s) : DisplayObject(s)
+CLI::CLI(State* s) : DisplayObject(s)
 {
 	new_tag(); //create the initial empty tag field
 	totals = new Text("", config->get_color(CLI_LIGHT));

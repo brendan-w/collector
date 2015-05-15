@@ -7,6 +7,7 @@
 #include <SDL.h>
 
 #include <display/displayobject.h>
+#include <display/state.h>
 #include <filestore/file.h>
 #include <filestore/selection.h>
 
@@ -20,13 +21,12 @@ typedef struct {
 class Grid : public DisplayObject
 {
 	public:
-		Grid(Selection** s);
+		Grid(State* s);
 		~Grid();
 		void render();
 		void resize();
 
 		void on_selection();
-		void fill_selector(Selector* s);
 		void on_wheel(SDL_MouseWheelEvent &e);
 		void on_click(SDL_MouseButtonEvent &e);
 		void on_motion(SDL_MouseMotionEvent &e);
@@ -37,8 +37,6 @@ class Grid : public DisplayObject
 		std::vector<Bounds> minimap;
 
 		SDL_Point mouse;
-		File* file_under_mouse = NULL;
-		file_map_bool inexclude;
 
 		//used to prevent excessive recalculation during window resize
 		size_t current_height_files = 0;

@@ -7,11 +7,12 @@
 #include <event.h>
 #include <utils.h>
 #include <filestore/types.h>
+#include <display/state.h>
 #include <display/thumbs.h>
 
 
 
-Thumbs::Thumbs(Selection** s) : DisplayObject(s)
+Thumbs::Thumbs(State* s) : DisplayObject(s)
 {
 
 }
@@ -101,12 +102,12 @@ void Thumbs::on_motion(SDL_MouseMotionEvent &e)
 
 void Thumbs::update_hover()
 {
-	File* old_file = file_under_mouse;
-	file_under_mouse = mouse_to_file(mouse.x, mouse.y);
+	File* old_file = state->file_under_mouse;
+	state->file_under_mouse = mouse_to_file(mouse.x, mouse.y);
 
-	if(file_under_mouse != old_file)
+	if(state->file_under_mouse != old_file)
 	{
-		sdl->submit(FILE_INFO, (void*) file_under_mouse);
+		sdl->submit(STATE_CHANGE);
 		mark_dirty();
 	}
 }

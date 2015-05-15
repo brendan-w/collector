@@ -5,6 +5,7 @@
 
 #include <filestore/types.h>
 #include <display/displayobject.h>
+#include <display/state.h>
 
 
 //internal use only
@@ -39,14 +40,15 @@ class Display
 		void on_motion(SDL_MouseMotionEvent &e);
 
 		void on_selection(Selection* new_selection);
-		void on_file_info(File* f);
+		void on_state_change();
 
 	private:
-		//the latest Selection from the FileStore
-		//all children are given a pointer to this pointer
-		Selection* selection;
+		//shared state between the children (includes the current Selection*)
+		//all children are given a pointer to this storage area
+		State state;
 
-		Child* current; //the view currently under the mouse
+		//the view currently under the mouse
+		Child* current;
 
 		Child cli;
 		Child subtags;

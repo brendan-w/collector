@@ -7,10 +7,11 @@
 #include <collector.h>
 #include <text.h>
 #include <filestore/selection.h>
+#include <display/state.h>
 #include <display/subtags.h>
 
 
-Subtags::Subtags(Selection** s) : DisplayObject(s)
+Subtags::Subtags(State* s) : DisplayObject(s)
 {
 
 }

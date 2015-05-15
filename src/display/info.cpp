@@ -12,10 +12,11 @@
 #include <utils.h> //pretty_print_file_size()
 #include <text.h>
 #include <filestore/file.h>
+#include <display/state.h>
 #include <display/info.h>
 
 
-Info::Info(Selection** s) : DisplayObject(s)
+Info::Info(State* s) : DisplayObject(s)
 {
 	filepath = new Text("", config->get_color(CLI_LIGHT));
 	filesize = new Text("", config->get_color(CLI_LIGHT));
@@ -42,9 +43,9 @@ void Info::render()
 	                 rect.y + CLI_PAD);
 }
 
-void Info::on_file_info(File* f)
+void Info::on_state_change()
 {
-	file = f;
+	File* file = state->file_under_mouse;
 
 	if(file == NULL)
 	{

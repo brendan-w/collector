@@ -29,6 +29,7 @@ set(SOURCE_FILES
 	"src/thumbnail.cpp"
 	"src/display/display.cpp"
 	"src/display/displayobject.cpp"
+	"src/display/state.cpp"
 	"src/display/cli.cpp"
 	"src/display/subtags.cpp"
 	"src/display/info.cpp"

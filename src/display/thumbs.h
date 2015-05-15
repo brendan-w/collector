@@ -4,6 +4,7 @@
 #include <SDL.h>
 
 #include <display/displayobject.h>
+#include <display/state.h>
 #include <filestore/file.h>
 #include <filestore/selection.h>
 
@@ -11,7 +12,7 @@
 class Thumbs : public virtual DisplayObject
 {
 	public:
-		Thumbs(Selection** s);
+		Thumbs(State* s);
 		~Thumbs();
 		void render();
 		void resize();
@@ -23,7 +24,6 @@ class Thumbs : public virtual DisplayObject
 	private:
 
 		SDL_Point mouse;
-		File* file_under_mouse = NULL;
 
 		size_t current_height_files = 0;
 

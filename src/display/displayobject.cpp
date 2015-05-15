@@ -6,12 +6,14 @@
 #include <collector.h>
 #include <filestore/types.h>
 #include <display/displayobject.h>
+#include <display/state.h>
 
 
 
-DisplayObject::DisplayObject(Selection** _selection)
+
+DisplayObject::DisplayObject(State* s) : state(s)
 {
-	s = _selection;
+
 }
 
 
@@ -53,9 +55,9 @@ void DisplayObject::pagedown()
 
 bool DisplayObject::is_dirty()
 {
-	bool state = dirty;
+	bool current = dirty;
 	dirty = false;
-	return state;
+	return current;
 }
 
 void DisplayObject::set_centered_height(size_t h)

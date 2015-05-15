@@ -4,6 +4,7 @@
 #include <SDL.h>
 
 #include <filestore/types.h>
+#include <display/state.h>
 
 
 /*
@@ -15,7 +16,7 @@ class DisplayObject
 	public:
 
 		//all display objects must be initted with a pointer to the current state
-		DisplayObject(Selection** _selection);
+		DisplayObject(State* s);
 		virtual ~DisplayObject() {}
 
 		virtual void render() {}
@@ -35,8 +36,8 @@ class DisplayObject
 
 		//IO with the outside world
 		virtual void on_selection() {}
+		virtual void on_state_change() {}
 		virtual void fill_selector(Selector* selector) {}
-		virtual void on_file_info(File* f) {}
 
 		bool is_dirty();
 		void mark_dirty() { dirty = true; }
@@ -46,12 +47,13 @@ class DisplayObject
 		void set_centered_height(size_t h);
 		int x_offset() { return offset.x; }
 		int y_offset() { return offset.y; }
-		Selection* selection() { return *s; }
+		inline Selection* selection() { return state->selection; }
+		
+		//pointer to the display's shared state
+		//(contains the current Selection*)
+		State* const state;
 
 	private:
-
-		//pointer to the current selection pointer
-		Selection** s;
 
 		//does this widget need rendering
 		bool dirty = true;

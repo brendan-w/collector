@@ -8,12 +8,13 @@
 
 #include <filestore/selection.h>
 #include <display/displayobject.h>
+#include <display/state.h>
 #include <text.h>
 
 class Subtags : public DisplayObject
 {
 	public:
-		Subtags(Selection** s);
+		Subtags(State* s);
 		~Subtags();
 
 		void render();

@@ -14,7 +14,7 @@
 Uint32 RENDER_THUMBS = 0;
 Uint32 SELECTOR = 0;
 Uint32 SELECTION = 0;
-Uint32 FILE_INFO = 0;
+Uint32 STATE_CHANGE = 0;
 
 
 SDL_Context::SDL_Context()
@@ -115,7 +115,7 @@ SDL_Context::SDL_Context()
 	RENDER_THUMBS  = begin;
 	SELECTOR       = begin + 1;
 	SELECTION      = begin + 2;
-	FILE_INFO      = begin + 3;
+	STATE_CHANGE   = begin + 3;
 }
 
 

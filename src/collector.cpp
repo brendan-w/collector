@@ -86,9 +86,9 @@ int main(int argc, char * argv[])
 					{
 						display->on_selection((Selection*) e.user.data1);
 					}
-					else if(e.type == FILE_INFO)
+					else if(e.type == STATE_CHANGE)
 					{
-						display->on_file_info((File*) e.user.data1);
+						display->on_state_change();
 					}
 					else if(e.type == RENDER_THUMBS)
 					{

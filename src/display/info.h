@@ -7,19 +7,19 @@
 
 #include <filestore/file.h>
 #include <display/displayobject.h>
+#include <display/state.h>
 #include <text.h>
 
 class Info : public DisplayObject
 {
 	public:
-		Info(Selection** s);
+		Info(State* s);
 		~Info();
 
 		void render();
-		void on_file_info(File* f);
+		void on_state_change();
 
 	private:
-		File* file;
 		Text* filepath;
 		Text* filesize;
 };

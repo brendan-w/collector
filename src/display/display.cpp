@@ -20,14 +20,14 @@
 
 Display::Display(Selection* init_selection)
 {
-	selection = init_selection;
+	state.selection = init_selection;
 
 	//create the main components, with references to the displays state
-	cli.display     = new CLI(&selection);
-	subtags.display = new Subtags(&selection);
-	info.display    = new Info(&selection);
-	grid.display    = new Grid(&selection);
-	thumbs.display  = new Thumbs(&selection);
+	cli.display     = new CLI(&state);
+	subtags.display = new Subtags(&state);
+	info.display    = new Info(&state);
+	grid.display    = new Grid(&state);
+	thumbs.display  = new Thumbs(&state);
 
 	//trigger the initial layout
 	resize();
@@ -40,9 +40,6 @@ Display::~Display()
 	delete info.display;
 	delete grid.display;
 	delete thumbs.display;
-
-	if(selection != NULL)
-		delete selection;
 }
 
 void Display::render()
@@ -141,7 +138,7 @@ void Display::on_key(SDL_KeyboardEvent &e)
 			sdl->quit();
 			break;
 		case SDLK_RETURN:
-			selection->export_();
+			state.selection->export_();
 			break;
 		case SDLK_PAGEUP:
 			if(current != NULL)
@@ -201,12 +198,10 @@ void Display::on_click(SDL_MouseButtonEvent &e)
 	}
 }
 
-void Display::on_selection(Selection* new_selection)
+void Display::on_selection(Selection* s)
 {
 	//replace the current selection
-	if(selection != NULL)
-		delete selection;
-	selection = new_selection;
+	state.replace_selection(s);
 
 	//let the components update themselves
 	cli.display->on_selection();
@@ -226,18 +221,20 @@ void Display::on_selection(Selection* new_selection)
 	thumbs.display->on_selection();
 }
 
-void Display::on_file_info(File* f)
+void Display::on_state_change()
 {
-	info.display->on_file_info(f);
+	info.display->on_state_change();
 }
 
 void Display::send_selector()
 {
 	Selector* selector = new Selector;
 
-	//ask the various components for their data
+	//load the current state from the UI (include/exclude table)
+	state.fill_selector(selector);
+
+	//ask the various components for their data (tag selections)
 	cli.display->fill_selector(selector);
-	grid.display->fill_selector(selector);
 
 	//send to SDL event queue
 	sdl->submit(SELECTOR, (void*) selector);

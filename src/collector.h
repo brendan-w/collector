@@ -12,7 +12,7 @@ extern Config* config;
 extern Uint32 RENDER_THUMBS;
 extern Uint32 SELECTOR;
 extern Uint32 SELECTION;
-extern Uint32 FILE_INFO;
+extern Uint32 STATE_CHANGE;
 
 //just to make the code cleaner
 #define CLI_H (config->CLI_height)
