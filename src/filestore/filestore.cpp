@@ -96,8 +96,6 @@ Selection* FileStore::select(Selector* selector)
 					r_files = r_files_intersect;
 				}
 			}
-
-			std::cout << tag << "  " << r_files.size() << std::endl;
 		}
 
 		//compute the set of subtags by performing a union

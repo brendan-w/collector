@@ -211,13 +211,11 @@ void CLI::on_selection()
 	std::string tag = t->get_text();
 	if(s->has_subtag(tag))
 	{
-		// std::cout << "found" << std::endl;
 		t->text->set_color(config->get_color(CLI_LIGHT));
 		t->set_completion("");
 	}
 	else
 	{
-		// std::cout << "not found" << std::endl;
 		t->text->set_color(config->get_color(CLI_ERROR));
 		if(tag.length() > 0)
 			t->set_completion(s->auto_complete(tag));
