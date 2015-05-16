@@ -87,13 +87,6 @@ void Selection::export_()
 	}
 }
 
-void Selection::export_and_open(File* file)
-{
-	export_();
-	std::string cmd = config->open_cmd + " " + file->get_link_path();
-	system(cmd.c_str());
-}
-
 bool Selection::has(File* file)
 {
 	return (files.find(file) != files.end());

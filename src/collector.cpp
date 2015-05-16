@@ -55,7 +55,11 @@ int main(int argc, char * argv[])
 					break;
 
 				case SDL_KEYDOWN:
-					display->on_key(e.key);
+					display->on_key_down(e.key);
+					break;
+
+				case SDL_KEYUP:
+					display->on_key_up(e.key);
 					break;
 
 				case SDL_TEXTINPUT:

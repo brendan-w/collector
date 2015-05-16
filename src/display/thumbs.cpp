@@ -114,14 +114,31 @@ void Thumbs::on_wheel(SDL_MouseWheelEvent &e)
 
 void Thumbs::on_click(SDL_MouseButtonEvent &e)
 {
-	if((e.button == SDL_BUTTON_LEFT) || (e.button == SDL_BUTTON_RIGHT))
+	if(state->key_ctrl)
 	{
-		bool include = (e.button == SDL_BUTTON_LEFT);
-		state->toggle_inexclude(state->file_under_mouse, include);
-		sdl->submit(STATE_CHANGE);
+		//CTRL clicking will include/exclude files
+		if((e.button == SDL_BUTTON_LEFT) || (e.button == SDL_BUTTON_RIGHT))
+		{
+			bool include = (e.button == SDL_BUTTON_LEFT);
+			state->toggle_inexclude(state->file_under_mouse, include);
+			sdl->submit(STATE_CHANGE);
+		}
+
+		mark_dirty();
+	}
+	else if(e.clicks == 2)
+	{
+		//double clicking will open the file
+		File* f = state->file_under_mouse;
+		if(f != NULL)
+		{
+			selection()->export_();
+			f->open(f->get_link_path());
+		}
 	}
 
-	mark_dirty();
+
+
 }
 
 void Thumbs::on_motion(SDL_MouseMotionEvent &e)

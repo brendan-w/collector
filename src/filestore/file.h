@@ -38,8 +38,12 @@ class File
 		~File();
 
 		//functions
-		size_t get_size();
 
+		//opens the file in its default application
+		//the filename is optional in case the symlink needs to be opened
+		void open(std::string filepath);
+
+		size_t get_size();
 		std::string get_path();
 		std::string get_full_path();
 		std::string get_link_path();

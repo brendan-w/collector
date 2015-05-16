@@ -14,7 +14,6 @@ class Selection
 
 		//the main IO of collector
 		void export_();
-		void export_and_open(File* file);
 
 		bool has(File* file);
 		tag_vector get_subtags() { return subtags; }

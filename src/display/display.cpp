@@ -130,7 +130,7 @@ void Display::request_render(Uint32 component)
 		thumbs.display->mark_dirty();
 }
 
-void Display::on_key(SDL_KeyboardEvent &e)
+void Display::on_key_down(SDL_KeyboardEvent &e)
 {
 	switch(e.keysym.sym)
 	{
@@ -148,11 +148,22 @@ void Display::on_key(SDL_KeyboardEvent &e)
 			if(current != NULL)
 				current->display->pagedown();
 			break;
+		case SDLK_RCTRL:
+		case SDLK_LCTRL:
+			state.key_ctrl = true;
+			break;
 		default:
 			if(cli.display->on_key(e))
 				send_selector();
 			break;
 	}
+}
+
+void Display::on_key_up(SDL_KeyboardEvent &e)
+{
+	if((e.keysym.sym == SDLK_RCTRL) ||
+	  (e.keysym.sym == SDLK_LCTRL))
+		state.key_ctrl = false;
 }
 
 void Display::on_text(SDL_TextInputEvent &e)

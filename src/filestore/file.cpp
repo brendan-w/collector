@@ -2,10 +2,11 @@
 
 #include <string>
 #include <fstream>
+#include <iostream>
 #include <algorithm> //replace()
 
-#include <collector.h>
-#include <utils.h>
+#include <collector.h> //config->cwd_path, config->open_cmd
+#include <utils.h> //escape_file_name()
 #include <thumbnail.h>
 #include <filestore/file.h>
 
@@ -20,6 +21,13 @@ File::File(std::string file_path)
 File::~File()
 {
 	unload();
+}
+
+void File::open(std::string filepath)
+{
+	filepath = escape_file_name(filepath);
+	std::string open_cmd = config->open_cmd + filepath;
+	system(open_cmd.c_str());
 }
 
 void File::unload()
