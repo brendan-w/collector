@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 #include <collector.h>
-#include <utils.h>
+#include <utils.h> //set_union(), set_intersect()
 #include <filestore/types.h>
 #include <filestore/filestore.h>
 
@@ -186,30 +186,4 @@ tag_set FileStore::tags_for_file(File* file)
 	}
 
 	return tags;
-}
-
-
-//return the tag with the nearest edit distance
-std::string FileStore::fuzzy_match(const std::string & partial_tag)
-{
-	std::string nearest_str = "";
-	size_t nearest = 0;
-
-	//prepopulate the initial result
-	auto it = tags.begin();
-	nearest_str = it->first;
-	nearest = levenshtein_distance(partial_tag, nearest_str);
-	++it;
-
-	for( ; it != tags.end(); ++it )
-	{
-		size_t dist = levenshtein_distance(partial_tag, it->first);
-		if(dist < nearest)
-		{
-			nearest = dist;
-			nearest_str = it->first;
-		}
-	}
-
-	return nearest_str;
 }
