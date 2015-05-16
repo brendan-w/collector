@@ -57,6 +57,7 @@ SDL_Context::SDL_Context()
 	//clear the screen with the background color
 	set_color(BACKGROUND);
 	SDL_RenderClear(renderer);
+	present();
 
 	SDL_StartTextInput();
 

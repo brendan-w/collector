@@ -75,7 +75,8 @@ void Thumbs::resize()
 	SDL_Rect viewport = sdl->get_viewport();
 	const size_t height_files = (viewport.h > 0) ? (viewport.h / FILE_THUMB_OFFSET) : 1;
 	const size_t height_px = height_files * FILE_THUMB_OFFSET;
-	const size_t width_px = (s->size() / height_files) * FILE_THUMB_OFFSET;
+	const size_t width_files = (s->size() / height_files) + 1;
+	const size_t width_px = width_files * FILE_THUMB_OFFSET;
 
 	set_scroll_range(width_px);
 	set_centered_height(height_px);

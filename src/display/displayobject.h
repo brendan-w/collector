@@ -44,6 +44,7 @@ class DisplayObject
 
 	protected:
 		void set_scroll_range(size_t s);
+		size_t get_scroll_range() { return scroll_range; }
 		void set_centered_height(size_t h);
 		int x_offset() { return offset.x; }
 		int y_offset() { return offset.y; }

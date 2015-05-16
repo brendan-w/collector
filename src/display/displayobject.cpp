@@ -68,7 +68,7 @@ void DisplayObject::set_centered_height(size_t h)
 void DisplayObject::set_scroll_range(size_t s)
 {
 	//account for the two UI bars at the top and bottom
-	scroll_range = s + (2 * CLI_H);
+	scroll_range = s;
 	limit_scroll();
 }
 

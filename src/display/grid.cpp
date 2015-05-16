@@ -4,13 +4,18 @@
 #include <SDL.h>
 
 #include <collector.h>
-#include <utils.h>
+#include <utils.h> //map()
 #include <filestore/file.h>
 #include <filestore/selector.h>
 #include <filestore/selection.h>
 #include <display/displayobject.h>
 #include <display/state.h>
 #include <display/grid.h>
+
+
+#define GRID_V_PADDING (CLI_H * 2)
+#define MINIMAP_H 6
+#define MINIMAP_VIEWPORT_DIST 3
 
 
 
@@ -21,7 +26,7 @@ Grid::Grid(State* s) : DisplayObject(s)
 
 Grid::~Grid()
 {
-
+	minimap.clear();
 }
 
 void Grid::render()
@@ -29,6 +34,8 @@ void Grid::render()
 	SDL_Rect rect = sdl->get_viewport();
 	sdl->set_color(BACKGROUND);
 	sdl->fill_rect(rect);
+
+	render_minimap();
 
 	Selection* s = selection();
 	file_vector_it begin = s->all_begin();
@@ -52,6 +59,42 @@ void Grid::render()
 	}
 }
 
+void Grid::render_minimap()
+{
+	SDL_Rect rect = sdl->get_viewport();
+
+	rect.h = MINIMAP_H;
+	rect.y = (GRID_V_PADDING - rect.h) / 2;
+
+	sdl->set_color(FILE_NEUTRAL);
+	sdl->fill_rect(rect);
+
+	const double width = (double) rect.w;
+
+	sdl->set_color(FILE_SELECTED);
+
+	for(Bound b: minimap)
+	{
+		int lower = (int) (b.lower * width);
+		int upper = (int) (b.upper * width);
+
+		if(lower == upper) upper++;
+
+		rect.x = lower;
+		rect.w = upper - lower;
+		sdl->fill_rect(rect);
+	}
+
+	//draw the current viewport region indicators
+	sdl->set_color(FILE_SELECTED);
+
+	const int x = (int) ((double) x_offset() * width / get_scroll_range());
+	const int w = (int) ((double) width * width / get_scroll_range());
+	const int top = rect.y - MINIMAP_VIEWPORT_DIST - 1; // -1 since the stroke is 1 pixel wide
+	const int bottom = rect.y + rect.h + MINIMAP_VIEWPORT_DIST;
+	sdl->draw_line(x, top, x + w, top);
+	sdl->draw_line(x, bottom, x + w, bottom);
+}
 
 void Grid::render_file(File* file, bool selected)
 {
@@ -109,9 +152,9 @@ void Grid::resize()
 
 	SDL_Rect viewport = sdl->get_viewport();
 	const size_t total_files = s->all_size();
-	const size_t height_files = (viewport.h > 0) ? (((viewport.h - CLI_H * 2)) / FILE_OFFSET) : 1;
+	const size_t height_files = (viewport.h > 0) ? (((viewport.h - GRID_V_PADDING * 2)) / FILE_OFFSET) : 1;
 	const size_t height_px = height_files * FILE_OFFSET;
-	const size_t width_files = (total_files / height_files);
+	const size_t width_files = (total_files / height_files) + 1;
 	const size_t width_px = width_files * FILE_OFFSET;
 
 	set_scroll_range(width_px);
@@ -143,8 +186,72 @@ void Grid::resize()
 	mark_dirty();
 }
 
+
+void Grid::update_minimap()
+{
+	//calculate the minimap
+	Selection* s = selection();
+	// SDL_Rect rect = sdl->get_viewport();
+
+	minimap.clear();
+
+	file_vector_it begin = s->all_begin();
+	file_vector_it end   = s->all_end();
+
+	const size_t total = s->all_size();
+	const size_t max_region_sep = current_height_files;
+
+	size_t count = 0;
+	size_t files_since_last_selected = 0;
+	bool in_region = false;
+
+	Bound region;
+
+	for(auto it = begin; it != end; ++it)
+	{
+		File* file = *it;
+
+		if(s->has(file))
+		{
+			files_since_last_selected = 0;
+
+			if(!in_region)
+			{
+				in_region = true;
+				region.lower = (double) count / (double) total;
+			}
+		}
+		else
+		{
+			files_since_last_selected++;
+			
+			if(in_region)
+			{
+				if(files_since_last_selected >= max_region_sep)
+				{
+					in_region = false;
+					size_t i = (count - files_since_last_selected);
+					region.upper = (double) i / (double) total;
+					minimap.push_back(region);
+				}
+			}
+		}
+
+		count++;
+	}
+
+	//close the last region, if there is one
+	if(in_region)
+	{
+		in_region = false;
+		region.upper = (count - files_since_last_selected);
+		minimap.push_back(region);
+	}
+}
+
 void Grid::on_selection()
 {
+	update_minimap();
 	mark_dirty();
 }
 

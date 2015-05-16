@@ -13,9 +13,9 @@
 
 
 typedef struct {
-	int lower;
-	int upper;
-} Bounds;
+	double lower;
+	double upper;
+} Bound;
 
 
 class Grid : public DisplayObject
@@ -34,12 +34,14 @@ class Grid : public DisplayObject
 	private:
 
 		//highlighted regions of the minimap
-		std::vector<Bounds> minimap;
+		std::vector<Bound> minimap;
 
 		//used to prevent excessive recalculation during window resize
 		size_t current_height_files = 0;
 		size_t current_width_files = 0;
 
+		void render_minimap();
+		void update_minimap();
 		void render_file(File* file, bool selected);
 		File* mouse_to_file(int x, int y);
 };
