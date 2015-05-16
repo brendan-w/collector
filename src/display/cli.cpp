@@ -22,7 +22,6 @@ Tag::Tag()
 {
 	text       = new Text("", config->get_color(CLI_LIGHT));
 	completion = new Text("", config->get_color(CLI_DARK));
-	valid      = true;
 }
 
 Tag::~Tag()
@@ -30,27 +29,6 @@ Tag::~Tag()
 	delete text;
 	delete completion;
 }
-
-std::string Tag::get_text()
-{
-	return text->get_text();
-}
-
-void Tag::set_text(const std::string & t)
-{
-	text->set_text(t);
-}
-
-std::string Tag::get_completion()
-{
-	return completion->get_text();
-}
-
-void Tag::set_completion(const std::string & t)
-{
-	completion->set_text(t);
-}
-
 
 
 
@@ -119,7 +97,7 @@ void CLI::on_text(SDL_TextInputEvent &e)
 	if(e.text[0] == ' ')
 	{
 		//if the last tag is empty, skip to it (rather than adding another)
-		if(tags[tags.size() - 1]->get_text().length() == 0)
+		if(tags[tags.size() - 1]->len_t() == 0)
 		{
 			current_index = tags.size() - 1;
 		}
@@ -128,16 +106,13 @@ void CLI::on_text(SDL_TextInputEvent &e)
 			new_tag();
 			mark_dirty();
 		}
-
-		// return false;
 	}
 	else
 	{
 		Tag* t = current_tag();
-		t->set_text(t->get_text() += e.text);
+		t->set_t(t->get_t() += e.text);
 		state->should_autoscroll = true;
 		mark_dirty();
-		// return true;
 	}
 }
 
@@ -213,7 +188,7 @@ void CLI::fill_selector(Selector* selector)
 	//dump our tags into the selector
 	for(Tag* t: tags)
 	{
-		selector->add_operation(t->get_text(), INTERSECTION);
+		selector->add_operation(t->get_t(), INTERSECTION);
 	}
 }
 
@@ -231,19 +206,19 @@ void CLI::on_selection()
 
 	//update the status of the current tag
 	Tag* t = current_tag();
-	std::string tag = t->get_text();
+	std::string tag = t->get_t();
 	if(s->has_subtag(tag))
 	{
 		t->text->set_color(config->get_color(CLI_LIGHT));
-		t->set_completion("");
+		t->set_c("");
 	}
 	else
 	{
 		t->text->set_color(config->get_color(CLI_ERROR));
 		if(tag.length() > 0)
-			t->set_completion(s->auto_complete(tag));
+			t->set_c(s->auto_complete(tag));
 		else
-			t->set_completion("");
+			t->set_c("");
 	}
 
 	mark_dirty();
@@ -277,8 +252,8 @@ void CLI::on_state_change()
 //deallocates all Text objects in tags
 void CLI::destroy_tags()
 {
-	for(Tag* tag: tags)
-		delete tag;
+	for(Tag* t: tags)
+		delete t;
 
 	tags.clear();
 }
@@ -320,11 +295,11 @@ void CLI::delete_tag()
 		state->should_autoscroll = true;
 		mark_dirty();
 	}
-	else if(t->get_text().length() > 0)
+	else if(t->len_t() > 0)
 	{
 		//if the user deleted the last tag, simply empty it
-		t->set_text("");
-		t->set_completion("");
+		t->set_t("");
+		t->set_c("");
 		state->should_autoscroll = true;
 		mark_dirty();
 	}
@@ -332,11 +307,11 @@ void CLI::delete_tag()
 
 void CLI::backspace()
 {
-	std::string s = current_tag()->get_text();
+	std::string s = current_tag()->get_t();
 	if(s.length() > 0)
 	{
 		s.pop_back();
-		current_tag()->set_text(s);
+		current_tag()->set_t(s);
 		state->should_autoscroll = true;
 		mark_dirty();
 	}
@@ -346,8 +321,8 @@ void CLI::auto_complete()
 {
 	Tag* t = current_tag();
 
-	t->set_text(t->get_text() + t->get_completion());
-	t->set_completion("");
+	t->set_t(t->get_t() + t->get_c());
+	t->set_c("");
 	state->should_autoscroll = true;
 	mark_dirty();
 }

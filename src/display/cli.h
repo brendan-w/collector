@@ -18,15 +18,16 @@ class Tag
 		Tag();
 		~Tag();
 
+		//helpers, merely to make the code prettier
+		std::string get_t() { return text->get_text(); }
+		std::string get_c() { return completion->get_text(); }
+		void set_t(std::string str) { text->set_text(str); }
+		void set_c(std::string str) { completion->set_text(str); }
+		size_t len_t() { return text->get_text().length(); }
+		size_t len_c() { return completion->get_text().length(); }
 
-		std::string get_text();
-		void set_text(const std::string & t);
-		std::string get_completion();
-		void set_completion(const std::string & t);
-
-		Text* text;
-		Text* completion;
-		bool valid;
+		Text* text;       //the users actual input
+		Text* completion; //the generated auto completion
 };
 
 

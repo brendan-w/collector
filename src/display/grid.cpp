@@ -86,7 +86,6 @@ void Grid::render_minimap()
 	}
 
 	//draw the current viewport region indicators
-	sdl->set_color(FILE_SELECTED);
 
 	const int x = (int) ((double) x_offset() * width / get_scroll_range());
 	const int w = (int) ((double) width * width / get_scroll_range());
