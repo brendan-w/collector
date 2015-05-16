@@ -53,6 +53,8 @@ std::string escape_file_name(std::string &path)
 			case '&':
 			case ';':
 			case '%':
+			case '(':
+			case ')':
 				output.push_back('\\');
 				break;
 		}
