@@ -13,9 +13,10 @@ class State
 		State();
 		~State();
 
-		Selection* selection = NULL;   //the current file selection returned from the filestore
-		File* file_under_mouse = NULL; //pointer to the file currently under the mouse
-		file_map_bool inexclude;       //manual include/exclude table
+		Selection* selection = NULL;    //the current file selection returned from the filestore
+		File* file_under_mouse = NULL;  //pointer to the file currently under the mouse
+		file_map_bool inexclude;        //manual include/exclude table
+		bool should_autoscroll = false; //whether or not the most recent selection should be autoscrolled
 
 		void replace_selection(Selection* s);
 		void fill_selector(Selector* s);

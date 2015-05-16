@@ -149,8 +149,8 @@ void Display::on_key(SDL_KeyboardEvent &e)
 				current->display->pagedown();
 			break;
 		default:
-			cli.display->on_key(e);
-			send_selector();
+			if(cli.display->on_key(e))
+				send_selector();
 			break;
 	}
 }

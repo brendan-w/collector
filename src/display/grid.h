@@ -42,6 +42,7 @@ class Grid : public DisplayObject
 
 		void render_minimap();
 		void update_minimap();
+		void auto_scroll();
 		void render_file(File* file, bool selected);
 		File* mouse_to_file(int x, int y);
 };

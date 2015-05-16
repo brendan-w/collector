@@ -72,6 +72,13 @@ void DisplayObject::set_scroll_range(size_t s)
 	limit_scroll();
 }
 
+void DisplayObject::scroll_to(int s)
+{
+	s -= (sdl->get_viewport().w / 2);
+	offset.x = s;
+	limit_scroll();
+}
+
 void DisplayObject::limit_scroll()
 {
 	int max_scroll = scroll_range - (sdl->get_viewport().w);

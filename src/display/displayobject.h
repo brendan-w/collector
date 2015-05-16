@@ -23,7 +23,7 @@ class DisplayObject
 		virtual void resize() { mark_dirty(); }
 
 		//events
-		virtual void on_key(SDL_KeyboardEvent &e) {}
+		virtual bool on_key(SDL_KeyboardEvent &e) { return false; } //returns bool for whether the key was accepted
 		virtual void on_text(SDL_TextInputEvent &e) {}
 		virtual void on_wheel(SDL_MouseWheelEvent &e);
 		virtual void on_click(SDL_MouseButtonEvent &e) {}
@@ -44,6 +44,7 @@ class DisplayObject
 
 	protected:
 		void set_scroll_range(size_t s);
+		void scroll_to(int s);
 		size_t get_scroll_range() { return scroll_range; }
 		void set_centered_height(size_t h);
 		int x_offset() { return offset.x; }

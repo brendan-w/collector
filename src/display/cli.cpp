@@ -74,40 +74,42 @@ CLI::~CLI()
 }
 
 
-void CLI::on_key(SDL_KeyboardEvent &e)
+bool CLI::on_key(SDL_KeyboardEvent &e)
 {
 	switch(e.keysym.sym)
 	{
 		case SDLK_BACKSPACE:
 			backspace();
-			break;
+			return true;
 		case SDLK_DELETE:
 			delete_tag();
-			break;
+			return true;
 		case SDLK_TAB:
 			auto_complete();
-			break;
+			return true;
 		case SDLK_UP:
-			break;
+			return true;
 		case SDLK_DOWN:
-			break;
+			return true;
 		case SDLK_LEFT:
 			if(current_index > 0)
 			{
 				current_index--;
 				mark_dirty();
 			}
-			break;
+			return true;
 		case SDLK_RIGHT:
 			if(current_index < (tags.size() - 1))
 			{
 				current_index++;
 				mark_dirty();
 			}
-			break;
+			return true;
 		default:
 			break;
 	}
+
+	return false;
 }
 
 
@@ -126,12 +128,16 @@ void CLI::on_text(SDL_TextInputEvent &e)
 			new_tag();
 			mark_dirty();
 		}
+
+		// return false;
 	}
 	else
 	{
 		Tag* t = current_tag();
 		t->set_text(t->get_text() += e.text);
+		state->should_autoscroll = true;
 		mark_dirty();
+		// return true;
 	}
 }
 
@@ -310,6 +316,8 @@ void CLI::delete_tag()
 		{
 			current_index--;
 		}
+
+		state->should_autoscroll = true;
 		mark_dirty();
 	}
 	else if(t->get_text().length() > 0)
@@ -317,6 +325,7 @@ void CLI::delete_tag()
 		//if the user deleted the last tag, simply empty it
 		t->set_text("");
 		t->set_completion("");
+		state->should_autoscroll = true;
 		mark_dirty();
 	}
 }
@@ -328,6 +337,7 @@ void CLI::backspace()
 	{
 		s.pop_back();
 		current_tag()->set_text(s);
+		state->should_autoscroll = true;
 		mark_dirty();
 	}
 }
@@ -338,5 +348,6 @@ void CLI::auto_complete()
 
 	t->set_text(t->get_text() + t->get_completion());
 	t->set_completion("");
+	state->should_autoscroll = true;
 	mark_dirty();
 }

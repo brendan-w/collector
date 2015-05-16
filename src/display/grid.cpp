@@ -14,7 +14,7 @@
 
 
 #define GRID_V_PADDING (CLI_H * 2)
-#define MINIMAP_H 6
+#define MINIMAP_H 8
 #define MINIMAP_VIEWPORT_DIST 3
 
 
@@ -90,8 +90,10 @@ void Grid::render_minimap()
 
 	const int x = (int) ((double) x_offset() * width / get_scroll_range());
 	const int w = (int) ((double) width * width / get_scroll_range());
+
 	const int top = rect.y - MINIMAP_VIEWPORT_DIST - 1; // -1 since the stroke is 1 pixel wide
 	const int bottom = rect.y + rect.h + MINIMAP_VIEWPORT_DIST;
+
 	sdl->draw_line(x, top, x + w, top);
 	sdl->draw_line(x, bottom, x + w, bottom);
 }
@@ -191,7 +193,6 @@ void Grid::update_minimap()
 {
 	//calculate the minimap
 	Selection* s = selection();
-	// SDL_Rect rect = sdl->get_viewport();
 
 	minimap.clear();
 
@@ -249,9 +250,49 @@ void Grid::update_minimap()
 	}
 }
 
+void Grid::auto_scroll()
+{
+	//read the minimap to determine where to scroll to
+
+	if(state->should_autoscroll)
+	{
+		state->should_autoscroll = false;
+
+		if(selection()->size() > 0)
+		{
+			const double single_file = (1.0 / selection()->all_size());
+
+			Bound bound;
+			double largest;
+
+			//find the widest region of files
+			for(Bound b: minimap)
+			{
+				if(b.upper == b.lower)
+					b.upper += single_file;
+
+				double size = b.upper - b.lower;
+				if(size > largest)
+				{
+					bound = b;
+					largest = size;
+				}
+			}
+
+			//get the midpoint of the region
+			double center = (bound.lower + bound.upper) / 2.0;
+			int pos = ((int) (center * get_scroll_range()));
+
+			//scroll to the region
+			scroll_to(pos);
+		}
+	}
+}
+
 void Grid::on_selection()
 {
 	update_minimap();
+	auto_scroll();
 	mark_dirty();
 }
 

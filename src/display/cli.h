@@ -38,7 +38,7 @@ class CLI : public DisplayObject
 
 		void render();
 
-		void on_key(SDL_KeyboardEvent &e);
+		bool on_key(SDL_KeyboardEvent &e);
 		void on_text(SDL_TextInputEvent &e);
 
 		void on_selection();

@@ -16,7 +16,6 @@
 #endif
 
 size_t levenshtein_distance(const std::string &s1, const std::string &s2);
-double map(double x, double in_min, double in_max, double out_min, double out_max);
 void to_lower(std::string & s);
 bool file_exists(const char* filename);
 bool starts_with(std::string str, std::string partial);

@@ -41,11 +41,6 @@ size_t levenshtein_distance(const std::string & s1, const std::string & s2) {
 	return prevCol[len2];
 }
 
-double map(double x, double in_min, double in_max, double out_min, double out_max)
-{
-    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
-
 void to_lower(std::string & s)
 {
 	std::transform(s.begin(), s.end(), s.begin(), ::tolower);
