@@ -162,6 +162,9 @@ void File::remove_tag(Tag_Entry* t)
 
 	/*
 		if the name carries this tag
+
+		note: name does not include the extension
+		file extensions can be searched, but not modified
 	*/
 	if(name_tags.find(t->tag) != name_tags.end())
 	{
@@ -192,9 +195,15 @@ void File::remove_tag(Tag_Entry* t)
 			}
 		}
 
+		//keep the tag_set up to date, so that the directory handler can check for duplicates
+		name_tags.erase(t->tag);
+
 		//prevent files with no names
 		if(p.name.length() == 0)
+		{
+			//TODO: update the FileStore for these outcomes
 			p.name = "unknown";
+		}
 	}
 
 
@@ -203,7 +212,39 @@ void File::remove_tag(Tag_Entry* t)
 	*/
 	if(dir_tags.find(t->tag) != dir_tags.end())
 	{
-		//remove all instances of it
+		//operate on a lower case version of the string
+		//to preserve the case of the original
+		std::string lower_dirs = p.dirs;
+		to_lower(lower_dirs);
+		
+		//find the first occurence of this tag in the directory path
+		size_t dir_pos = lower_dirs.find(t->tag);
+
+		//scan backwards to find the preceeding PATH_SEP
+		dir_pos = lower_dirs.rfind(PATH_SEP, dir_pos);
+		if(dir_pos == std::string::npos)
+			dir_pos = 0;
+
+		//when the file gets popped out of a directory,
+		//it may loose more tags than just the deleted tag.
+		//get the string of all dirs that are about to go away
+		std::string path_casualties = p.dirs.substr(dir_pos);
+
+		//pop the file up to the appropriate dir
+		p.dirs = p.dirs.substr(0, dir_pos);
+
+		//encode the casualty tags in the filename
+		tag_set casualty_tags = split_tags(path_casualties);
+
+		//exclude the tag that we're trying to remove
+		casualty_tags.erase(t->tag);
+
+		for(std::string tag: casualty_tags)
+		{
+			//if this tag wasn't already in the filename, add it
+			if(name_tags.find(tag) == name_tags.end())
+				p.name = tag + config->default_tag_delim + p.name;
+		}
 	}
 
 	//put the parts back together
