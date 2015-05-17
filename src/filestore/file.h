@@ -67,7 +67,7 @@ class File
 		std::string path;
 		Thumbnail* thumb;
 
-		void move(std::string dest);
+		bool move(std::string dest);
 };
 
 

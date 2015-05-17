@@ -117,13 +117,16 @@ void File::add_tag(Tag_Entry* t)
 	dest = path_join(config->cwd_path, dest);
 
 	//move the file (handles possible collisions)
-	move(dest);
+	if(move(dest))
+	{
+		//if the file move was successful
 
-	//add this file to the tag entry
-	t->files.insert(this);
+		//add this file to the tag entry
+		t->files.insert(this);
 
-	//mark the this file with the tag entry
-	tags.insert(t);
+		//mark the this file with the tag entry
+		tags.insert(t);
+	}
 }
 
 void File::remove_tag(Tag_Entry* t)
@@ -137,7 +140,7 @@ void File::remove_tag(Tag_Entry* t)
 	tags.erase(t);
 }
 
-void File::move(std::string dest)
+bool File::move(std::string dest)
 {
 	//look for a collision
 	if(file_exists(dest.c_str()))
@@ -168,10 +171,13 @@ void File::move(std::string dest)
 	{
 		//failure
 		perror(path.c_str());
-		return;
+		return false;
 	}
-
-	//update the path for this file
-	size_t root_path_length = config->cwd_path.length() + 1;
-	path = dest.substr(root_path_length, std::string::npos);
+	else
+	{
+		//update the path for this file
+		size_t root_path_length = config->cwd_path.length() + 1;
+		path = dest.substr(root_path_length, std::string::npos);
+		return true;
+	}
 }
