@@ -43,11 +43,15 @@ class File
 		//the filename is optional in case the symlink needs to be opened
 		void open(std::string filepath);
 
+		//tag operations
+		bool has_tag(Tag_Entry* t);
+		void add_tag(Tag_Entry* t);
+		void remove_tag(Tag_Entry* t);
+
 		size_t get_size();
 		std::string get_path();
 		std::string get_full_path();
 		std::string get_link_path();
-		void set_path(std::string new_path);
 
 		void unload();
 		Thumbnail* get_thumb();
@@ -62,6 +66,8 @@ class File
 	private:
 		std::string path;
 		Thumbnail* thumb;
+
+		void move(std::string dest);
 };
 
 

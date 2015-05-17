@@ -29,7 +29,6 @@ class FileStore
 		void insert_file(File* file);
 		tag_set tags_for_file(File* file);
 
-		void add_tag_on_file(File* file, const std::string & tag);
-		void remove_tag_on_file(File* file, const std::string & tag);
-		void move_file(File* file, std::string dest);
+		void add_tag(Selection* selection, const std::string & tag);
+		void remove_tag(Selection* selection, const std::string & tag);
 };

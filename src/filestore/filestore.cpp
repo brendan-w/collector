@@ -46,9 +46,10 @@ FileStore::FileStore()
 FileStore::~FileStore()
 {
 	for(File* file: files)
-	{
 		delete file;
-	}
+
+	for(auto e: tags)
+		delete e.second; //the Tag_Entry
 
 	files.clear();
 	tags.clear();
@@ -123,24 +124,12 @@ void FileStore::operation(Selection* selection, Operation* operation)
 	switch(operation->get_op())
 	{
 		case ADD_TAG:
-			for(File* file: *selection)
-			{
-				add_tag_on_file(file, operation->get_tag());
-			}
+			add_tag(selection, operation->get_tag());
 			break;
 
 		case REMOVE_TAG:
-		{
-			std::string tag = operation->get_tag();
-			
-			if(selection->has_subtag(tag))
-			{
-				for(File* file: *selection)
-					remove_tag_on_file(file, tag);
-			}
-			
+			remove_tag(selection, operation->get_tag());
 			break;
-		}
 
 		case DELETE_FILES:
 			break;
@@ -219,94 +208,47 @@ tag_set FileStore::tags_for_file(File* file)
 }
 
 
-void FileStore::add_tag_on_file(File* file, const std::string & tag)
+void FileStore::add_tag(Selection* selection, const std::string & tag)
 {
-	//make sure this tag isn't already on the file
+	//update the data sctructure for the new tag
+	Tag_Entry* entry;
+	
 	if(has_tag(tag))
 	{
-		Tag_Entry* entry = tags[tag];
-		if(file->tags.find(entry) != file->tags.end())
-			return; //file already has this tag. Done.
-	}
-
-	//calculate where to move this file
-	//search for a subdirectory to place the file in
-
-	//split the filepath into directories and file name
-	std::string dirs = file->get_path();
-	std::string name = dirs;
-
-	size_t last_dir = dirs.rfind(PATH_SEP);
-
-	if(last_dir != std::string::npos)
-	{
-		last_dir++; //include the PATH_SEP in the dirs portion, and not the name
-		dirs = dirs.substr(0, last_dir);
-		name = name.substr(last_dir);
+		entry = tags[tag];
 	}
 	else
 	{
-		dirs = "";
+		//create the new Tag_Entry
+		entry = new Tag_Entry;
+		entry->tag = tag;
+		tags[tag] = entry;
 	}
 
-	std::string dir_tag = path_join(dirs, tag);
-
-	std::string dest = "";
-
-	if(dir_exists(path_join(config->cwd_path, dir_tag).c_str()))
+	for(File* file: *selection)
 	{
-		//there is a subdirectory to encode this tag
-		dest = path_join(dir_tag, name);
+		if(!file->has_tag(entry))
+			file->add_tag(entry);
 	}
-	else
-	{
-		//there is no subdirectory for this tag, add it to the filename
-		dest = path_join(dirs, tag + config->default_tag_delim + name);
-	}
-
-	//make it absolute from the root
-	dest = path_join(config->cwd_path, dest);
-
-	move_file(file, dest);
 }
 
-void FileStore::remove_tag_on_file(File* file, const std::string & tag)
+void FileStore::remove_tag(Selection* selection, const std::string & tag)
 {
-	if(has_tag(tag))
+	if(!has_tag(tag))
+		return; //tag has never been seen before. Done.
+
+	Tag_Entry* entry = tags[tag];
+
+	for(File* file: *selection)
 	{
-		Tag_Entry* entry = tags[tag];
-		if(file->tags.find(entry) == file->tags.end())
-			return; //file doesn't have this tag. Done.
-	}
-	else
-		return; //tag has never been seen before, so it's not on the file. Done.
-
-}
-
-void FileStore::move_file(File* file, std::string dest)
-{
-	//look for a collision
-	if(file_exists(dest.c_str()))
-	{
-		//as long as there's a collision, try adding "(i)" to the filename
-
-		size_t ext_pos = dest.rfind(".");
-		std::string pathname = dest.substr(0, ext_pos);
-		std::string ext = dest.substr(ext_pos);
-
-		size_t i = 1;
-		std::string new_dest;
-
-		do
-		{
-			new_dest = pathname + "(" + std::to_string(i) + ")" + ext;
-			i++;
-		}
-		while(file_exists(new_dest.c_str()));
-
-		dest = new_dest;
+		if(file->has_tag(entry))
+			file->remove_tag(entry);
 	}
 
-	std::cout << dest << std::endl;
-	// rename(file->get_full_path().c_str(), dest.c_str());
+	//delete the Tag_Entry if there are no remaining files with that tag
+	if(entry->files.size() == 0)
+	{
+		tags.erase(tag);
+		delete entry;
+	}
 }
