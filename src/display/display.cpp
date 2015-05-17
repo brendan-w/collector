@@ -245,6 +245,11 @@ void Display::on_selection(Selection* s)
 	update_mouse();
 }
 
+void Display::on_operation(Operation* operation)
+{
+	
+}
+
 void Display::on_state_change()
 {
 	cli.display->on_state_change();

@@ -34,7 +34,8 @@ class Selection
 		std::string auto_complete(std::string partial);
 
 	private:
-		 //set of Files selected by the previous Selector
+		
+		//set of Files selected by the previous Selector
 		file_set files;
 		
 		//the whole file list

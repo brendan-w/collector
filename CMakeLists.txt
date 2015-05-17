@@ -41,6 +41,7 @@ set(SOURCE_FILES
 	"src/filestore/file.cpp"
 	"src/filestore/selector.cpp"
 	"src/filestore/selection.cpp"
+	"src/filestore/operation.cpp"
 )
 
 add_executable(collector ${SOURCE_FILES})

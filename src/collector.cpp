@@ -90,13 +90,20 @@ int main(int argc, char * argv[])
 					{
 						display->on_selection((Selection*) e.user.data1);
 					}
-					else if(e.type == STATE_CHANGE)
+					else if(e.type == OPERATION)
 					{
-						display->on_state_change();
+						Operation* op = (Operation*) e.user.data2;
+						filestore->operation((Selection*) e.user.data1, op);
+						display->on_operation(op); //this will trigger a re-selection
+						delete op;
 					}
 					else if(e.type == RENDER_THUMBS)
 					{
 						display->request_render(RENDER_THUMBS);
+					}
+					else if(e.type == STATE_CHANGE)
+					{
+						display->on_state_change();
 					}
 					break;
 			}

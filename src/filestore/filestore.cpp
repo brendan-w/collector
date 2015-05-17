@@ -118,6 +118,36 @@ Selection* FileStore::select(Selector* selector)
 }
 
 
+void FileStore::operation(Selection* selection, Operation* operation)
+{
+	switch(operation->get_op())
+	{
+		case ADD_TAG:
+			for(File* file: *selection)
+			{
+				add_tag_on_file(file, operation->get_tag());
+			}
+			break;
+
+		case REMOVE_TAG:
+		{
+			std::string tag = operation->get_tag();
+			
+			if(selection->has_subtag(tag))
+			{
+				for(File* file: *selection)
+					remove_tag_on_file(file, tag);
+			}
+			
+			break;
+		}
+
+		case DELETE_FILES:
+			break;
+	}
+}
+
+
 bool FileStore::has_tag(const std::string & tag)
 {
 	return (tags.find(tag) != tags.end());
@@ -186,4 +216,15 @@ tag_set FileStore::tags_for_file(File* file)
 	}
 
 	return tags;
+}
+
+
+void FileStore::add_tag_on_file(File* file, const std::string & tag)
+{
+
+}
+
+void FileStore::remove_tag_on_file(File* file, const std::string & tag)
+{
+
 }

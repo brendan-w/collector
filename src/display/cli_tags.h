@@ -48,7 +48,7 @@ class CLI_Tags : public DisplayObject
 	private:
 
 		std::vector<Tag*> tags;
-		unsigned int current_index;
+		size_t current_index;
 
 		void render_tags(int x, const int y);
 		void new_tag();

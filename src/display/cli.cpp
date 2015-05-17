@@ -131,6 +131,7 @@ void CLI::render()
 
 void CLI::fill_selector(Selector* selector)
 {
+	//the Tags component is the only one with selector data
 	tags->fill_selector(selector);
 }
 

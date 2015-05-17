@@ -41,6 +41,7 @@ class Display
 		void on_motion(SDL_MouseMotionEvent &e);
 
 		void on_selection(Selection* new_selection);
+		void on_operation(Operation* operation);
 		void on_state_change();
 
 	private:

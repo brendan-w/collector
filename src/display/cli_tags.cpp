@@ -104,7 +104,7 @@ void CLI_Tags::on_text(SDL_TextInputEvent &e)
 	else
 	{
 		Tag* t = current_tag();
-		t->set_t(t->get_t() += e.text);
+		t->set_t(t->get_t() + e.text);
 		state->should_autoscroll = true;
 		mark_dirty();
 	}

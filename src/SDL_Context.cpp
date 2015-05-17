@@ -9,11 +9,12 @@
 #include <SDL_utils.h>
 
 
-#define NUM_USER_EVENTS 4
+#define NUM_USER_EVENTS 5
 
-Uint32 RENDER_THUMBS = 0;
 Uint32 SELECTOR = 0;
 Uint32 SELECTION = 0;
+Uint32 OPERATION = 0;
+Uint32 RENDER_THUMBS = 0;
 Uint32 STATE_CHANGE = 0;
 
 
@@ -113,10 +114,12 @@ SDL_Context::SDL_Context()
 		return;
 	}
 
-	RENDER_THUMBS  = begin;
-	SELECTOR       = begin + 1;
-	SELECTION      = begin + 2;
-	STATE_CHANGE   = begin + 3;
+
+	SELECTOR      = begin;
+	SELECTION     = begin + 1;
+	OPERATION     = begin + 2;
+	RENDER_THUMBS = begin + 3;
+	STATE_CHANGE  = begin + 4;
 }
 
 

@@ -8,3 +8,4 @@
 #include <filestore/file.h>
 #include <filestore/selector.h>
 #include <filestore/selection.h>
+#include <filestore/operation.h>
