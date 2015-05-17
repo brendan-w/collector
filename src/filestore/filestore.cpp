@@ -64,10 +64,12 @@ Selection* FileStore::select(Selector* selector)
 
 	if(!selector->is_empty())
 	{
-		tag_vector intersections = selector->get_tag_intersections();
+		/*
+			Intersections
+		*/
 
 		bool first = true;
-		for(std::string tag: intersections)
+		for(std::string tag: selector->get_tag_intersections())
 		{
 			//prevent unknown tags from destroying the query
 			if(!has_tag(tag))
@@ -96,7 +98,27 @@ Selection* FileStore::select(Selector* selector)
 			}
 		}
 
-		//process the manually included and excluded files
+		/*
+			Exclusions
+		*/
+
+		for(std::string tag: selector->get_tag_exclusions())
+		{
+			//prevent unknown tags from destroying the query
+			if(!has_tag(tag))
+				continue;
+
+			Tag_Entry* entry = tags[tag];
+
+			//exclude these files from the selection
+			for(File* f: entry->files)
+				r_files.erase(f);
+		}
+
+		/*
+			Manual Includes & Excludes
+		*/
+
 		file_map_bool inexclude = selector->get_inexclude();
 		for(auto e: inexclude)
 		{
@@ -106,7 +128,10 @@ Selection* FileStore::select(Selector* selector)
 				r_files.erase(e.first); //exclude this file
 		}
 
-		//compute the set of subtags by performing a union
+		/*
+			Subtags
+		*/
+
 		for(File* file: r_files)
 		{
 			set_union(r_subtags, file->tags);

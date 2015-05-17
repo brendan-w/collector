@@ -25,6 +25,30 @@ Tag::~Tag()
 	delete completion;
 }
 
+std::string Tag::get_tag()
+{
+	if(get_op() == EXCLUSION)
+		return get_t().substr(1);
+
+	return get_t();
+}
+
+Set_Operation Tag::get_op()
+{
+	if(len_t() > 0)
+	{
+		switch(get_t().at(0))
+		{
+			case '-':
+				return EXCLUSION;
+				break;
+		}		
+	}
+
+	return INTERSECTION;
+}
+
+
 
 
 
@@ -153,7 +177,7 @@ void CLI_Tags::fill_selector(Selector* selector)
 	//dump our tags into the selector
 	for(Tag* t: tags)
 	{
-		selector->add_operation(t->get_t(), INTERSECTION);
+		selector->add_tag(t->get_tag(), t->get_op());
 	}
 }
 
@@ -164,7 +188,7 @@ void CLI_Tags::on_selection()
 
 	//update the status of the current tag
 	Tag* t = current_tag();
-	std::string tag = t->get_t();
+	std::string tag = t->get_tag();
 	if(s->has_subtag(tag))
 	{
 		t->text->set_color(config->get_color(CLI_LIGHT));

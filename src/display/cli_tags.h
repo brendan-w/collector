@@ -26,6 +26,10 @@ class Tag
 		size_t len_t() { return text->get_text().length(); }
 		size_t len_c() { return completion->get_text().length(); }
 
+		//helpers to account for control characters
+		std::string get_tag();
+		Set_Operation get_op();
+
 		Text* text;       //the users actual input
 		Text* completion; //the generated auto completion
 };

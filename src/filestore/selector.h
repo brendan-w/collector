@@ -10,7 +10,7 @@
 typedef std::unordered_map<File*, bool> file_map_bool;
 
 
-enum Set_operation
+enum Set_Operation
 {
 	INTERSECTION = 0,
 	EXCLUSION,
@@ -24,7 +24,7 @@ class Selector
 		Selector();
 		~Selector();
 
-		void add_operation(std::string tag, Set_operation op);
+		void add_tag(std::string tag, Set_Operation op);
 		void add_inexclude(File* f, bool included);
 
 		const tag_vector get_tag_intersections() { return tag_intersections; }

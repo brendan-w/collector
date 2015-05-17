@@ -22,7 +22,7 @@ Selector::~Selector()
 	inexclude.clear();
 }
 
-void Selector::add_operation(std::string tag, Set_operation op)
+void Selector::add_tag(std::string tag, Set_Operation op)
 {
 	if(tag.length() > 0)
 	{
