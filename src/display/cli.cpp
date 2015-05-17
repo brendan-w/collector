@@ -6,7 +6,6 @@
 
 #include <iostream>
 #include <string>
-#include <vector>
 
 #include <SDL.h>
 
@@ -14,106 +13,72 @@
 #include <text.h>
 #include <filestore/types.h>
 #include <display/state.h>
+#include <display/cli_tags.h>
+#include <display/cli_command.h>
 #include <display/cli.h>
 
 
-
-Tag::Tag()
-{
-	text       = new Text("", config->get_color(CLI_LIGHT));
-	completion = new Text("", config->get_color(CLI_DARK));
-}
-
-Tag::~Tag()
-{
-	delete text;
-	delete completion;
-}
-
+#define TAG_MODE_PROMPT "SELECT"
+#define TAG_MODE_COLOR FILE_INCLUDED
+#define COMMAND_MODE_PROMPT "COMMAND"
+#define COMMAND_MODE_COLOR FILE_INCLUDED
 
 
 
 
 CLI::CLI(State* s) : DisplayObject(s)
 {
-	new_tag(); //create the initial empty tag field
+	prompt   = new Text("", config->get_color(HIGHLIGHT));
 	totals   = new Text("", config->get_color(CLI_LIGHT));
 	includes = new Text("", config->get_color(CLI_DARK));
 	excludes = new Text("", config->get_color(CLI_DARK));
-	on_selection();
-	on_state_change();
+
+	tags    = new CLI_Tags(s);
+	command = new CLI_Command(s);
+
+	set_mode(tags);
+	on_selection();    //set the selection totals
+	on_state_change(); //set the include/exclude totals
 }
 
 
 CLI::~CLI()
 {
-	destroy_tags();
+	delete prompt;
 	delete totals;
+	delete includes;
+	delete excludes;
+
+	delete tags;
+	delete command;
 }
 
+void CLI::carry_dirt()
+{
+	if(current->is_dirty())
+		mark_dirty();
+}
 
 bool CLI::on_key(SDL_KeyboardEvent &e)
 {
-	switch(e.keysym.sym)
+	if(state->key_ctrl && (e.keysym.sym == SDLK_TAB))
 	{
-		case SDLK_BACKSPACE:
-			backspace();
-			return true;
-		case SDLK_DELETE:
-			delete_tag();
-			return true;
-		case SDLK_TAB:
-			auto_complete();
-			return true;
-		case SDLK_UP:
-			return true;
-		case SDLK_DOWN:
-			return true;
-		case SDLK_LEFT:
-			if(current_index > 0)
-			{
-				current_index--;
-				mark_dirty();
-			}
-			return true;
-		case SDLK_RIGHT:
-			if(current_index < (tags.size() - 1))
-			{
-				current_index++;
-				mark_dirty();
-			}
-			return true;
-		default:
-			break;
+		cycle_mode();
+		return false;
 	}
-
-	return false;
+	else
+	{
+		bool r = current->on_key(e);
+		carry_dirt();
+		return r;
+	}
 }
 
 
 void CLI::on_text(SDL_TextInputEvent &e)
 {
-	//space bar starts a new tag
-	if(e.text[0] == ' ')
-	{
-		//if the last tag is empty, skip to it (rather than adding another)
-		if(tags[tags.size() - 1]->len_t() == 0)
-		{
-			current_index = tags.size() - 1;
-		}
-		else
-		{
-			new_tag();
-			mark_dirty();
-		}
-	}
-	else
-	{
-		Tag* t = current_tag();
-		t->set_t(t->get_t() += e.text);
-		state->should_autoscroll = true;
-		mark_dirty();
-	}
+	current->on_text(e);
+	carry_dirt();
 }
 
 
@@ -125,71 +90,48 @@ void CLI::render()
 	sdl->set_color(OVERLAY);
 	sdl->fill_rect(rect);
 
-	int x = rect.w - CLI_PAD;
 	const int y = rect.y + CLI_PAD;
+	int rx = 0;
 
-	x -= totals->width();
-	totals->render(x, y);
+	//right aligned content
+	rx = rect.w - CLI_PAD;
 
-	x -= (CLI_PAD * 6);
+	rx -= totals->width();
+	totals->render(rx, y);
 
-	x -= excludes->width();
-	excludes->render(x, y);
+	rx -= (CLI_PAD * 6);
 
-	x -= (CLI_PAD * 2);
+	rx -= excludes->width();
+	excludes->render(rx, y);
 
-	x -= includes->width();
-	includes->render(x, y);
+	rx -= (CLI_PAD * 2);
 
-	render_tags();
+	rx -= includes->width();
+	includes->render(rx, y);
+
+
+	//left aligned content
+
+	int lx = CLI_PAD;
+	prompt->render(lx, y);
+	lx += prompt->width() + CLI_PAD;
+
+	SDL_Rect content = {
+		lx,
+		0,
+		rx - lx,
+		rect.h
+	};
+
+	sdl->set_viewport(content);
+
+	current->render();
 }
 
-
-
-void CLI::render_tags()
-{
-	SDL_Rect rect = sdl->get_viewport();
-	SDL_Rect tag_rect = rect;
-
-	//draw each tags text
-	sdl->set_color(HIGHLIGHT);
-
-	int x = CLI_PAD;
-	const int y = rect.y + CLI_PAD;
-
-	for(size_t i = 0; i < tags.size(); i++)
-	{
-		Tag* t = tags[i];
-		int tw = t->text->width();
-		int cw = t->completion->width();
-
-		tag_rect.x = x - CLI_PAD;
-		tag_rect.w = tw + (CLI_PAD * 2);
-		
-		if(i == current_index)
-		{
-			tag_rect.w += cw;
-			sdl->fill_rect(tag_rect);
-		}
-
-		t->text->render(x, y);
-
-		if(i == current_index)
-		{
-			t->completion->render(x + tw, y);
-		}
-
-		x += tag_rect.w;
-	}
-}
 
 void CLI::fill_selector(Selector* selector)
 {
-	//dump our tags into the selector
-	for(Tag* t: tags)
-	{
-		selector->add_operation(t->get_t(), INTERSECTION);
-	}
+	tags->fill_selector(selector);
 }
 
 
@@ -204,22 +146,7 @@ void CLI::on_selection()
 	totals_str += std::to_string(s->all_size());
 	totals->set_text(totals_str);
 
-	//update the status of the current tag
-	Tag* t = current_tag();
-	std::string tag = t->get_t();
-	if(s->has_subtag(tag))
-	{
-		t->text->set_color(config->get_color(CLI_LIGHT));
-		t->set_c("");
-	}
-	else
-	{
-		t->text->set_color(config->get_color(CLI_ERROR));
-		if(tag.length() > 0)
-			t->set_c(s->auto_complete(tag));
-		else
-			t->set_c("");
-	}
+	current->on_selection();
 
 	mark_dirty();
 }
@@ -246,83 +173,33 @@ void CLI::on_state_change()
 	if(n_excludes == 0) excludes->set_color(config->get_color(CLI_DARK));
 	else                excludes->set_color(config->get_color(FILE_EXCLUDED));
 
+	current->on_state_change();
+
 	mark_dirty();
 }
 
-//deallocates all Text objects in tags
-void CLI::destroy_tags()
+void CLI::cycle_mode()
 {
-	for(Tag* t: tags)
-		delete t;
-
-	tags.clear();
+	if(current == tags)
+		set_mode(command);
+	else if(current == command)
+		set_mode(tags);
 }
 
-
-Tag* CLI::current_tag()
+void CLI::set_mode(DisplayObject* m)
 {
-	return tags[current_index];
-}
+	current = m;
 
-
-//creates a new tag at the end of the tags vector
-//and sets it as the current
-void CLI::new_tag()
-{
-	Tag* t = new Tag();
-	tags.push_back(t);
-	current_index = tags.size() - 1;
-}
-
-
-//deletes the current tag, ensures that there is
-//always one tag in the vector
-void CLI::delete_tag()
-{
-	Tag* t = current_tag();
-
-	//ensure that there is always at least one tag preset
-	if(tags.size() > 1)
+	if(current == tags)
 	{
-		delete t;
-		tags.erase(tags.begin() + current_index);
-
-		if(current_index > (tags.size() - 1))
-		{
-			current_index--;
-		}
-
-		state->should_autoscroll = true;
-		mark_dirty();
+		prompt->set_text(TAG_MODE_PROMPT);
+		prompt->set_color(config->get_color(TAG_MODE_COLOR));
 	}
-	else if(t->len_t() > 0)
+	else if(current == command)
 	{
-		//if the user deleted the last tag, simply empty it
-		t->set_t("");
-		t->set_c("");
-		state->should_autoscroll = true;
-		mark_dirty();
+		prompt->set_text(COMMAND_MODE_PROMPT);
+		prompt->set_color(config->get_color(COMMAND_MODE_COLOR));
 	}
-}
 
-void CLI::backspace()
-{
-	std::string s = current_tag()->get_t();
-	if(s.length() > 0)
-	{
-		s.pop_back();
-		current_tag()->set_t(s);
-		state->should_autoscroll = true;
-		mark_dirty();
-	}
-}
-
-void CLI::auto_complete()
-{
-	Tag* t = current_tag();
-
-	t->set_t(t->get_t() + t->get_c());
-	t->set_c("");
-	state->should_autoscroll = true;
 	mark_dirty();
 }

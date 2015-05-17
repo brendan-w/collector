@@ -31,6 +31,8 @@ set(SOURCE_FILES
 	"src/display/displayobject.cpp"
 	"src/display/state.cpp"
 	"src/display/cli.cpp"
+	"src/display/cli_tags.cpp"
+	"src/display/cli_command.cpp"
 	"src/display/subtags.cpp"
 	"src/display/info.cpp"
 	"src/display/grid.cpp"

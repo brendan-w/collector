@@ -137,9 +137,6 @@ void Display::on_key_down(SDL_KeyboardEvent &e)
 		case SDLK_ESCAPE:
 			sdl->quit();
 			break;
-		case SDLK_RETURN:
-			state.selection->export_();
-			break;
 		case SDLK_PAGEUP:
 			if(current != NULL)
 				current->display->pageup();
