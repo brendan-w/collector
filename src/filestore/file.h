@@ -23,6 +23,13 @@ typedef struct {
 } File_Point;
 
 
+//used when renaming the file for new tags
+typedef struct {
+	std::string dirs;
+	std::string name;
+} Path_Parts;
+
+
 //forward declare
 class Tag_Entry;
 
@@ -44,6 +51,7 @@ class File
 		void open(std::string filepath);
 
 		//tag operations
+		tag_set compute_tags();
 		bool has_tag(Tag_Entry* t);
 		void add_tag(Tag_Entry* t);
 		void remove_tag(Tag_Entry* t);
@@ -60,13 +68,16 @@ class File
 
 		File_Point grid_pos;
 		File_Point thumb_pos;
-
 		entry_set tags;
 
 	private:
+		//the path relative to the curerent working directory
 		std::string path;
+
 		Thumbnail* thumb;
 
+		tag_set split_tags(std::string p);
+		Path_Parts get_path_parts();
 		bool move(std::string dest);
 };
 

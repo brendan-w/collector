@@ -76,41 +76,78 @@ bool File::has_tag(Tag_Entry* t)
 	return (tags.find(t) != tags.end());
 }
 
+tag_set File::compute_tags()
+{
+	return split_tags(path);
+}
+
+tag_set File::split_tags(std::string p)
+{
+	tag_set tags;
+
+	to_lower(p);
+
+	size_t prev = 0;
+	size_t pos = 0;
+
+	//while there is another delimeter
+	while((pos = p.find_first_of(config->tag_delim, prev)) != std::string::npos)
+	{
+		if(pos > prev)
+		{
+			tags.insert(p.substr(prev, pos-prev));
+		}
+		prev = pos + 1;
+	}
+
+	//add the last tag to the set
+	if(prev < p.length())
+	{
+		tags.insert(p.substr(prev, std::string::npos));
+	}
+
+	return tags;
+}
+
+Path_Parts File::get_path_parts()
+{
+	//split the filepath into directories and file name
+	Path_Parts r;
+	r.dirs = "";
+	r.name = get_path();
+
+	size_t last_dir = r.name.rfind(PATH_SEP);
+
+	if(last_dir != std::string::npos)
+	{
+		last_dir++; //include the PATH_SEP in the dirs portion, and not the name
+		r.dirs = r.name.substr(0, last_dir);
+		r.name = r.name.substr(last_dir);
+	}
+
+	return r;
+}
+
 void File::add_tag(Tag_Entry* t)
 {
 	//calculate where to move this file
 	//search for a subdirectory to place the file in
 
 	//split the filepath into directories and file name
-	std::string dirs = get_path();
-	std::string name = dirs;
-
-	size_t last_dir = dirs.rfind(PATH_SEP);
-
-	if(last_dir != std::string::npos)
-	{
-		last_dir++; //include the PATH_SEP in the dirs portion, and not the name
-		dirs = dirs.substr(0, last_dir);
-		name = name.substr(last_dir);
-	}
-	else
-	{
-		dirs = "";
-	}
-
-	std::string dir_tag = path_join(dirs, t->tag);
+	Path_Parts p = get_path_parts();
 
 	std::string dest = "";
+	std::string dir_tag = path_join(p.dirs, t->tag);
 
 	if(dir_exists(path_join(config->cwd_path, dir_tag).c_str()))
 	{
 		//there is a subdirectory to encode this tag
-		dest = path_join(dir_tag, name);
+		dest = path_join(dir_tag, p.name);
 	}
 	else
 	{
 		//there is no subdirectory for this tag, add it to the filename
-		dest = path_join(dirs, t->tag + config->default_tag_delim + name);
+		dest = path_join(p.dirs, t->tag + config->default_tag_delim + p.name);
 	}
 
 	//make it absolute from the root
@@ -131,7 +168,14 @@ void File::add_tag(Tag_Entry* t)
 
 void File::remove_tag(Tag_Entry* t)
 {
+	//split the filepath into directories and file name
+	Path_Parts p = get_path_parts();
 
+
+
+
+
+	std::string dest = "";
 
 	//remove this file from the tag entry
 	t->files.erase(this);

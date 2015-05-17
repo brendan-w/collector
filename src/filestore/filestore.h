@@ -27,7 +27,6 @@ class FileStore
 
 		bool has_tag(const std::string & tag);
 		void insert_file(File* file);
-		tag_set tags_for_file(File* file);
 
 		void add_tag(Selection* selection, const std::string & tag);
 		void remove_tag(Selection* selection, const std::string & tag);

@@ -147,8 +147,7 @@ void FileStore::insert_file(File* file)
 	files.push_back(file);
 
 	//get all tags, relative to the current working directory
-	tag_set file_tags = tags_for_file(file);
-
+	tag_set file_tags = file->compute_tags();
 
 	//first iteration, populate the tag map with any new tags
 	for(std::string tag: file_tags)
@@ -175,38 +174,6 @@ void FileStore::insert_file(File* file)
 		file->tags.insert(entry);
 	}
 }
-
-
-tag_set FileStore::tags_for_file(File* file)
-{
-	tag_set tags;
-
-	//copy the path, so to_lower won't affect the original
-	std::string p = file->get_path();
-	to_lower(p);
-
-	size_t prev = 0;
-	size_t pos = 0;
-
-	//while there is another delimeter
-	while((pos = p.find_first_of(config->tag_delim, prev)) != std::string::npos)
-	{
-		if(pos > prev)
-		{
-			tags.insert(p.substr(prev, pos-prev));
-		}
-		prev = pos + 1;
-	}
-
-	//add the last tag to the set
-	if(prev < p.length())
-	{
-		tags.insert(p.substr(prev, std::string::npos));
-	}
-
-	return tags;
-}
-
 
 void FileStore::add_tag(Selection* selection, const std::string & tag)
 {
