@@ -51,6 +51,39 @@ bool is_number(const std::string& s)
 	return !s.empty() && it == s.end();
 }
 
+Path_Parts get_path_parts(std::string path)
+{
+	//split the filepath into directories and file name
+	Path_Parts p;
+	p.dirs = "";
+	p.name = path;
+	p.ext = "";
+
+	size_t last_dir = p.name.rfind(PATH_SEP);
+
+	if(last_dir != std::string::npos)
+	{
+		last_dir++; //include the PATH_SEP in the dirs portion, and not the name
+		p.dirs = p.name.substr(0, last_dir);
+		p.name = p.name.substr(last_dir);
+	}
+
+	size_t ext_pos = p.name.rfind(".");
+
+	if(ext_pos != std::string::npos)
+	{
+		p.ext  = p.name.substr(ext_pos);
+		p.name = p.name.substr(0, ext_pos);
+	}
+
+	return p;
+}
+
+std::string join_path_parts(Path_Parts p)
+{
+	return path_join(p.dirs, p.name + p.ext);
+}
+
 std::string escape_file_name(std::string &path)
 {
 	std::string output = "";

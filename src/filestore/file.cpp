@@ -7,7 +7,7 @@
 #include <algorithm> //replace()
 
 #include <collector.h> //config->cwd_path, config->open_cmd
-#include <utils.h> //escape_file_name()
+#include <utils.h> //escape_file_name(), get_path_parts(), join_path_parts()
 #include <thumbnail.h>
 #include <filestore/file.h>
 
@@ -109,32 +109,13 @@ tag_set File::split_tags(std::string p)
 	return tags;
 }
 
-Path_Parts File::get_path_parts()
-{
-	//split the filepath into directories and file name
-	Path_Parts r;
-	r.dirs = "";
-	r.name = get_path();
-
-	size_t last_dir = r.name.rfind(PATH_SEP);
-
-	if(last_dir != std::string::npos)
-	{
-		last_dir++; //include the PATH_SEP in the dirs portion, and not the name
-		r.dirs = r.name.substr(0, last_dir);
-		r.name = r.name.substr(last_dir);
-	}
-
-	return r;
-}
-
 void File::add_tag(Tag_Entry* t)
 {
 	//calculate where to move this file
 	//search for a subdirectory to place the file in
 
 	//split the filepath into directories and file name
-	Path_Parts p = get_path_parts();
+	Path_Parts p = get_path_parts(path);
 
 	std::string dest = "";
 	std::string dir_tag = path_join(p.dirs, t->tag);
@@ -142,13 +123,15 @@ void File::add_tag(Tag_Entry* t)
 	if(dir_exists(path_join(config->cwd_path, dir_tag).c_str()))
 	{
 		//there is a subdirectory to encode this tag
-		dest = path_join(dir_tag, p.name);
+		p.dirs = dir_tag;
 	}
 	else
 	{
 		//there is no subdirectory for this tag, add it to the filename
-		dest = path_join(p.dirs, t->tag + config->default_tag_delim + p.name);
+		p.name = t->tag + config->default_tag_delim + p.name;
 	}
+
+	dest = join_path_parts(p);
 
 	//make it absolute from the root
 	dest = path_join(config->cwd_path, dest);
@@ -169,19 +152,63 @@ void File::add_tag(Tag_Entry* t)
 void File::remove_tag(Tag_Entry* t)
 {
 	//split the filepath into directories and file name
-	Path_Parts p = get_path_parts();
+	Path_Parts p = get_path_parts(path);
+
+	const size_t tag_len = t->tag.length();
+
+	tag_set dir_tags  = split_tags(p.dirs);
+	tag_set name_tags = split_tags(p.name);
+
+	//if the name carries this tag
+	if(name_tags.find(t->tag) != name_tags.end())
+	{
+		//remove all instances of it
+
+		//operate on a lower case version of the string
+		//to preserve the case of the original
+		std::string lower_name = p.name;
+		to_lower(lower_name);
+
+		size_t pos;
+		while( (pos = lower_name.find(t->tag)) != std::string::npos )
+		{
+			lower_name.erase(pos, tag_len);
+			p.name.erase(pos, tag_len);
+		}
+
+		//prevent files with no names
+		if(p.name.length() == 0)
+			p.name = "unknown";
+	}
 
 
+	//a directory carries this tag
+	if(dir_tags.find(t->tag) != dir_tags.end())
+	{
+		//remove all instances of it
+	}
 
+	//put the parts back together
+	std::string dest = join_path_parts(p);
 
+	//make it absolute from the root
+	dest = path_join(config->cwd_path, dest);
 
-	std::string dest = "";
+	std::cout << dest << std::endl;
 
-	//remove this file from the tag entry
-	t->files.erase(this);
+	/*
+	//move the file (handles possible collisions)
+	if(move(dest))
+	{
+		//if the file move was successful
 
-	//unmark the this file with the tag entry
-	tags.erase(t);
+		//remove this file from the tag entry
+		t->files.erase(this);
+
+		//unmark the this file with the tag entry
+		tags.erase(t);
+	}
+	*/
 }
 
 bool File::move(std::string dest)
@@ -190,17 +217,16 @@ bool File::move(std::string dest)
 	if(file_exists(dest.c_str()))
 	{
 		//as long as there's a collision, try adding "(i)" to the filename
-
-		size_t ext_pos = dest.rfind(".");
-		std::string pathname = dest.substr(0, ext_pos);
-		std::string ext = dest.substr(ext_pos);
+		Path_Parts p = get_path_parts(dest);
 
 		size_t i = 1;
 		std::string new_dest;
 
 		do
 		{
-			new_dest = pathname + "(" + std::to_string(i) + ")" + ext;
+			Path_Parts new_p = p;
+			p.name += "(" + std::to_string(i) + ")";
+			new_dest = join_path_parts(new_p);
 			i++;
 		}
 		while(file_exists(new_dest.c_str()));

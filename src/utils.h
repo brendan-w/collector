@@ -15,11 +15,26 @@
 	const char PATH_SEP = '/';
 #endif
 
+
+//used when renaming the file for new tags
+typedef struct {
+
+    //  [                   dirs                   ][   name    ][ext]
+    //  /home/brendan/dev/cpp/collector/src/display/displayobject.cpp
+
+    std::string dirs;
+    std::string name;
+    std::string ext;
+} Path_Parts;
+
+
 void to_lower(std::string & s);
 bool file_exists(const char* filename);
 bool dir_exists(const char* path);
 bool starts_with(std::string str, std::string partial);
 bool is_number(const std::string& s);
+Path_Parts get_path_parts(std::string path);
+std::string join_path_parts(Path_Parts p);
 std::string escape_file_name(std::string &path);
 std::string double_to_str(double d, int p);
 std::string pretty_print_file_size(size_t size);

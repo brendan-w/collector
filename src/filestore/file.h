@@ -23,13 +23,6 @@ typedef struct {
 } File_Point;
 
 
-//used when renaming the file for new tags
-typedef struct {
-	std::string dirs;
-	std::string name;
-} Path_Parts;
-
-
 //forward declare
 class Tag_Entry;
 
@@ -77,7 +70,6 @@ class File
 		Thumbnail* thumb;
 
 		tag_set split_tags(std::string p);
-		Path_Parts get_path_parts();
 		bool move(std::string dest);
 };
 
