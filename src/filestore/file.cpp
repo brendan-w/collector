@@ -159,7 +159,10 @@ void File::remove_tag(Tag_Entry* t)
 	tag_set dir_tags  = split_tags(p.dirs);
 	tag_set name_tags = split_tags(p.name);
 
-	//if the name carries this tag
+
+	/*
+		if the name carries this tag
+	*/
 	if(name_tags.find(t->tag) != name_tags.end())
 	{
 		//remove all instances of it
@@ -174,6 +177,19 @@ void File::remove_tag(Tag_Entry* t)
 		{
 			lower_name.erase(pos, tag_len);
 			p.name.erase(pos, tag_len);
+
+			//remove the delimeter
+			if(pos >= p.name.length())
+			{
+				//this tag was at the end of the filename
+				p.name.erase(pos - 1, 1);
+			}
+			else
+			{
+				//this tag was NOT at the end of the filename
+				//erase the forward delimeter
+				p.name.erase(pos, 1);
+			}
 		}
 
 		//prevent files with no names
@@ -182,7 +198,9 @@ void File::remove_tag(Tag_Entry* t)
 	}
 
 
-	//a directory carries this tag
+	/*
+		a directory carries this tag
+	*/
 	if(dir_tags.find(t->tag) != dir_tags.end())
 	{
 		//remove all instances of it
@@ -194,9 +212,8 @@ void File::remove_tag(Tag_Entry* t)
 	//make it absolute from the root
 	dest = path_join(config->cwd_path, dest);
 
-	std::cout << dest << std::endl;
+	// std::cout << dest << std::endl;
 
-	/*
 	//move the file (handles possible collisions)
 	if(move(dest))
 	{
@@ -208,7 +225,6 @@ void File::remove_tag(Tag_Entry* t)
 		//unmark the this file with the tag entry
 		tags.erase(t);
 	}
-	*/
 }
 
 bool File::move(std::string dest)
