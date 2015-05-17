@@ -2,7 +2,7 @@
 #pragma once
 
 #include <string>
-#include <vector>
+#include <deque>
 
 #include "SDL.h"
 
@@ -26,12 +26,22 @@ class CLI_Command : public DisplayObject
 
 	private:
 
+		std::string cmd = "";
+
+		//the current location in history when using the up/down keys
+		//-1 = blank
+		//0  = most recent
+		//etc...
+		int history_index = -1;
+		std::deque<std::string> history;
+
 		size_t cursor_index = 0;
 
 		Text* command;
 		Text* completion;
 
 		void execute();
+		void post_execute();
 		void backspace();
 		void update_completion();
 };

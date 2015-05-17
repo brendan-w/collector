@@ -12,6 +12,7 @@
 #include <display/cli_command.h>
 
 
+#define MAX_HISTORY 50
 
 
 CLI_Command::CLI_Command(State* s) : DisplayObject(s)
@@ -25,6 +26,7 @@ CLI_Command::~CLI_Command()
 {
 	delete command;
 	delete completion;
+	history.clear();
 }
 
 
@@ -42,8 +44,25 @@ bool CLI_Command::on_key(SDL_KeyboardEvent &e)
 			//auto_complete();
 			break;
 		case SDLK_UP:
+
+			if(history_index < (int)(history.size() - 1))
+				history_index++;
+
+			command->set_text(history[history_index]);
+
+			mark_dirty();
 			break;
 		case SDLK_DOWN:
+
+			if(history_index > -1)
+				history_index--;
+
+			if(history_index == -1)
+				command->set_text(cmd);
+			else
+				command->set_text(history[history_index]);
+
+			mark_dirty();
 			break;
 		case SDLK_LEFT:
 			// if(current_index > 0)
@@ -63,13 +82,16 @@ bool CLI_Command::on_key(SDL_KeyboardEvent &e)
 			break;
 	}
 
-	return false;
+	return false; //never trigger a selector
 }
 
 
 void CLI_Command::on_text(SDL_TextInputEvent &e)
 {
-	command->set_text(command->get_text() + e.text);
+	//get the text directly from the screen, in case the user is modifying a past command
+	cmd = command->get_text() + e.text;
+	command->set_text(cmd);
+
 	mark_dirty();
 }
 
@@ -91,27 +113,24 @@ void CLI_Command::render()
 
 void CLI_Command::execute()
 {
-	std::string cmd = command->get_text();
 
 	if(cmd.length() > 1)
 	{
 		switch(cmd.at(0))
 		{
 			case '+': //add tag to selection
-				cmd = cmd.substr(1);
 				sdl->submit(OPERATION,
 							selection(),
-							new Operation(cmd, ADD_TAG));
+							new Operation(cmd.substr(1), ADD_TAG));
 
-				command->set_text("");
+				post_execute();
 				break;
 			case '-': //remove tag from selection
-				cmd = cmd.substr(1);
 				sdl->submit(OPERATION,
 							selection(),
-							new Operation(cmd, REMOVE_TAG));
+							new Operation(cmd.substr(1), REMOVE_TAG));
 
-				command->set_text("");
+				post_execute();
 				break;
 			default:
 				break;
@@ -121,13 +140,39 @@ void CLI_Command::execute()
 	mark_dirty();
 }
 
+void CLI_Command::post_execute()
+{
+	if(history.size() > 0)
+	{
+		//prevent duplicate commands from being repeatedly logged
+		if(cmd != history.front())
+		{
+			//prevent the list from growing indefinitely
+			if(history.size() > MAX_HISTORY)
+				history.pop_back();
+
+			history.push_front(cmd);
+		}
+	}
+	else
+	{
+		history.push_front(cmd);
+	}
+
+	history_index = -1;
+	cmd = "";
+	command->set_text("");
+}
+
 void CLI_Command::backspace()
 {
-	std::string s = command->get_text();
-	if(s.length() > 0)
+	//get the text directly from the screen, in case the user is modifying a past command
+	cmd = command->get_text();
+
+	if(cmd.length() > 0)
 	{
-		s.pop_back();
-		command->set_text(s);
+		cmd.pop_back();
+		command->set_text(cmd);
 		mark_dirty();
 	}
 }
