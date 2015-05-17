@@ -1,5 +1,7 @@
 
 
+#include <algorithm> //remove_if()
+
 #include <filestore/types.h>
 #include <display/state.h>
 
@@ -45,4 +47,25 @@ void State::toggle_inexclude(File* f, bool include)
 bool State::inexclude_has(File* f)
 {
 	return (inexclude.find(f) != inexclude.end());
+}
+
+void State::clear_includes()
+{
+	remove_inexclude_by_val(true);
+}
+
+void State::clear_excludes()
+{
+	remove_inexclude_by_val(false);
+}
+
+void State::remove_inexclude_by_val(bool val)
+{
+	for(auto i = inexclude.begin(); i != inexclude.end(); )
+	{
+		if(i->second == val)
+			i = inexclude.erase(i);
+		else
+			i++;
+	}
 }

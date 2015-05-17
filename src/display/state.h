@@ -23,4 +23,9 @@ class State
 		void fill_selector(Selector* s);
 		void toggle_inexclude(File* f, bool include);
 		bool inexclude_has(File* f);
+		void clear_includes();
+		void clear_excludes();
+
+	private:
+		void remove_inexclude_by_val(bool val);
 };

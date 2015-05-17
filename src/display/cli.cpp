@@ -61,10 +61,25 @@ void CLI::carry_dirt()
 
 bool CLI::on_key(SDL_KeyboardEvent &e)
 {
-	if(state->key_ctrl && (e.keysym.sym == SDLK_TAB))
+	if(state->key_ctrl)
 	{
-		cycle_mode();
-		return false;
+		switch(e.keysym.sym)
+		{
+			case SDLK_TAB:
+				cycle_mode();
+				return false;
+			case SDLK_i:
+				state->clear_includes();
+				sdl->submit(STATE_CHANGE);
+				mark_dirty();
+				return true;
+			case SDLK_e:
+				state->clear_excludes();
+				sdl->submit(STATE_CHANGE);
+				mark_dirty();
+				return true;
+		}
+
 	}
 	else
 	{
@@ -72,6 +87,8 @@ bool CLI::on_key(SDL_KeyboardEvent &e)
 		carry_dirt();
 		return r;
 	}
+
+	return false;
 }
 
 
