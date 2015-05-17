@@ -1,7 +1,7 @@
 
 #include <iostream>
 #include <string>
-#include <stdio.h>
+#include <stdio.h> //rename
 
 #include <collector.h>
 #include <utils.h> //set_union(), set_intersect(), dir_exists(), PATH_SEP
@@ -264,7 +264,10 @@ void FileStore::add_tag_on_file(File* file, const std::string & tag)
 		dest = path_join(dirs, tag + config->default_tag_delim + name);
 	}
 
-	std::cout << dest << std::endl;
+	//make it absolute from the root
+	dest = path_join(config->cwd_path, dest);
+
+	move_file(file, dest);
 }
 
 void FileStore::remove_tag_on_file(File* file, const std::string & tag)
@@ -283,4 +286,27 @@ void FileStore::remove_tag_on_file(File* file, const std::string & tag)
 void FileStore::move_file(File* file, std::string dest)
 {
 	//look for a collision
+	if(file_exists(dest.c_str()))
+	{
+		//as long as there's a collision, try adding "(i)" to the filename
+
+		size_t ext_pos = dest.rfind(".");
+		std::string pathname = dest.substr(0, ext_pos);
+		std::string ext = dest.substr(ext_pos);
+
+		size_t i = 1;
+		std::string new_dest;
+
+		do
+		{
+			new_dest = pathname + "(" + std::to_string(i) + ")" + ext;
+			i++;
+		}
+		while(file_exists(new_dest.c_str()));
+
+		dest = new_dest;
+	}
+
+	std::cout << dest << std::endl;
+	// rename(file->get_full_path().c_str(), dest.c_str());
 }
