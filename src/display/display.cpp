@@ -159,7 +159,7 @@ void Display::on_key_down(SDL_KeyboardEvent &e)
 void Display::on_key_up(SDL_KeyboardEvent &e)
 {
 	if((e.keysym.sym == SDLK_RCTRL) ||
-	  (e.keysym.sym == SDLK_LCTRL))
+	   (e.keysym.sym == SDLK_LCTRL))
 		state.key_ctrl = false;
 }
 
@@ -247,7 +247,7 @@ void Display::on_selection(Selection* s)
 
 void Display::on_operation(Operation* operation)
 {
-	
+
 }
 
 void Display::on_state_change()

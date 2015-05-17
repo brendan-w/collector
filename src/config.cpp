@@ -33,6 +33,9 @@ Config::Config()
 	//(representing the selection)
 	export_path = "/tmp/collector";
 
+	//the font file
+	font_path = path_join(bin_path, "../assets/MonoLiberation.ttf");
+
 	//lists all items in the current directory and below
 	//only returns files
 	//excludes dot-files and dot-folders
@@ -48,7 +51,9 @@ Config::Config()
 	//the delimeters by which paths will be split
 	tag_delim = " ._-+&%%()[]{}";
 	tag_delim += PATH_SEP;
-	font_path = path_join(bin_path, "../assets/MonoLiberation.ttf");
+
+	//used when adding tags to filenames
+	default_tag_delim = "_";
 	
 	fullscreen = false;
 	resizable = true;

@@ -17,6 +17,7 @@
 
 void to_lower(std::string & s);
 bool file_exists(const char* filename);
+bool dir_exists(const char* path);
 bool starts_with(std::string str, std::string partial);
 bool is_number(const std::string& s);
 std::string escape_file_name(std::string &path);

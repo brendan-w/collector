@@ -35,12 +35,13 @@ class Config
 		std::string bin_path;
 		std::string cwd_path;
 		std::string export_path;
+		std::string font_path;
 
 		std::string find_cmd;
 		std::string mime_cmd;
 		std::string open_cmd;
 		std::string tag_delim;
-		std::string font_path;
+		std::string default_tag_delim;
 
 		bool fullscreen;
 		bool resizable;

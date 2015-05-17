@@ -31,4 +31,5 @@ class FileStore
 
 		void add_tag_on_file(File* file, const std::string & tag);
 		void remove_tag_on_file(File* file, const std::string & tag);
+		void move_file(File* file, std::string dest);
 };

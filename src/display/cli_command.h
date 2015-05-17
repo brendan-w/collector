@@ -26,6 +26,7 @@ class CLI_Command : public DisplayObject
 
 	private:
 
+		//buffer, to save the users text while scrolling through history
 		std::string cmd = "";
 
 		//the current location in history when using the up/down keys

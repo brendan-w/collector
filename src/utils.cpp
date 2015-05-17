@@ -8,6 +8,7 @@
 #include <vector>
 #include <algorithm> //std::min()
 #include <cmath>
+#include <sys/stat.h> //stat()
 
 #include <SDL.h>
 
@@ -25,6 +26,15 @@ bool file_exists(const char* filename)
 {
 	std::ifstream fin(filename);
 	return fin;
+}
+
+bool dir_exists(const char* path)
+{
+	struct stat st;
+	if(stat(path, &st) == 0)
+		if((st.st_mode & S_IFDIR) != 0)
+			return true;
+	return false;
 }
 
 bool starts_with(std::string str, std::string partial)
@@ -96,7 +106,7 @@ std::string pretty_print_file_size(size_t bytes)
 std::string path_join(std::string a_str, std::string b_str)
 {
     bool a = (a_str.back() == PATH_SEP);
-    bool b = (b_str.back() == PATH_SEP);
+    bool b = (b_str.front() == PATH_SEP);
 
     if(a && b)
         a_str.pop_back();

@@ -35,8 +35,8 @@ bool CLI_Command::on_key(SDL_KeyboardEvent &e)
 	switch(e.keysym.sym)
 	{
 		case SDLK_RETURN:
-			execute();
-			break;
+			execute(); //will push an Operation onto the event queue
+			return true; //will push a Selector onto the event queue
 		case SDLK_BACKSPACE:
 			backspace();
 			break;
@@ -113,6 +113,7 @@ void CLI_Command::render()
 
 void CLI_Command::execute()
 {
+	cmd = command->get_text();
 
 	if(cmd.length() > 1)
 	{

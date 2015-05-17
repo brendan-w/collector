@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 #include <collector.h>
-#include <utils.h> //set_union(), set_intersect()
+#include <utils.h> //set_union(), set_intersect(), dir_exists(), PATH_SEP
 #include <filestore/types.h>
 #include <filestore/filestore.h>
 
@@ -221,10 +221,66 @@ tag_set FileStore::tags_for_file(File* file)
 
 void FileStore::add_tag_on_file(File* file, const std::string & tag)
 {
+	//make sure this tag isn't already on the file
+	if(has_tag(tag))
+	{
+		Tag_Entry* entry = tags[tag];
+		if(file->tags.find(entry) != file->tags.end())
+			return; //file already has this tag. Done.
+	}
 
+	//calculate where to move this file
+	//search for a subdirectory to place the file in
+
+	//split the filepath into directories and file name
+	std::string dirs = file->get_path();
+	std::string name = dirs;
+
+	size_t last_dir = dirs.rfind(PATH_SEP);
+
+	if(last_dir != std::string::npos)
+	{
+		last_dir++; //include the PATH_SEP in the dirs portion, and not the name
+		dirs = dirs.substr(0, last_dir);
+		name = name.substr(last_dir);
+	}
+	else
+	{
+		dirs = "";
+	}
+
+	std::string dir_tag = path_join(dirs, tag);
+
+	std::string dest = "";
+
+	if(dir_exists(path_join(config->cwd_path, dir_tag).c_str()))
+	{
+		//there is a subdirectory to encode this tag
+		dest = path_join(dir_tag, name);
+	}
+	else
+	{
+		//there is no subdirectory for this tag, add it to the filename
+		dest = path_join(dirs, tag + config->default_tag_delim + name);
+	}
+
+	std::cout << dest << std::endl;
 }
 
 void FileStore::remove_tag_on_file(File* file, const std::string & tag)
 {
+	if(has_tag(tag))
+	{
+		Tag_Entry* entry = tags[tag];
+		if(file->tags.find(entry) == file->tags.end())
+			return; //file doesn't have this tag. Done.
+	}
+	else
+		return; //tag has never been seen before, so it's not on the file. Done.
 
+}
+
+void FileStore::move_file(File* file, std::string dest)
+{
+	//look for a collision
 }
