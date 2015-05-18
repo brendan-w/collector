@@ -205,12 +205,14 @@ void File::remove_tag(Tag_Entry* t)
 			if(pos >= p.name.length())
 			{
 				//this tag was at the end of the filename
+				lower_name.erase(pos - 1, 1);
 				p.name.erase(pos - 1, 1);
 			}
 			else
 			{
 				//this tag was NOT at the end of the filename
 				//erase the forward delimeter
+				lower_name.erase(pos, 1);
 				p.name.erase(pos, 1);
 			}
 		}

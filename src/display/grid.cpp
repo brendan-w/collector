@@ -397,8 +397,6 @@ size_t Grid::create_tag(File* file, size_t column)
 	{
 		if((tags.size() == 0) || (tag != tags.back().text->get_text()))
 		{
-			std::cout << tag << std::endl;
-
 			Grid_Tag t = {
 				column,
 				new Text(tag, config->get_color(CLI_DARK))
