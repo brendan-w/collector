@@ -1,4 +1,19 @@
+/*
+	Collector - Tag based file management for linux
 
+	[ ][ ][ ][ ][ ][ ][ ][ ][ ][X][ ][ ][ ][ ]
+	[ ][X][ ][ ][ ][ ][ ][X][ ][X][ ][ ][ ][ ]
+	[ ][ ][X][ ][ ][ ][ ][ ][ ][ ][X][X][ ][ ]
+	[ ][ ][ ][ ][ ][X][ ][ ][ ][ ][X][X][ ][ ]
+
+	Written By: Brendan Whitfield
+	https://github.com/brendanwhitfield/collector
+*/
+
+
+#include <string>
+#include <string.h>
+#include <stdio.h>
 
 #include <SDL.h>
 
@@ -8,11 +23,15 @@
 #include <filestore/types.h>
 #include <filestore/filestore.h>
 #include <display/display.h>
+#include <utils.h>
 
 
-//forward declare
-static bool init();
-static void close();
+#ifdef _WIN32
+	#include <direct.h>
+	#define getcwd _getcwd
+#else
+	#include <unistd.h> //getcwd()
+#endif
 
 
 //global contexts and resources
@@ -24,15 +43,98 @@ FileStore* filestore = NULL;
 Display* display = NULL;
 
 
+static void close()
+{
+	delete display;
+	delete filestore;
+	delete sdl;
+	delete config;
+}
+
+
+static void help()
+{
+	printf("\
+Usage:\n\
+\tcollector [working path]\n\
+\n\
+By default, collector uses you current working directory as the working path\n\
+By default, selections (symlinks) are exported to /tmp/collector\n\
+\n\
+Controls:\n\
+\tTAB                  autocomplete tag\n\
+\tCTRL + TAB           toggle between SELECT and COMMAND mode\n\
+\tRETURN               in SELECT mode: exports the current selection to /tmp\n\
+\t                     in COMMAND mode: executes the command (see below)\n\
+\tDouble_Click         open file\n\
+\tCTRL + Left_Click    include file\n\
+\tCTRL + Right_Click   exclude file\n\
+\tCTRL + i             clear included files\n\
+\tCTRL + e             clear excluded files\n\
+\tESCAPE               quit collector\n\
+\n\
+Commands:\n\
+\t+<tag>               adds <tag> to the current selection\n\
+\t-<tag>               removes <tag> from the current selection\n\
+\n\
+For issues and documentation: https://github.com/brendanwhitfield/collector\n");
+}
+
+
 int main(int argc, char * argv[])
 {
-	if(!init())
+	//handle cli input and pick the working directory
+	std::string cwd = "";
+
+	if(argc == 1)
+	{
+		cwd = std::string(getcwd(NULL, 0));
+	}
+	else if(argc == 2)
+	{
+		if(strcmp(argv[1], "--help") == 0)
+		{
+			help();
+			return EXIT_SUCCESS;
+		}
+		else
+		{
+			if(dir_exists(argv[1]))
+			{
+				cwd = std::string(argv[1]);
+			}
+			else
+			{
+				printf("Error:\n\tInvalid directory: %s\n\n", argv[1]);		
+				return EXIT_FAILURE;	
+			}
+		}
+	}
+	else
+	{
+		help();
+		return EXIT_FAILURE;
+	}
+
+	/*
+		init
+	*/
+
+	config    = new Config(cwd);
+	sdl       = new SDL_Context;
+	filestore = new FileStore;
+	display   = new Display(filestore->select(new Selector())); //initial, empty, selection
+
+	if(!sdl->succeeded())
 	{
 		close();
 		return EXIT_FAILURE;
 	}
 
-	//main event loop
+	/*
+		start the main loop
+	*/
+
 	SDL_Event e;
 	bool running = true;
 
@@ -117,23 +219,4 @@ int main(int argc, char * argv[])
 
 	close();
 	return EXIT_SUCCESS;
-}
-
-
-static bool init()
-{
-	config    = new Config;
-	sdl       = new SDL_Context;
-	filestore = new FileStore;
-	display   = new Display(filestore->select(new Selector())); //initial, empty, selection
-
-	return sdl->succeeded();
-}
-
-static void close()
-{
-	delete display;
-	delete filestore;
-	delete sdl;
-	delete config;
 }

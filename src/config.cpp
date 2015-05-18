@@ -7,15 +7,8 @@
 #include <config.h>
 
 
-#ifdef _WIN32
-	#include <direct.h>
-	#define getcwd _getcwd
-#else
-	#include <unistd.h> //getcwd()
-#endif
 
-
-Config::Config()
+Config::Config(std::string cwd)
 {
 	/*
 		Set default configuration before reading config file
@@ -24,10 +17,11 @@ Config::Config()
 	//use the executable location to find the assets
 	bin_path = std::string(SDL_GetBasePath());
 
-	//get the pathname for the current working directory
-	// cwd_path = std::string(getcwd(NULL, 0));
-	// cwd_path = "/home/brendan/Andromeda";
-	cwd_path = "/home/brendan/cool";
+	cwd_path = cwd;
+
+	//the filestore is expecting this to be WITHOUT the trailing slash
+	if(cwd_path.back() == PATH_SEP)
+		cwd_path.pop_back();
 
 	//the directory where symlinks will be placed
 	//(representing the selection)

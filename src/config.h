@@ -29,7 +29,7 @@ enum Color
 class Config
 {
 	public:
-		Config();
+		Config(std::string cwd);
 		~Config();
 
 		std::string bin_path;
