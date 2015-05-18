@@ -44,6 +44,7 @@ class File
 		void open(std::string filepath);
 
 		//tag operations
+		std::string get_exemplar_tag();
 		tag_set compute_tags();
 		bool has_tag(Tag_Entry* t);
 		void add_tag(Tag_Entry* t);

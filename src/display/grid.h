@@ -6,10 +6,17 @@
 
 #include <SDL.h>
 
+#include <text.h>
 #include <display/displayobject.h>
 #include <display/state.h>
 #include <filestore/file.h>
 #include <filestore/selection.h>
+
+
+typedef struct {
+	size_t x; //column location for this tag
+	Text* text;
+} Grid_Tag;
 
 
 typedef struct {
@@ -33,6 +40,9 @@ class Grid : public DisplayObject
 
 	private:
 
+		//tag names below the grid
+		std::vector<Grid_Tag> tags;
+
 		//highlighted regions of the minimap
 		std::vector<Bound> minimap;
 
@@ -41,8 +51,11 @@ class Grid : public DisplayObject
 		size_t current_width_files = 0;
 
 		void render_minimap();
+		void render_tags();
 		void update_minimap();
 		void auto_scroll();
 		void render_file(File* file, bool selected);
 		File* mouse_to_file(int x, int y);
+		size_t create_tag(File* file, size_t column);
+		void clear_tags();
 };

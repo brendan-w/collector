@@ -50,6 +50,7 @@ class Config
 		SDL_Color colors[NUM_COLORS];
 
 		size_t scroll_speed;
+		size_t grid_tag_spacing;
 		int font_size;
 		int file_size;
 		int file_thumb_size;

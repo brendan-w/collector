@@ -77,6 +77,7 @@ Config::Config(std::string cwd)
 	colors[THUMB_INCLUDED]      = { 70,  255, 70,  100 };
 
 	scroll_speed = 120;
+	grid_tag_spacing = 20; //number of columns before the next tag
 	font_size = 12;
 	file_size = 9;
 	file_thumb_size = 149;

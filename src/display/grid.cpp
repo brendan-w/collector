@@ -4,7 +4,7 @@
 #include <SDL.h>
 
 #include <collector.h>
-#include <utils.h> //map()
+#include <text.h>
 #include <filestore/file.h>
 #include <filestore/selector.h>
 #include <filestore/selection.h>
@@ -27,6 +27,7 @@ Grid::Grid(State* s) : DisplayObject(s)
 Grid::~Grid()
 {
 	minimap.clear();
+	clear_tags();
 }
 
 void Grid::render()
@@ -36,6 +37,8 @@ void Grid::render()
 	sdl->fill_rect(rect);
 
 	render_minimap();
+
+	render_tags();
 
 	Selection* s = selection();
 	file_vector_it begin = s->all_begin();
@@ -97,6 +100,19 @@ void Grid::render_minimap()
 	sdl->draw_line(x, bottom, x + w, bottom);
 }
 
+void Grid::render_tags()
+{
+	SDL_Rect rect = sdl->get_viewport();
+
+	const int y = rect.h - GRID_V_PADDING + (GRID_V_PADDING / 2) - (CLI_H / 2);
+
+	for(Grid_Tag t: tags)
+	{
+		int x = (t.x * FILE_OFFSET) - x_offset();
+		t.text->render(x, y);
+	}
+}
+
 void Grid::render_file(File* file, bool selected)
 {
 	SDL_Rect rect = {
@@ -149,6 +165,7 @@ void Grid::render_file(File* file, bool selected)
 //updates every File->grid_pos
 void Grid::resize()
 {
+	clear_tags();
 	Selection* s = selection();
 
 	SDL_Rect viewport = sdl->get_viewport();
@@ -165,29 +182,36 @@ void Grid::resize()
 	//don't recalc the tile positions unless we have to
 	if(current_height_files != height_files)
 	{
+		current_height_files = height_files;
+		current_width_files = width_files;
+
 		file_vector_it begin = s->all_begin();
 		file_vector_it end   = s->all_end();
 
 		size_t count = 0;
+		size_t column_wait = 0;
 		for(auto it = begin; it != end; ++it)
 		{
 			File* file = *it;
+
 			//compute the XY coordinates based on position in sequence
 			file->grid_pos.x = count / height_files;
 			file->grid_pos.y = count % height_files;
 
+			//get the representative tag name
+			if(column_wait == 0)
+				column_wait = create_tag(file, file->grid_pos.x);
+			else
+				column_wait--;
+
 			count++;
 		}
-
-		current_height_files = height_files;
-		current_width_files = width_files;
 	}
 
 	//even if the grid_pos properties didn't change
 	//we still need to update the centering values
 	mark_dirty();
 }
-
 
 void Grid::update_minimap()
 {
@@ -363,4 +387,37 @@ File* Grid::mouse_to_file(int x, int y)
 	}
 
 	return NULL;
+}
+
+size_t Grid::create_tag(File* file, size_t column)
+{
+	std::string tag = file->get_exemplar_tag();
+
+	if(tag.length() > 0)
+	{
+		if((tags.size() == 0) || (tag != tags.back().text->get_text()))
+		{
+			std::cout << tag << std::endl;
+
+			Grid_Tag t = {
+				column,
+				new Text(tag, config->get_color(CLI_DARK))
+			};
+
+			tags.push_back(t);
+
+			//TODO: make this not hacky
+			//number of columns to wait until the next tag
+			return current_height_files * t.text->get_text().length() + 5; 
+		}
+	}
+
+	return 0;
+}
+
+void Grid::clear_tags()
+{
+	for(Grid_Tag t: tags)
+		delete t.text;
+	tags.clear();
 }

@@ -76,6 +76,26 @@ bool File::has_tag(Tag_Entry* t)
 	return (tags.find(t) != tags.end());
 }
 
+std::string File::get_exemplar_tag()
+{
+	std::string tag = "";
+	std::string p = path;
+	size_t last_dir = p.rfind(PATH_SEP);
+
+	if(last_dir != std::string::npos)
+	{
+		p = p.substr(0, last_dir);
+		last_dir = p.rfind(PATH_SEP);
+		
+		if(last_dir == std::string::npos)
+			tag = p;
+		else
+			tag = p.substr(last_dir + 1);
+	}
+
+	return tag;
+}
+
 tag_set File::compute_tags()
 {
 	return split_tags(path);
