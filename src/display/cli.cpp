@@ -68,14 +68,22 @@ bool CLI::on_key(SDL_KeyboardEvent &e)
 			case SDLK_TAB:
 				cycle_mode();
 				return false;
+
 			case SDLK_i:
 				state->clear_includes();
 				sdl->submit(STATE_CHANGE);
 				mark_dirty();
 				return true;
+
 			case SDLK_e:
 				state->clear_excludes();
 				sdl->submit(STATE_CHANGE);
+				mark_dirty();
+				return true;
+
+			case SDLK_a:
+				for(File* f: *selection())
+					state->inexclude_file(f, true);
 				mark_dirty();
 				return true;
 		}

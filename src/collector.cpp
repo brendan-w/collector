@@ -69,6 +69,7 @@ Controls:\n\
 \tDouble_Click         open file\n\
 \tCTRL + Left_Click    include file\n\
 \tCTRL + Right_Click   exclude file\n\
+\tCTRL + a             included all files in current selection\n\
 \tCTRL + i             clear included files\n\
 \tCTRL + e             clear excluded files\n\
 \tESCAPE               quit collector\n\

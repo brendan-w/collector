@@ -21,6 +21,7 @@ class State
 
 		void replace_selection(Selection* s);
 		void fill_selector(Selector* s);
+		void inexclude_file(File* f, bool include);
 		void toggle_inexclude(File* f, bool include);
 		bool inexclude_has(File* f);
 		void clear_includes();

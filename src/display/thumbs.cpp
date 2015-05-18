@@ -73,9 +73,11 @@ void Thumbs::resize()
 	Selection* s = selection();
 
 	SDL_Rect viewport = sdl->get_viewport();
+	const size_t total_files = s->size();
 	const size_t height_files = (viewport.h > 0) ? (viewport.h / FILE_THUMB_OFFSET) : 1;
 	const size_t height_px = height_files * FILE_THUMB_OFFSET;
-	const size_t width_files = (s->size() / height_files) + 1;
+	size_t overflow_column = (total_files % height_files == 0) ? 0 : 1;
+	const size_t width_files = (total_files / height_files) + overflow_column;
 	const size_t width_px = width_files * FILE_THUMB_OFFSET;
 
 	set_scroll_range(width_px);

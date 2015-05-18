@@ -155,7 +155,8 @@ void Grid::resize()
 	const size_t total_files = s->all_size();
 	const size_t height_files = (viewport.h > 0) ? (((viewport.h - GRID_V_PADDING * 2)) / FILE_OFFSET) : 1;
 	const size_t height_px = height_files * FILE_OFFSET;
-	const size_t width_files = (total_files / height_files) + 1;
+	size_t overflow_column = (total_files % height_files == 0) ? 0 : 1;
+	const size_t width_files = (total_files / height_files) + overflow_column;
 	const size_t width_px = width_files * FILE_OFFSET;
 
 	set_scroll_range(width_px);
