@@ -128,7 +128,7 @@ void File::add_tag(Tag_Entry* t)
 	else
 	{
 		//there is no subdirectory for this tag, add it to the filename
-		p.name = t->tag + config->default_tag_delim + p.name;
+		p.name += config->default_tag_delim + t->tag;
 	}
 
 	dest = join_path_parts(p);
