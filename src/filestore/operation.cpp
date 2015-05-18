@@ -8,7 +8,7 @@
 
 
 
-Operation::Operation(std::string t, Selection_operation o)
+Operation::Operation(std::string t, Selection_Operation o)
 {
 	to_lower(t);
 	tag = t;

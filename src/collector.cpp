@@ -195,10 +195,8 @@ int main(int argc, char * argv[])
 					}
 					else if(e.type == OPERATION)
 					{
-						Operation* op = (Operation*) e.user.data2;
-						filestore->operation((Selection*) e.user.data1, op);
-						display->on_operation(op); //this will trigger a re-selection
-						delete op;
+						filestore->operation((Selection*) e.user.data1,
+						                     (Operation*) e.user.data2);
 					}
 					else if(e.type == RENDER_THUMBS)
 					{

@@ -5,7 +5,7 @@
 
 
 
-enum Selection_operation
+enum Selection_Operation
 {
 	ADD_TAG = 0,
 	REMOVE_TAG,
@@ -16,13 +16,13 @@ enum Selection_operation
 class Operation
 {
 	public:
-		Operation(std::string t, Selection_operation o);
+		Operation(std::string t, Selection_Operation o);
 		~Operation();
 
 		std::string get_tag()        { return tag; }
-		Selection_operation get_op() { return op; }
+		Selection_Operation get_op() { return op; }
 
 	private:
 		std::string tag;
-		Selection_operation op;
+		Selection_Operation op;
 };

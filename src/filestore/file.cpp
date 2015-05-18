@@ -275,8 +275,6 @@ void File::remove_tag(Tag_Entry* t)
 	//make it absolute from the root
 	dest = path_join(config->cwd_path, dest);
 
-	// std::cout << dest << std::endl;
-
 	//move the file (handles possible collisions)
 	if(move(dest))
 	{
@@ -312,8 +310,6 @@ bool File::move(std::string dest)
 
 		dest = new_dest;
 	}
-
-	std::cout << dest << std::endl;
 
 	//try the rename
 	if(rename(get_full_path().c_str(), dest.c_str()))

@@ -124,12 +124,16 @@ void CLI_Command::execute()
 							selection(),
 							new Operation(cmd.substr(1), ADD_TAG));
 
+				sdl->submit(STATE_CHANGE); //update the file info readout
+
 				post_execute();
 				break;
 			case '-': //remove tag from selection
 				sdl->submit(OPERATION,
 							selection(),
 							new Operation(cmd.substr(1), REMOVE_TAG));
+
+				sdl->submit(STATE_CHANGE); //update the file info readout
 
 				post_execute();
 				break;

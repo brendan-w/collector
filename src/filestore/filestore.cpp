@@ -159,6 +159,8 @@ void FileStore::operation(Selection* selection, Operation* operation)
 		case DELETE_FILES:
 			break;
 	}
+
+	delete operation;
 }
 
 
