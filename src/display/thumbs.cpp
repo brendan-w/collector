@@ -33,7 +33,6 @@
 
 #include <collector.h>
 #include <thumbnail.h>
-#include <event.h>
 #include <utils.h>
 #include <filestore/types.h>
 #include <display/state.h>
