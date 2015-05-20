@@ -62,6 +62,7 @@ class Display
 		void resize();
 		void request_render(Uint32 component);
 
+		void on_window_event(SDL_WindowEvent &e);
 		void on_key_down(SDL_KeyboardEvent &e);
 		void on_key_up(SDL_KeyboardEvent &e);
 		void on_text(SDL_TextInputEvent &e);

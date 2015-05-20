@@ -91,6 +91,15 @@ void Display::render_child(Child& child)
 	}
 }
 
+void Display::on_window_event(SDL_WindowEvent &e)
+{
+	//the only window events that should trigger a resize
+	if((e.event == SDL_WINDOWEVENT_RESIZED) ||
+	   (e.event == SDL_WINDOWEVENT_MAXIMIZED) ||
+	   (e.event == SDL_WINDOWEVENT_RESTORED))
+		resize();
+}
+
 void Display::resize()
 {
 	SDL_Point window = sdl->window_size();

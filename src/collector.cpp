@@ -166,38 +166,15 @@ int main(int argc, char * argv[])
 		{
 			switch(e.type)
 			{
-				case SDL_QUIT:
-					running = false;
-					break;
-
-				case SDL_WINDOWEVENT:
-					if(e.window.event == SDL_WINDOWEVENT_RESIZED)
-						display->resize();
-					break;
-
-				case SDL_KEYDOWN:
-					display->on_key_down(e.key);
-					break;
-
-				case SDL_KEYUP:
-					display->on_key_up(e.key);
-					break;
-
-				case SDL_TEXTINPUT:
-					display->on_text(e.text);
-					break;
-
-				case SDL_MOUSEMOTION:
-					display->on_motion(e.motion);
-					break;
-
-				case SDL_MOUSEBUTTONDOWN:
-					display->on_click(e.button);
-					break;
-
-				case SDL_MOUSEWHEEL:
-					display->on_wheel(e.wheel);
-					break;
+				//dispatch SDL events to their respective handlers
+				case SDL_QUIT:            running = false; break;
+				case SDL_WINDOWEVENT:     display->on_window_event(e.window); break;
+				case SDL_KEYDOWN:         display->on_key_down(e.key); break;
+				case SDL_KEYUP:           display->on_key_up(e.key); break;
+				case SDL_TEXTINPUT:       display->on_text(e.text); break;
+				case SDL_MOUSEMOTION:     display->on_motion(e.motion); break;
+				case SDL_MOUSEBUTTONDOWN: display->on_click(e.button); break;
+				case SDL_MOUSEWHEEL:      display->on_wheel(e.wheel); break;
 
 				default:
 					//user events are registered at runtime, so can't be used in the switch
@@ -237,3 +214,4 @@ int main(int argc, char * argv[])
 	close();
 	return EXIT_SUCCESS;
 }
+
