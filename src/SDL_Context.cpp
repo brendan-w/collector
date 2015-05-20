@@ -187,6 +187,10 @@ void SDL_Context::submit(Uint32 type, void* data1 /*=NULL*/, void* data2 /*=NULL
 	e.user.data1 = data1;
 	e.user.data2 = data2;
 
+	//prevent multiple SELECTORS and SELECTIONs
+	if((type == SELECTOR) || (type == SELECTION))
+		SDL_FlushEvent(type);
+
 	//try to push onto SDL event queue
 	int r = SDL_PushEvent(&e);
 
