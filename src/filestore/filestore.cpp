@@ -89,7 +89,6 @@ Selection* FileStore::select(Selector* selector)
 {
 	//result holders
 	file_set r_files;
-	entry_set r_subtags;
 
 	if(!selector->is_empty())
 	{
@@ -156,20 +155,11 @@ Selection* FileStore::select(Selector* selector)
 			else
 				r_files.erase(e.first); //exclude this file
 		}
-
-		/*
-			Subtags
-		*/
-
-		for(File* file: r_files)
-		{
-			set_union(r_subtags, file->tags);
-		}
 	}
 
 	//done selecting
 	delete selector;
-	return new Selection(&files, r_files, r_subtags);
+	return new Selection(&files, r_files);
 }
 
 

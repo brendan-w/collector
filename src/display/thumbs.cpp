@@ -111,8 +111,8 @@ void Thumbs::resize()
 	set_scroll_range(width_px);
 	set_centered_height(height_px);
 
-	file_set_it begin = s->begin();
-	file_set_it end   = s->end();
+	auto begin = s->begin();
+	auto end   = s->end();
 
 	size_t count = 0;
 	for(auto it = begin; it != end; ++it)

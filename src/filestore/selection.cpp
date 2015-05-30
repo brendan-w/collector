@@ -30,8 +30,8 @@
 
 
 #include <string>
+#include <string.h>
 #include <iostream>
-#include <iterator>
 #include <cstdlib> //system()
 #include <unistd.h> //symlink()
 #include <algorithm> //sort()
@@ -44,54 +44,77 @@
 
 
 
-static bool tag_entry_compare(Tag_Entry* A, Tag_Entry* B)
+static bool tag_entry_compare(Tag_Entry* a, Tag_Entry* b)
 {
-	return A->files.size() > B->files.size();
+	return a->files.size() > b->files.size();
+}
+
+static bool file_compare(File* a, File* b)
+{
+	return strcmp(a->get_path().c_str(), b->get_path().c_str()) > 0;
 }
 
 
-
-Selection::Selection(file_vector* all, file_set fs, entry_set es)
+Selection::Selection(file_vector* all, file_set fs) : all_files(all)
 {
 	exported = false;
-	all_files = all;
 	files = fs;
 
-	//dump the set to a sortable vector
-	entry_vector subtag_entries;
-	for(Tag_Entry* entry: es)
+	/*
+		Files
+	*/
+
+	//create the sorted file vector
+	for(File* f: files)
+		files_sorted.push_back(f);
+
+	std::sort(files_sorted.begin(),
+	          files_sorted.end(),
+	          file_compare);
+
+	/*
+		Tags
+	*/
+
+	//compile the entry set
+	entry_set entries;
+	for(File* f: files)
+		set_union(entries, f->tags);
+
+	//filter and dump the set to a sortable vector of entries
+	//fill the subtags set with plain-text tag names
+	entry_vector entries_sorted;
+	for(Tag_Entry* entry: entries)
 	{
 		//strain out lone subtags
 		if(entry->files.size() == 1)
 			continue;
 
+		//strain out numbers
 		if(is_number(entry->tag))
 			continue;
 
-		subtag_entries.push_back(entry);
+		entries_sorted.push_back(entry);
+		subtags.insert(entry->tag);
 	}
 
 	//sort in descending number of files per tag
-	std::sort(subtag_entries.begin(),
-			  subtag_entries.end(),
+	std::sort(entries_sorted.begin(),
+			  entries_sorted.end(),
 			  tag_entry_compare);
 
-	//convert entries to plain-text tags
-	for(Tag_Entry* entry: subtag_entries)
-	{
-		std::string tag = entry->tag;
-		subtag_set.insert(tag);
-		subtags.push_back(tag);
-	}
+	//convert sorted tags into plain-text tags
+	for(Tag_Entry* entry: entries_sorted)
+		subtags_sorted.push_back(entry->tag);
 }
 
 Selection::~Selection()
 {
-	subtags.clear();
-	subtag_set.clear();
+	files.clear();
+	files_sorted.clear();
 
-	// for(File* file: files)
-	// 	file->unload();
+	subtags.clear();
+	subtags_sorted.clear();
 }
 
 
@@ -121,13 +144,6 @@ bool Selection::has(File* file)
 	return (files.find(file) != files.end());
 }
 
-File* Selection::at(size_t i)
-{
-	file_set_it it = begin();
-	std::advance(it, i);
-	return *it;
-}
-
 File* Selection::all_at(size_t i)
 {
 	if(i < all_size())
@@ -138,7 +154,7 @@ File* Selection::all_at(size_t i)
 
 bool Selection::has_subtag(std::string tag)
 {
-	return (subtag_set.find(tag) != subtag_set.end());
+	return (subtags.find(tag) != subtags.end());
 }
 
 std::string Selection::auto_complete(std::string partial)
