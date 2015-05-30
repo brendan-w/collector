@@ -80,6 +80,32 @@ bool is_number(const std::string& s)
 	return !s.empty() && it == s.end();
 }
 
+
+
+
+std::vector<std::string> split(std::string & str, std::string delims)
+{
+	std::vector<std::string> parts;
+
+	size_t prev = 0;
+	size_t pos = 0;
+
+	//while there is another delimeter
+	while((pos = str.find_first_of(delims, prev)) != std::string::npos)
+	{
+		if(pos > prev)
+			parts.push_back(str.substr(prev, pos-prev));
+
+		prev = pos + 1;
+	}
+
+	//add the last tag to the set
+	if(prev < str.length())
+		parts.push_back(str.substr(prev, std::string::npos));
+
+	return parts;
+}
+
 Path_Parts get_path_parts(std::string path)
 {
 	//split the filepath into directories and file name

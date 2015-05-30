@@ -40,6 +40,7 @@
 #include <thumbnail.h>
 
 
+//raw string tag collections
 typedef std::vector<std::string> tag_vector;
 typedef std::unordered_set<std::string> tag_set;
 
@@ -55,8 +56,12 @@ typedef struct {
 //forward declare
 class Tag_Entry;
 
+//Tag_Entry collections
 typedef std::vector<Tag_Entry*> entry_vector;
 typedef std::unordered_set<Tag_Entry*> entry_set;
+
+//map strings to Tag_Entry
+//primary data structure for the filestore
 typedef std::unordered_map<std::string, Tag_Entry*> tag_map;
 
 

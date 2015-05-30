@@ -157,6 +157,13 @@ bool Selection::has_subtag(std::string tag)
 	return (subtags.find(tag) != subtags.end());
 }
 
+/*
+	returns the completion for a given partial tag:
+
+	given:    "part"
+	real tag: "partial"
+	returns:      "ial"
+*/
 std::string Selection::auto_complete(std::string partial)
 {
 	for(std::string tag: subtags)

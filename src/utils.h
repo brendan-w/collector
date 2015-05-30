@@ -31,6 +31,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include <SDL.h>
 
@@ -62,12 +63,14 @@ bool file_exists(const char* filename);
 bool dir_exists(const char* path);
 bool starts_with(std::string str, std::string partial);
 bool is_number(const std::string& s);
+std::vector<std::string> split(std::string & str, std::string delims);
 Path_Parts get_path_parts(std::string path);
 std::string join_path_parts(Path_Parts p);
 std::string escape_file_name(std::string &path);
 std::string double_to_str(double d, int p);
 std::string pretty_print_file_size(size_t size);
 std::string path_join(std::string a_str, std::string b_str);
+
 
 /*
     Set Operations

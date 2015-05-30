@@ -144,6 +144,8 @@ void CLI_Command::execute()
 {
 	cmd = command->get_text();
 
+	
+
 	if(cmd.length() > 1)
 	{
 		switch(cmd.at(0))

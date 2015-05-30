@@ -36,7 +36,7 @@
 #include <algorithm> //replace()
 
 #include <collector.h> //config->cwd_path, config->open_cmd
-#include <utils.h> //escape_file_name(), get_path_parts(), join_path_parts()
+#include <utils.h> //escape_file_name(), get_path_parts(), join_path_parts(), split()
 #include <thumbnail.h>
 #include <filestore/file.h>
 
@@ -125,37 +125,22 @@ std::string File::get_exemplar_tag()
 	return tag;
 }
 
+tag_set File::split_tags(std::string p)
+{
+	to_lower(p);
+	tag_vector parts = (tag_vector) split(p, config->tag_delim);
+
+	//strain out duplicates
+	tag_set tags;
+	for(std::string tag: parts)
+		tags.insert(tag);
+
+	return tags;
+}
+
 tag_set File::compute_tags()
 {
 	return split_tags(path);
-}
-
-tag_set File::split_tags(std::string p)
-{
-	tag_set tags;
-
-	to_lower(p);
-
-	size_t prev = 0;
-	size_t pos = 0;
-
-	//while there is another delimeter
-	while((pos = p.find_first_of(config->tag_delim, prev)) != std::string::npos)
-	{
-		if(pos > prev)
-		{
-			tags.insert(p.substr(prev, pos-prev));
-		}
-		prev = pos + 1;
-	}
-
-	//add the last tag to the set
-	if(prev < p.length())
-	{
-		tags.insert(p.substr(prev, std::string::npos));
-	}
-
-	return tags;
 }
 
 void File::add_tag(Tag_Entry* t)
