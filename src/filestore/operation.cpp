@@ -31,20 +31,54 @@
 
 #include <string>
 
-#include <utils.h>
+#include <utils.h> //to_lower()
 #include <filestore/operation.h>
 
 
 
-
-Operation::Operation(std::string t, Selection_Operation o)
+Operation::Operation(Selection* s) : selection(s)
 {
-	to_lower(t);
-	tag = t;
-	op = o;
+
 }
 
 Operation::~Operation()
 {
-	
+	//Note: do NOT delete the selection object
+}
+
+void Operation::add(Selection_Operation o)
+{
+	switch(o)
+	{
+		case DELETE_FILES:
+			delete_files = true;
+			break;
+		default:
+			break;
+	}
+}
+
+void Operation::add(Selection_Operation o, std::string t)
+{
+	to_lower(t);
+
+	switch(o)
+	{
+		case ADD_TAG:
+			add_tags.insert(t);
+			break;
+		case REMOVE_TAG:
+			remove_tags.insert(t);
+			break;
+		default:
+			break;
+	}
+
+}
+
+bool Operation::is_changing()
+{
+	return delete_files ||
+	       (add_tags.size() > 0) ||
+	       (remove_tags.size() > 0);
 }

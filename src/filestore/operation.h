@@ -31,7 +31,7 @@
 #pragma once
 
 #include <string>
-
+#include <filestore/types.h>
 
 
 enum Selection_Operation
@@ -45,13 +45,26 @@ enum Selection_Operation
 class Operation
 {
 	public:
-		Operation(std::string t, Selection_Operation o);
+		Operation(Selection* s);
 		~Operation();
 
-		std::string get_tag()        { return tag; }
-		Selection_Operation get_op() { return op; }
+		//setters
+		void add(Selection_Operation o);
+		void add(Selection_Operation o, std::string t);
+
+		//getters
+		Selection* get_selection()   { return selection; }
+		bool       get_delete()      { return delete_files; }
+		tag_set    get_add_tags()    { return add_tags; }
+		tag_set    get_remove_tags() { return remove_tags; }
+		
+		bool is_changing();
 
 	private:
-		std::string tag;
-		Selection_Operation op;
+		Selection* const selection;
+
+		//data for all possible actions
+		bool delete_files = false;
+		tag_set add_tags;
+		tag_set remove_tags;
 };

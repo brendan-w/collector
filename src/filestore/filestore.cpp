@@ -163,20 +163,24 @@ Selection* FileStore::select(Selector* selector)
 }
 
 
-void FileStore::operation(Selection* selection, Operation* operation)
+void FileStore::operation(Operation* operation)
 {
-	switch(operation->get_op())
+	Selection* const selection = operation->get_selection();
+
+	if(operation->get_delete())
 	{
-		case ADD_TAG:
-			add_tag(selection, operation->get_tag());
-			break;
+		//delete the selected files
+		//TODO
+	}
+	else
+	{
+		//add/remove tags
 
-		case REMOVE_TAG:
-			remove_tag(selection, operation->get_tag());
-			break;
+		for(std::string tag: operation->get_add_tags())
+			add_tag(selection, tag);
 
-		case DELETE_FILES:
-			break;
+		for(std::string tag: operation->get_remove_tags())
+			remove_tag(selection, tag);
 	}
 
 	delete operation;
@@ -221,7 +225,7 @@ void FileStore::insert_file(File* file)
 	}
 }
 
-void FileStore::add_tag(Selection* selection, const std::string & tag)
+void FileStore::add_tag(Selection* const selection, const std::string & tag)
 {
 	//update the data sctructure for the new tag
 	Tag_Entry* entry;
@@ -245,7 +249,7 @@ void FileStore::add_tag(Selection* selection, const std::string & tag)
 	}
 }
 
-void FileStore::remove_tag(Selection* selection, const std::string & tag)
+void FileStore::remove_tag(Selection* const selection, const std::string & tag)
 {
 	if(!has_tag(tag))
 		return; //tag has never been seen before. Done.

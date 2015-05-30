@@ -190,8 +190,7 @@ int main(int argc, char * argv[])
 					}
 					else if(e.type == OPERATION)
 					{
-						filestore->operation((Selection*) e.user.data1,
-						                     (Operation*) e.user.data2);
+						filestore->operation((Operation*) e.user.data1);
 					}
 					else if(e.type == RENDER_THUMBS)
 					{

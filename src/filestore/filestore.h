@@ -48,7 +48,7 @@ class FileStore
 
 		//primary accessors
 		Selection* select(Selector* selector);
-		void operation(Selection* selection, Operation* operation);
+		void operation(Operation* operation);
 
 	private:
 		file_vector files;
@@ -57,6 +57,6 @@ class FileStore
 		bool has_tag(const std::string & tag);
 		void insert_file(File* file);
 
-		void add_tag(Selection* selection, const std::string & tag);
-		void remove_tag(Selection* selection, const std::string & tag);
+		void add_tag(Selection* const selection, const std::string & tag);
+		void remove_tag(Selection* const selection, const std::string & tag);
 };

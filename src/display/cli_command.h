@@ -71,6 +71,7 @@ class CLI_Command : public DisplayObject
 		Text* completion;
 
 		void execute();
+		void parse_command(Operation* op, std::string & cmd);
 		void post_execute();
 		void backspace();
 		void update_completion();

@@ -39,7 +39,7 @@
 #include <filestore/types.h>
 #include <display/state.h>
 #include <display/cli_command.h>
-
+#include <utils.h> //split()
 
 #define MAX_HISTORY 50
 
@@ -142,38 +142,44 @@ void CLI_Command::render()
 
 void CLI_Command::execute()
 {
-	cmd = command->get_text();
+	//get all commands, delimited by spaces
+	std::string cmd_text = command->get_text();
+	std::vector<std::string> cmds = split(cmd_text, " ");
 
-	
+	//new operation on this selections
+	Operation* op = new Operation(selection());
 
-	if(cmd.length() > 1)
+	//parse load each command into the Operation
+	for(std::string cmd: cmds)
+		parse_command(op, cmd);
+
+	//if the operation modifies files
+	if(op->is_changing())
 	{
-		switch(cmd.at(0))
-		{
-			case '+': //add tag to selection
-				sdl->submit(OPERATION,
-							selection(),
-							new Operation(cmd.substr(1), ADD_TAG));
-
-				sdl->submit(STATE_CHANGE); //update the file info readout
-
-				post_execute();
-				break;
-			case '-': //remove tag from selection
-				sdl->submit(OPERATION,
-							selection(),
-							new Operation(cmd.substr(1), REMOVE_TAG));
-
-				sdl->submit(STATE_CHANGE); //update the file info readout
-
-				post_execute();
-				break;
-			default:
-				break;
-		}
+		sdl->submit(OPERATION, op);
+		sdl->submit(STATE_CHANGE); //update the file info readout
+		post_execute();
 	}
 
 	mark_dirty();
+}
+
+void CLI_Command::parse_command(Operation* op, std::string & cmd)
+{
+	if(cmd.length() == 0)
+		return;
+
+	switch(cmd.at(0))
+	{
+		case '+': //add tag to selection
+			op->add(ADD_TAG, cmd.substr(1));
+			break;
+		case '-': //remove tag from selection
+			op->add(REMOVE_TAG, cmd.substr(1));
+			break;
+		default:
+			break;
+	}
 }
 
 void CLI_Command::post_execute()
