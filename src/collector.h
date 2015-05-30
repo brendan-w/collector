@@ -39,7 +39,6 @@ extern Config* config;
 
 //each of the custom events (declared in SDL_Context.cpp)
 extern Uint32 SELECTOR;
-extern Uint32 SELECTION;
 extern Uint32 OPERATION;
 extern Uint32 RENDER_THUMBS;
 extern Uint32 STATE_CHANGE;

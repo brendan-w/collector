@@ -38,10 +38,9 @@
 #include <SDL_utils.h>
 
 
-#define NUM_USER_EVENTS 5
+#define NUM_USER_EVENTS 4
 
 Uint32 SELECTOR = 0;
-Uint32 SELECTION = 0;
 Uint32 OPERATION = 0;
 Uint32 RENDER_THUMBS = 0;
 Uint32 STATE_CHANGE = 0;
@@ -145,10 +144,9 @@ SDL_Context::SDL_Context()
 
 
 	SELECTOR      = begin;
-	SELECTION     = begin + 1;
-	OPERATION     = begin + 2;
-	RENDER_THUMBS = begin + 3;
-	STATE_CHANGE  = begin + 4;
+	OPERATION     = begin + 1;
+	RENDER_THUMBS = begin + 2;
+	STATE_CHANGE  = begin + 3;
 }
 
 
@@ -188,7 +186,7 @@ void SDL_Context::submit(Uint32 type, void* data1 /*=NULL*/, void* data2 /*=NULL
 	e.user.data2 = data2;
 
 	//prevent multiple SELECTORS and SELECTIONs
-	if((type == SELECTOR) || (type == SELECTION))
+	if(type == SELECTOR)
 		SDL_FlushEvent(type);
 
 	//try to push onto SDL event queue

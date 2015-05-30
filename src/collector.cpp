@@ -179,27 +179,13 @@ int main(int argc, char * argv[])
 				default:
 					//user events are registered at runtime, so can't be used in the switch
 					if(e.type == SELECTOR)
-					{
-						//process the Selector, and broadcast the resulting Selection
-						Selection* s = filestore->select((Selector*) e.user.data1);
-						sdl->submit(SELECTION, (void*) s);
-					}
-					else if(e.type == SELECTION)
-					{
-						display->on_selection((Selection*) e.user.data1);
-					}
+						display->on_selection(filestore->select((Selector*) e.user.data1));
 					else if(e.type == OPERATION)
-					{
 						filestore->operation((Operation*) e.user.data1);
-					}
 					else if(e.type == RENDER_THUMBS)
-					{
 						display->request_render(RENDER_THUMBS);
-					}
 					else if(e.type == STATE_CHANGE)
-					{
 						display->on_state_change();
-					}
 					break;
 			}
 		}
