@@ -44,7 +44,7 @@
 
 
 
-static bool tag_entry_compare(Tag_Entry* a, Tag_Entry* b)
+static bool tag_entry_compare(TagEntry* a, TagEntry* b)
 {
 	return a->files.size() > b->files.size();
 }
@@ -55,7 +55,7 @@ static bool file_compare(File* a, File* b)
 }
 
 
-Selection::Selection(file_vector* all, file_set fs) : all_files(all)
+Selection::Selection(FileVector* all, FileSet fs) : all_files(all)
 {
 	exported = false;
 	files = fs;
@@ -77,14 +77,14 @@ Selection::Selection(file_vector* all, file_set fs) : all_files(all)
 	*/
 
 	//compile the entry set
-	entry_set entries;
+	EntrySet entries;
 	for(File* f: files)
 		set_union(entries, f->tags);
 
 	//filter and dump the set to a sortable vector of entries
 	//fill the subtags set with plain-text tag names
-	entry_vector entries_sorted;
-	for(Tag_Entry* entry: entries)
+	EntryVector entries_sorted;
+	for(TagEntry* entry: entries)
 	{
 		//strain out lone subtags
 		if(entry->files.size() == 1)
@@ -104,7 +104,7 @@ Selection::Selection(file_vector* all, file_set fs) : all_files(all)
 			  tag_entry_compare);
 
 	//convert sorted tags into plain-text tags
-	for(Tag_Entry* entry: entries_sorted)
+	for(TagEntry* entry: entries_sorted)
 		subtags_sorted.push_back(entry->tag);
 }
 

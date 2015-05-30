@@ -78,7 +78,7 @@ FileStore::~FileStore()
 		delete file;
 
 	for(auto e: tags)
-		delete e.second; //the Tag_Entry
+		delete e.second; //the TagEntry
 
 	files.clear();
 	tags.clear();
@@ -88,7 +88,7 @@ FileStore::~FileStore()
 Selection* FileStore::select(Selector* selector)
 {
 	//result holders
-	file_set r_files;
+	FileSet r_files;
 
 	if(!selector->is_empty())
 	{
@@ -103,7 +103,7 @@ Selection* FileStore::select(Selector* selector)
 			if(!has_tag(tag))
 				continue;
 
-			Tag_Entry* entry = tags[tag];
+			TagEntry* entry = tags[tag];
 
 			if(first)
 			{
@@ -113,8 +113,8 @@ Selection* FileStore::select(Selector* selector)
 			}
 			else
 			{
-				file_set r_files_intersect;
-				set_intersect<file_set>(r_files_intersect,
+				FileSet r_files_intersect;
+				set_intersect<FileSet>(r_files_intersect,
 										r_files,
 										entry->files);
 
@@ -136,7 +136,7 @@ Selection* FileStore::select(Selector* selector)
 			if(!has_tag(tag))
 				continue;
 
-			Tag_Entry* entry = tags[tag];
+			TagEntry* entry = tags[tag];
 
 			//exclude these files from the selection
 			for(File* f: entry->files)
@@ -197,17 +197,17 @@ void FileStore::insert_file(File* file)
 	files.push_back(file);
 
 	//get all tags, relative to the current working directory
-	tag_set file_tags = file->compute_tags();
+	TagSet file_tags = file->compute_tags();
 
 	//first iteration, populate the tag map with any new tags
 	for(std::string tag: file_tags)
 	{
-		Tag_Entry* entry = NULL;
+		TagEntry* entry = NULL;
 
 		if(!has_tag(tag))
 		{
 			//create a new entry object for this tag
-			entry = new Tag_Entry;
+			entry = new TagEntry;
 			entry->tag = tag;
 			entry->files.insert(file);
 
@@ -215,12 +215,12 @@ void FileStore::insert_file(File* file)
 		}
 		else
 		{
-			//add the file to the correct tag file_set
+			//add the file to the correct tag FileSet
 			entry = tags[tag];
 			entry->files.insert(file);
 		}
 
-		//give the file a pointer to each of its Tag_Entry
+		//give the file a pointer to each of its TagEntry
 		file->tags.insert(entry);
 	}
 }
@@ -228,7 +228,7 @@ void FileStore::insert_file(File* file)
 void FileStore::add_tag(Selection* const selection, const std::string & tag)
 {
 	//update the data sctructure for the new tag
-	Tag_Entry* entry;
+	TagEntry* entry;
 	
 	if(has_tag(tag))
 	{
@@ -236,8 +236,8 @@ void FileStore::add_tag(Selection* const selection, const std::string & tag)
 	}
 	else
 	{
-		//create the new Tag_Entry
-		entry = new Tag_Entry;
+		//create the new TagEntry
+		entry = new TagEntry;
 		entry->tag = tag;
 		tags[tag] = entry;
 	}
@@ -254,7 +254,7 @@ void FileStore::remove_tag(Selection* const selection, const std::string & tag)
 	if(!has_tag(tag))
 		return; //tag has never been seen before. Done.
 
-	Tag_Entry* entry = tags[tag];
+	TagEntry* entry = tags[tag];
 
 	for(File* file: *selection)
 	{
@@ -262,7 +262,7 @@ void FileStore::remove_tag(Selection* const selection, const std::string & tag)
 			file->remove_tag(entry);
 	}
 
-	//delete the Tag_Entry if there are no remaining files with that tag
+	//delete the TagEntry if there are no remaining files with that tag
 	if(entry->files.size() == 0)
 	{
 		tags.erase(tag);

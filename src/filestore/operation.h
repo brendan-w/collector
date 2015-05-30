@@ -55,8 +55,8 @@ class Operation
 		//getters
 		Selection* get_selection()   { return selection; }
 		bool       get_delete()      { return delete_files; }
-		tag_set    get_add_tags()    { return add_tags; }
-		tag_set    get_remove_tags() { return remove_tags; }
+		TagSet    get_add_tags()    { return add_tags; }
+		TagSet    get_remove_tags() { return remove_tags; }
 		
 		bool is_changing();
 
@@ -65,6 +65,6 @@ class Operation
 
 		//data for all possible actions
 		bool delete_files = false;
-		tag_set add_tags;
-		tag_set remove_tags;
+		TagSet add_tags;
+		TagSet remove_tags;
 };

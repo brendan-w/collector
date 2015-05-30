@@ -100,7 +100,7 @@ size_t File::get_size()
 	return fin.tellg();
 }
 
-bool File::has_tag(Tag_Entry* t)
+bool File::has_tag(TagEntry* t)
 {
 	return (tags.find(t) != tags.end());
 }
@@ -125,25 +125,25 @@ std::string File::get_exemplar_tag()
 	return tag;
 }
 
-tag_set File::split_tags(std::string p)
+TagSet File::split_tags(std::string p)
 {
 	to_lower(p);
-	tag_vector parts = (tag_vector) split(p, config->tag_delim);
+	TagVector parts = (TagVector) split(p, config->tag_delim);
 
 	//strain out duplicates
-	tag_set tags;
+	TagSet tags;
 	for(std::string tag: parts)
 		tags.insert(tag);
 
 	return tags;
 }
 
-tag_set File::compute_tags()
+TagSet File::compute_tags()
 {
 	return split_tags(path);
 }
 
-void File::add_tag(Tag_Entry* t)
+void File::add_tag(TagEntry* t)
 {
 	//calculate where to move this file
 	//search for a subdirectory to place the file in
@@ -183,15 +183,15 @@ void File::add_tag(Tag_Entry* t)
 	}
 }
 
-void File::remove_tag(Tag_Entry* t)
+void File::remove_tag(TagEntry* t)
 {
 	//split the filepath into directories and file name
 	Path_Parts p = get_path_parts(path);
 
 	const size_t tag_len = t->tag.length();
 
-	tag_set dir_tags  = split_tags(p.dirs);
-	tag_set name_tags = split_tags(p.name);
+	TagSet dir_tags  = split_tags(p.dirs);
+	TagSet name_tags = split_tags(p.name);
 
 
 	/*
@@ -231,7 +231,7 @@ void File::remove_tag(Tag_Entry* t)
 			}
 		}
 
-		//keep the tag_set up to date, so that the directory handler can check for duplicates
+		//keep the TagSet up to date, so that the directory handler can check for duplicates
 		name_tags.erase(t->tag);
 
 		//prevent files with no names
@@ -270,7 +270,7 @@ void File::remove_tag(Tag_Entry* t)
 		p.dirs = p.dirs.substr(0, dir_pos);
 
 		//encode the casualty tags in the filename
-		tag_set casualty_tags = split_tags(path_casualties);
+		TagSet casualty_tags = split_tags(path_casualties);
 
 		//exclude the tag that we're trying to remove
 		casualty_tags.erase(t->tag);

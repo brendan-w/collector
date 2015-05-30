@@ -70,8 +70,8 @@ void Grid::render()
 	render_tags();
 
 	Selection* s = selection();
-	file_vector_it begin = s->all_begin();
-	file_vector_it end   = s->all_end();
+	FileVector_it begin = s->all_begin();
+	FileVector_it end   = s->all_end();
 
 	//not very dry, but saves having to check for a null selection every iteration
 	if(s->size() > 0)
@@ -214,8 +214,8 @@ void Grid::resize()
 		current_height_files = height_files;
 		current_width_files = width_files;
 
-		file_vector_it begin = s->all_begin();
-		file_vector_it end   = s->all_end();
+		FileVector_it begin = s->all_begin();
+		FileVector_it end   = s->all_end();
 
 		size_t count = 0;
 		size_t column_wait = 0;
@@ -249,8 +249,8 @@ void Grid::update_minimap()
 
 	minimap.clear();
 
-	file_vector_it begin = s->all_begin();
-	file_vector_it end   = s->all_end();
+	FileVector_it begin = s->all_begin();
+	FileVector_it end   = s->all_end();
 
 	const size_t total = s->all_size();
 	const size_t max_region_sep = current_height_files;

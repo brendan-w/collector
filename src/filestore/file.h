@@ -41,8 +41,8 @@
 
 
 //raw string tag collections
-typedef std::vector<std::string> tag_vector;
-typedef std::unordered_set<std::string> tag_set;
+typedef std::vector<std::string> TagVector;
+typedef std::unordered_set<std::string> TagSet;
 
 
 //SDL_Point =  8 bytes
@@ -54,15 +54,11 @@ typedef struct {
 
 
 //forward declare
-class Tag_Entry;
+class TagEntry;
 
-//Tag_Entry collections
-typedef std::vector<Tag_Entry*> entry_vector;
-typedef std::unordered_set<Tag_Entry*> entry_set;
-
-//map strings to Tag_Entry
-//primary data structure for the filestore
-typedef std::unordered_map<std::string, Tag_Entry*> tag_map;
+//TagEntry collections
+typedef std::vector<TagEntry*> EntryVector;
+typedef std::unordered_set<TagEntry*> EntrySet;
 
 
 class File
@@ -79,10 +75,10 @@ class File
 
 		//tag operations
 		std::string get_exemplar_tag();
-		tag_set compute_tags();
-		bool has_tag(Tag_Entry* t);
-		void add_tag(Tag_Entry* t);
-		void remove_tag(Tag_Entry* t);
+		TagSet compute_tags();
+		bool has_tag(TagEntry* t);
+		void add_tag(TagEntry* t);
+		void remove_tag(TagEntry* t);
 
 		size_t get_size();
 		std::string get_path();
@@ -96,7 +92,7 @@ class File
 
 		File_Point grid_pos;
 		File_Point thumb_pos;
-		entry_set tags;
+		EntrySet tags;
 
 	private:
 		//the path relative to the curerent working directory
@@ -104,23 +100,23 @@ class File
 
 		Thumbnail* thumb;
 
-		tag_set split_tags(std::string p);
+		TagSet split_tags(std::string p);
 		bool move(std::string dest);
 };
 
 
-//file_vector
-typedef std::vector<File*> file_vector;
-typedef file_vector::iterator file_vector_it;
+//FileVector
+typedef std::vector<File*> FileVector;
+typedef FileVector::iterator FileVector_it;
 
-//file_set
-typedef std::unordered_set<File*> file_set;
-typedef file_set::iterator file_set_it;
+//FileSet
+typedef std::unordered_set<File*> FileSet;
+typedef FileSet::iterator FileSet_it;
 
 
-class Tag_Entry
+class TagEntry
 {
 	public:
 		std::string tag;
-		file_set files;
+		FileSet files;
 };

@@ -56,14 +56,14 @@ class Selector
 		void add_tag(std::string tag, Set_Operation op);
 		void add_inexclude(File* f, bool included);
 
-		const tag_vector get_tag_intersections() { return tag_intersections; }
-		const tag_vector get_tag_exclusions()    { return tag_exclusions; }
+		const TagVector get_tag_intersections() { return tag_intersections; }
+		const TagVector get_tag_exclusions()    { return tag_exclusions; }
 		const file_map_bool get_inexclude()      { return inexclude; }
 
 		bool is_empty();
 
 	private:
-		tag_vector tag_intersections;
-		tag_vector tag_exclusions;
+		TagVector tag_intersections;
+		TagVector tag_exclusions;
 		file_map_bool inexclude;
 };

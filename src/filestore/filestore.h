@@ -38,6 +38,9 @@
 #include <filestore/types.h>
 
 
+//map strings to TagEntry
+//primary data structure for the filestore
+typedef std::unordered_map<std::string, TagEntry*> TagMap;
 
 
 class FileStore
@@ -51,8 +54,8 @@ class FileStore
 		void operation(Operation* operation);
 
 	private:
-		file_vector files;
-		tag_map tags;
+		FileVector files;
+		TagMap tags;
 
 		bool has_tag(const std::string & tag);
 		void insert_file(File* file);
