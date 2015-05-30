@@ -30,9 +30,6 @@
 
 #pragma once
 
-
-#include <string>
-#include <vector>
 #include <unordered_map>
 
 #include <filestore/types.h>
@@ -40,7 +37,7 @@
 
 //map strings to TagEntry
 //primary data structure for the filestore
-typedef std::unordered_map<std::string, TagEntry*> TagMap;
+typedef std::unordered_map<Tag, TagEntry*> TagMap;
 
 
 class FileStore
@@ -57,9 +54,9 @@ class FileStore
 		FileVector files;
 		TagMap tags;
 
-		bool has_tag(const std::string & tag);
+		bool has_tag(const Tag & tag);
 		void insert_file(File* file);
 
-		void add_tag(Selection* const selection, const std::string & tag);
-		void remove_tag(Selection* const selection, const std::string & tag);
+		void add_tag(Selection* const selection, const Tag & tag);
+		void remove_tag(Selection* const selection, const Tag & tag);
 };

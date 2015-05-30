@@ -28,17 +28,12 @@
 ########################################################################
 */
 
-#include <iostream>
-
 #include <SDL.h>
 
 #include <collector.h>
 #include <text.h>
-#include <filestore/file.h>
-#include <filestore/selector.h>
-#include <filestore/selection.h>
+#include <filestore/types.h>
 #include <display/displayobject.h>
-#include <display/state.h>
 #include <display/grid.h>
 
 
@@ -420,7 +415,7 @@ File* Grid::mouse_to_file(int x, int y)
 
 size_t Grid::create_tag(File* file, size_t column)
 {
-	std::string tag = file->get_exemplar_tag();
+	Tag tag = file->get_exemplar_tag();
 
 	if(tag.length() > 0)
 	{

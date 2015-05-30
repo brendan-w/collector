@@ -33,7 +33,6 @@
 	which are used to query the filestore.
 */
 
-#include <iostream>
 #include <string>
 
 #include <SDL.h>
@@ -41,7 +40,7 @@
 #include <collector.h>
 #include <text.h>
 #include <filestore/types.h>
-#include <display/state.h>
+#include <display/displayobject.h>
 #include <display/cli_tags.h>
 #include <display/cli_command.h>
 #include <display/cli.h>

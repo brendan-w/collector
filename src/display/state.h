@@ -44,7 +44,7 @@ class State
 
 		Selection* selection = NULL;    //the current file selection returned from the filestore
 		File* file_under_mouse = NULL;  //pointer to the file currently under the mouse
-		file_map_bool inexclude;        //manual include/exclude table
+		InExclude inexclude;        //manual include/exclude table
 		bool should_autoscroll = false; //whether or not the most recent selection should be autoscrolled
 		bool key_ctrl = false;         //whether a shift key is depressed
 
@@ -57,5 +57,6 @@ class State
 		void clear_excludes();
 
 	private:
+		//backend for clear_includes() and clear_excludes()
 		void remove_inexclude_by_val(bool val);
 };

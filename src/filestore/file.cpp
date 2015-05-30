@@ -105,9 +105,9 @@ bool File::has_tag(TagEntry* t)
 	return (tags.find(t) != tags.end());
 }
 
-std::string File::get_exemplar_tag()
+Tag File::get_exemplar_tag()
 {
-	std::string tag = "";
+	Tag tag = "";
 	std::string p = path;
 	size_t last_dir = p.rfind(PATH_SEP);
 

@@ -97,7 +97,7 @@ Selection* FileStore::select(Selector* selector)
 		*/
 
 		bool first = true;
-		for(std::string tag: selector->get_tag_intersections())
+		for(Tag tag: selector->get_tag_intersections())
 		{
 			//prevent unknown tags from destroying the query
 			if(!has_tag(tag))
@@ -130,7 +130,7 @@ Selection* FileStore::select(Selector* selector)
 			Exclusions
 		*/
 
-		for(std::string tag: selector->get_tag_exclusions())
+		for(Tag tag: selector->get_tag_exclusions())
 		{
 			//prevent unknown tags from destroying the query
 			if(!has_tag(tag))
@@ -147,7 +147,7 @@ Selection* FileStore::select(Selector* selector)
 			Manual Includes & Excludes
 		*/
 
-		file_map_bool inexclude = selector->get_inexclude();
+		InExclude inexclude = selector->get_inexclude();
 		for(auto e: inexclude)
 		{
 			if(e.second)
@@ -176,10 +176,10 @@ void FileStore::operation(Operation* operation)
 	{
 		//add/remove tags
 
-		for(std::string tag: operation->get_add_tags())
+		for(Tag tag: operation->get_add_tags())
 			add_tag(selection, tag);
 
-		for(std::string tag: operation->get_remove_tags())
+		for(Tag tag: operation->get_remove_tags())
 			remove_tag(selection, tag);
 	}
 
@@ -187,7 +187,7 @@ void FileStore::operation(Operation* operation)
 }
 
 
-bool FileStore::has_tag(const std::string & tag)
+bool FileStore::has_tag(const Tag & tag)
 {
 	return (tags.find(tag) != tags.end());
 }
@@ -225,7 +225,7 @@ void FileStore::insert_file(File* file)
 	}
 }
 
-void FileStore::add_tag(Selection* const selection, const std::string & tag)
+void FileStore::add_tag(Selection* const selection, const Tag & tag)
 {
 	//update the data sctructure for the new tag
 	TagEntry* entry;
@@ -249,7 +249,7 @@ void FileStore::add_tag(Selection* const selection, const std::string & tag)
 	}
 }
 
-void FileStore::remove_tag(Selection* const selection, const std::string & tag)
+void FileStore::remove_tag(Selection* const selection, const Tag & tag)
 {
 	if(!has_tag(tag))
 		return; //tag has never been seen before. Done.

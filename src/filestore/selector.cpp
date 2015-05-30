@@ -29,11 +29,8 @@
 */
 
 
-#include <string>
-
+#include <filestore/file.h>
 #include <filestore/selector.h>
-#include <utils.h>
-
 
 /*
 	Selector object
@@ -51,7 +48,7 @@ Selector::~Selector()
 	inexclude.clear();
 }
 
-void Selector::add_tag(std::string tag, Set_Operation op)
+void Selector::add_tag(Tag tag, Set_Operation op)
 {
 	if(tag.length() > 0)
 	{

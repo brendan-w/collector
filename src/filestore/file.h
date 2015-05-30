@@ -41,8 +41,9 @@
 
 
 //raw string tag collections
-typedef std::vector<std::string> TagVector;
-typedef std::unordered_set<std::string> TagSet;
+typedef std::string Tag;
+typedef std::vector<Tag> TagVector;
+typedef std::unordered_set<Tag> TagSet;
 
 
 //SDL_Point =  8 bytes
@@ -74,7 +75,7 @@ class File
 		void open(std::string filepath);
 
 		//tag operations
-		std::string get_exemplar_tag();
+		Tag get_exemplar_tag();
 		TagSet compute_tags();
 		bool has_tag(TagEntry* t);
 		void add_tag(TagEntry* t);
@@ -117,6 +118,6 @@ typedef FileSet::iterator FileSet_it;
 class TagEntry
 {
 	public:
-		std::string tag;
+		Tag tag;
 		FileSet files;
 };

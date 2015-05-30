@@ -34,7 +34,6 @@
 
 #include <filestore/types.h>
 #include <display/displayobject.h>
-#include <display/state.h>
 
 
 //internal use only

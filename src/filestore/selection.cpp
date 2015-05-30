@@ -152,7 +152,7 @@ File* Selection::all_at(size_t i)
 		return NULL;
 }
 
-bool Selection::has_subtag(std::string tag)
+bool Selection::has_subtag(Tag tag)
 {
 	return (subtags.find(tag) != subtags.end());
 }
@@ -164,9 +164,9 @@ bool Selection::has_subtag(std::string tag)
 	real tag: "partial"
 	returns:      "ial"
 */
-std::string Selection::auto_complete(std::string partial)
+Tag Selection::auto_complete(Tag partial)
 {
-	for(std::string tag: subtags)
+	for(Tag tag: subtags)
 	{
 		if(starts_with(tag, partial))
 			return tag.substr(partial.length());

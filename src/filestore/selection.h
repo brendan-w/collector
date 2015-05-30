@@ -50,17 +50,17 @@ class Selection
 		//the selection
 		const FileVector_it begin() { return files_sorted.begin(); }
 		const FileVector_it end()   { return files_sorted.end(); }
-		size_t size()                { return files_sorted.size(); }
-		File* at(size_t i)           { return files_sorted[i]; };
+		size_t size()               { return files_sorted.size(); }
+		File* at(size_t i)          { return files_sorted[i]; };
 
 		//all files
 		const FileVector_it all_begin() { return all_files->begin(); }
 		const FileVector_it all_end()   { return all_files->end(); }
-		size_t all_size()                { return all_files->size(); }
+		size_t all_size()               { return all_files->size(); }
 		File* all_at(size_t i);
 
-		bool has_subtag(std::string tag);
-		std::string auto_complete(std::string partial);
+		bool has_subtag(Tag tag);
+		Tag auto_complete(Tag partial);
 
 	private:
 		

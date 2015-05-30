@@ -30,15 +30,11 @@
 
 #pragma once
 
-#include <string>
-#include <vector>
-
 #include "SDL.h"
 
+#include <text.h>
 #include <filestore/types.h>
 #include <display/displayobject.h>
-#include <display/state.h>
-#include <text.h>
 
 
 

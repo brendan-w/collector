@@ -50,13 +50,13 @@ class Operation
 
 		//setters
 		void add(Selection_Operation o);
-		void add(Selection_Operation o, std::string t);
+		void add(Selection_Operation o, Tag t);
 
 		//getters
 		Selection* get_selection()   { return selection; }
 		bool       get_delete()      { return delete_files; }
-		TagSet    get_add_tags()    { return add_tags; }
-		TagSet    get_remove_tags() { return remove_tags; }
+		TagSet     get_add_tags()    { return add_tags; }
+		TagSet     get_remove_tags() { return remove_tags; }
 		
 		bool is_changing();
 

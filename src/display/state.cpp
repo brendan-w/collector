@@ -29,8 +29,6 @@
 */
 
 
-#include <algorithm> //remove_if()
-
 #include <filestore/types.h>
 #include <display/state.h>
 

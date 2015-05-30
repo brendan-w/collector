@@ -41,11 +41,11 @@
 #include <text.h>
 
 
-class Tag
+class CLI_Tag
 {
 	public:
-		Tag();
-		~Tag();
+		CLI_Tag();
+		~CLI_Tag();
 
 		//helpers, merely to make the code prettier
 		std::string get_t() { return text->get_text(); }
@@ -56,7 +56,7 @@ class Tag
 		size_t len_c() { return completion->get_text().length(); }
 
 		//helpers to account for control characters
-		std::string get_tag();
+		Tag get_tag();
 		Set_Operation get_op();
 
 		Text* text;       //the users actual input
@@ -80,7 +80,7 @@ class CLI_Tags : public DisplayObject
 
 	private:
 
-		std::vector<Tag*> tags;
+		std::vector<CLI_Tag*> tags;
 		size_t current_index;
 
 		void render_tags(int x, const int y);
@@ -90,5 +90,5 @@ class CLI_Tags : public DisplayObject
 		void backspace();
 		void send_tag_info();
 		void auto_complete();
-		Tag* current_tag();
+		CLI_Tag* current_tag();
 };

@@ -58,7 +58,7 @@ void Operation::add(Selection_Operation o)
 	}
 }
 
-void Operation::add(Selection_Operation o, std::string t)
+void Operation::add(Selection_Operation o, Tag t)
 {
 	to_lower(t);
 

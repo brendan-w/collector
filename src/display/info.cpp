@@ -29,8 +29,6 @@
 */
 
 
-#include <string>
-
 #include <SDL.h>
 
 #include <collector.h>

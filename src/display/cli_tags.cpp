@@ -29,7 +29,6 @@
 */
 
 
-#include <iostream>
 #include <string>
 
 #include <SDL.h>
@@ -42,19 +41,19 @@
 
 
 
-Tag::Tag()
+CLI_Tag::CLI_Tag()
 {
 	text       = new Text("", config->get_color(CLI_LIGHT));
 	completion = new Text("", config->get_color(CLI_DARK));
 }
 
-Tag::~Tag()
+CLI_Tag::~CLI_Tag()
 {
 	delete text;
 	delete completion;
 }
 
-std::string Tag::get_tag()
+Tag CLI_Tag::get_tag()
 {
 	if(get_op() == EXCLUSION)
 		return get_t().substr(1);
@@ -62,7 +61,7 @@ std::string Tag::get_tag()
 	return get_t();
 }
 
-Set_Operation Tag::get_op()
+Set_Operation CLI_Tag::get_op()
 {
 	if(len_t() > 0)
 	{
@@ -156,7 +155,7 @@ void CLI_Tags::on_text(SDL_TextInputEvent &e)
 	}
 	else
 	{
-		Tag* t = current_tag();
+		CLI_Tag* t = current_tag();
 		t->set_t(t->get_t() + e.text);
 		state->should_autoscroll = true;
 		mark_dirty();
@@ -177,7 +176,7 @@ void CLI_Tags::render()
 
 	for(size_t i = 0; i < tags.size(); i++)
 	{
-		Tag* t = tags[i];
+		CLI_Tag* t = tags[i];
 		int tw = t->text->width();
 		int cw = t->completion->width();
 
@@ -204,7 +203,7 @@ void CLI_Tags::render()
 void CLI_Tags::fill_selector(Selector* selector)
 {
 	//dump our tags into the selector
-	for(Tag* t: tags)
+	for(CLI_Tag* t: tags)
 	{
 		selector->add_tag(t->get_tag(), t->get_op());
 	}
@@ -216,8 +215,8 @@ void CLI_Tags::on_selection()
 	Selection* s = selection();
 
 	//update the status of the current tag
-	Tag* t = current_tag();
-	std::string tag = t->get_tag();
+	CLI_Tag* t = current_tag();
+	Tag tag = t->get_tag();
 	if(s->has_subtag(tag))
 	{
 		t->text->set_color(config->get_color(CLI_LIGHT));
@@ -238,14 +237,14 @@ void CLI_Tags::on_selection()
 //deallocates all Text objects in tags
 void CLI_Tags::destroy_tags()
 {
-	for(Tag* t: tags)
+	for(CLI_Tag* t: tags)
 		delete t;
 
 	tags.clear();
 }
 
 
-Tag* CLI_Tags::current_tag()
+CLI_Tag* CLI_Tags::current_tag()
 {
 	return tags[current_index];
 }
@@ -255,7 +254,7 @@ Tag* CLI_Tags::current_tag()
 //and sets it as the current
 void CLI_Tags::new_tag()
 {
-	Tag* t = new Tag();
+	CLI_Tag* t = new CLI_Tag();
 	tags.push_back(t);
 	current_index = tags.size() - 1;
 }
@@ -265,7 +264,7 @@ void CLI_Tags::new_tag()
 //always one tag in the vector
 void CLI_Tags::delete_tag()
 {
-	Tag* t = current_tag();
+	CLI_Tag* t = current_tag();
 
 	//ensure that there is always at least one tag preset
 	if(tags.size() > 1)
@@ -303,7 +302,7 @@ void CLI_Tags::backspace()
 
 void CLI_Tags::auto_complete()
 {
-	Tag* t = current_tag();
+	CLI_Tag* t = current_tag();
 
 	t->set_t(t->get_t() + t->get_c());
 	t->set_c("");

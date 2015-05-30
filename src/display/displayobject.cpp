@@ -28,14 +28,12 @@
 ########################################################################
 */
 
-#include <iostream>
-
 #include <SDL.h>
 
 #include <collector.h>
 #include <filestore/types.h>
-#include <display/displayobject.h>
 #include <display/state.h>
+#include <display/displayobject.h>
 
 
 

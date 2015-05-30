@@ -30,8 +30,6 @@
 
 #pragma once
 
-#include <string>
-
 #include "SDL.h"
 
 #include <filestore/file.h>

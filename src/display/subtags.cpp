@@ -28,9 +28,6 @@
 ########################################################################
 */
 
-#include <iostream>
-#include <string>
-
 #include <SDL.h>
 
 #include <collector.h>
@@ -91,7 +88,7 @@ void Subtags::on_selection()
 
 	TagVector subtags = selection()->get_subtags();
 
-	for(std::string tag: subtags)
+	for(Tag tag: subtags)
 	{
 		Text* text = new Text(tag, config->get_color(CLI_DARK));
 		tags.push_back(text);
